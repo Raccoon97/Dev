@@ -106,6 +106,7 @@ closure()
 ```
 >- 일회성, 클로저를 소괄호로 감싸고 끝에 호출 구문인 () 를 이용해서 실행할 수 있다.
 
+<br><br><br>
 # Closure 의 경량화
 - Trailling Closure
 >- 함수의 마지막 Parameter가 Closure 일 때, 이를 Parameter 형식이 아닌 함수 뒤에 붙여 사용하는 문법, 이 때, Argument Label 은 생략된다.
@@ -121,3 +122,23 @@ doSomething(closure: { () -> () in
 })
 ```
 >- 이렇게 Closure 가 Parameter 형식으로 함수의 호출 구문 안에 있는 것을 Inline Closure 라고 부른다.
+>- 함수 해석이 쉽지만은 않은 모양의 함수이므로 이 때 함수의 가장 마지막에 꼬리처럼 붙여 사용할 수 있는 Trailling Closure 를 사용한다.
+```swift
+// Trailling Closure
+doSomething () { () -> () in
+    print("Hello!")
+}
+```
+>- Trailling Closure 를 사용하기 위한 조건
+>>- 1. 마지막 Parameter 가 Closure 일 경우
+>- Parameter 가 Closure 하나인 경우에는 더 경량화 시킬 수 있다.
+```swift
+doSomething () { () -> () in
+    print("Hello!")
+}
+// 기존 
+
+doSomething { () -> () in
+    print("Hello!")
+}
+```
