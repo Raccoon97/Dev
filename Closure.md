@@ -25,14 +25,14 @@ let closure = { print("Somaker") }
 ```
 - 주로 Closure 를 언급할 땐 익명함수( Unamed Closure ) 이므로 func 키워드는 사용하지 않는다.
 - Closure는 Closure Head 와 Closure Body로 이루어져 있는데, 그 둘을 구분짓는 것이 in 키워드 이다.
-- Parameter 와 Return Type 이 없는 클로저
+- Parameter 와 Return Type 이 없는 Closure
 ```swift
 let closure = { () -> () in
    print("Closure")
 }
 ```
 >- Closure 는 익명함수이긴 하지만 함수이다, 따라서 Swift 에서 1급 객체 함수이기 때문에, 상수에 대입이 가능하다.
-- Parameter 와 Return Type 이 있는 클로저
+- Parameter 와 Return Type 이 있는 Closure
 ```swift
 let closure = { (name: String) -> String in
     return "Hello, \(name)"
@@ -49,19 +49,19 @@ closure("Raccoon")
 closure(name: "Raccoon")  //error!
 ```
 <br><br><br>
-# 1급 객체로서의 클로저
-- 클로저를 변수나 상수에 대입할 수 있다.
+# 1급 객체로서의 Closure
+- Closure 를 변수나 상수에 대입할 수 있다.
 ```swift
 let closure = { () -> () in
     print("Closure")
 }
 ```
->- 대입과 동시에 클로저를 작성할 수 있다.
+>- 대입과 동시에 Closure 를 작성할 수 있다.
 ```swift
 let closure2 = closure
 ```
->- 기존에 클로저를 대입한 변수나 상수를 새로운 변수나 상수에 대입할 수 있다.
-- 함수의 파라미터 타입으로 클로저를 전달할 수 있다.
+>- 기존에 Closure 를 대입한 변수나 상수를 새로운 변수나 상수에 대입할 수 있다.
+- 함수의 파라미터 타입으로 Closure 를 전달할 수 있다.
 ```swift
 func doSomething(closure: () -> ()) {
     closure()
@@ -71,8 +71,8 @@ func doSomething(closure: { () -> () in
     print("Hello!")
 })
 ```
->- 이처럼 함수를 파라미터로 전달받는 함수가 있다, 하지만 파라미터를 클로저로 넘겨줘도 된다.
-- 함수의 반환 타입으로 클로저를 전달할 수 있다.
+>- 이처럼 함수를 파라미터로 전달받는 함수가 있다, 하지만 파라미터를 Closure 로 넘겨줘도 된다.
+- 함수의 반환 타입으로 Closure 를 전달할 수 있다.
 ```swift
 func doSomething() -> () -> () {
     return { () -> () in
@@ -80,9 +80,22 @@ func doSomething() -> () -> () {
     }
 }
 ```
->- 실제 Return을 할 때 함수가 아닌 클로저를 Return할 수 있다.
+>- 실제 Return을 할 때 함수가 아닌 Closure 를 Return할 수 있다.
 ```swfit
 let closure = doSomething()
 closure()
 ```
->- 또한 상수에 함수의 Return값( 클로저 )을 대입해서 위와 같이 실행할 수 있다.
+>- 또한 상수에 함수의 Return 값( Closure )을 대입해서 위와 같이 실행할 수 있다.
+
+<br><br><br>
+# Closure 실행하기
+- Closure 가 대입된 변수나 상수로 호출하기
+```swift
+let closure = { () -> String in
+    return "Hello Sodeul!"
+}
+
+closure()
+```
+>- 이처럼 클로저가 
+- Closure 를 직접 호출하기
