@@ -1,4 +1,4 @@
-# 클로저
+# Closure
 - Named Closure
         - 평소에 일반적으로 사용하는 함수는 Named Closure 이다.
 ```swift
