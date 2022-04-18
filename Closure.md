@@ -168,4 +168,56 @@ fetchData(success:  { () -> () in
 
 <br><br><br>
 
-# 클로저의 경량화
+# Closure의 경량 문법
+- 문법을 최적화하여 Closure 를 간단하게 쓸 수 있는 것
+```swift
+func doSomething(closure: (Int, Int, Int) -> Int) {
+    closure(1, 2, 3)
+}
+```
+>- 경량화 할 함수 예시
+
+```swift
+doSomething(closure: { (a: Int, b: Int, c: Int) -> Int in
+    return a + b + c
+})
+```
+>- Inline Closure 작성
+- Parameter 형식과 Return 형식을 생략할 수 있다.
+```swift
+doSomething(closure: { (a, b, c ) in
+    return a + b + c
+})
+```
+>- Parameter 생략, Return 생략
+- Parameter Name 은 Shortand Argument Names 로 대체하고 이 경우 Parameter Name 과 in 키워드를 생략한다.
+>- Shortand Argument Names 란 a, b, c 라는 Parameter Name 대신에 $0, $1, $2 와 같이 $ 과 index 를 이용해서 Parameter 에 순서대로 접근하는 것
+```swift
+doSomething(closure: {  
+    return $0 + $1 + $2
+})
+```
+>- Shortand Argument Names 로 Parameter 를 대체하여 경량화된 Closure 
+- 단일 Return 문만 남을 경우 Return 도 생략할 수 있다, 단일 Return 문이 아닌 경우엔 Error가 발생한다.
+>- 단일 Return 문이란, Closure 내부에 return 구문 하나만 남은 상태 
+```swift
+doSomething(closure: {  
+    $0 + $1 + $2
+})
+```
+- Closure Parameter 가 마지막 Parameter 라면 Trailling Closure 로 작성한다.
+```swift
+doSomething() {  
+     $0 + $1 + $2
+}
+```
+>- Trailling Closure 로 작성하여 Closure 를 함수의 끝 부분으로 뺀 모습
+- 함수 호출부에 별다른 Argument 가 없다면 ()를 생략할 수 있다.
+```swift
+doSomething { $0 + $1 + $2 }
+```
+>- Closure를 최종적으로 경량화 시킨 모습
+
+<br><br><br>
+# @autoclosure
+2022.04.18 계속..
