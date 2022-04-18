@@ -110,6 +110,7 @@ closure()
 # Closure 의 경량화
 - Trailling Closure
 >- 함수의 마지막 Parameter가 Closure 일 때, 이를 Parameter 형식이 아닌 함수 뒤에 붙여 사용하는 문법, 이 때, Argument Label 은 생략된다.
+>>- Trailling Closure 를 사용하기 위한 조건 --> 마지막 Parameter 가 Closure 일 경우
 - Parameter 가 Closure 하나인 함수
 ```swift
 func doSomething(closure: () -> ()) {
@@ -129,16 +130,37 @@ doSomething () { () -> () in
     print("Hello!")
 }
 ```
->- Trailling Closure 를 사용하기 위한 조건
->>- 1. 마지막 Parameter 가 Closure 일 경우
->- Parameter 가 Closure 하나인 경우에는 더 경량화 시킬 수 있다.
+>- Parameter 가 Closure 하나인 경우에는 더 경량화 시킬 수 있다.( 함수 호출 구문인 () 를 생략 가능 )
 ```swift
 doSomething () { () -> () in
     print("Hello!")
 }
-// 기존 
+// 기존 Trailling Closure 를 사용했을 때 모습
 
 doSomething { () -> () in
     print("Hello!")
 }
+// Parameter 가 Closure 하나인 경우 더 경량화 된 모습
+```
+- Parameter 가 여러 개인 함수
+```swift
+func fetchData(success: () -> (), fail: () -> ()) {
+    //do something...
+}
+// 이런 함수가 있을 때 
+
+fetchData(success: { () -> () in
+    print("Success!")
+}, fail: { () -> () in
+    print("Fail!")
+})
+// Inline Closure 의 경우
+
+
+fetchData(success:  { () -> () in
+    print("Success!")
+}) { () -> () in
+    print("Fail!")
+}
+// Trailling Closure 를 적용한 모습, 
 ```
