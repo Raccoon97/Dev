@@ -162,5 +162,10 @@ fetchData(success:  { () -> () in
 }) { () -> () in
     print("Fail!")
 }
-// Trailling Closure 를 적용한 모습, 
+// Trailling Closure 를 적용한 모습, 마지막 Parameter 가 Closure 이기에 Trailling Closure 를 사용하여 표현함
+// 마지막 Parameter 만 Argument Label 을 생략할 수 있다.
 ```
+
+<br><br><br>
+
+# 클로저의 경량화
