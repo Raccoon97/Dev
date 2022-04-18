@@ -92,10 +92,16 @@ closure()
 - Closure 가 대입된 변수나 상수로 호출하기
 ```swift
 let closure = { () -> String in
-    return "Hello Sodeul!"
+    return "Hello!"
 }
 
 closure()
 ```
->- 이처럼 클로저가 
+>- 이처럼 클로저가 대입된 closure 상수를 호출 구문인 () 를 이용해서 실행할 수 있다.
 - Closure 를 직접 호출하기
+```swift
+({ () -> () in
+    print("Hello!")
+})()
+```
+>- 일회성, 클로저를 소괄호로 감싸고 끝에 호출 구문인 () 를 이용해서 실행할 수 있다.
