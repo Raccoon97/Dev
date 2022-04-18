@@ -32,7 +32,6 @@ let closure = { () -> () in
 }
 ```
 >- Closure 는 익명함수이긴 하지만 함수이다, 따라서 Swift 에서 1급 객체 함수이기 때문에, 상수에 대입이 가능하다.
-
 - Parameter 와 Return Type 이 있는 클로저
 ```swift
 let closure = { (name: String) -> String in
@@ -49,7 +48,7 @@ let closure = { (name: String) -> String in
 closure("Raccoon")
 closure(name: "Raccoon")  //error!
 ```
-
+<br><br><br>
 # 1급 객체로서의 클로저
 - 클로저를 변수나 상수에 대입할 수 있다.
 ```swift
@@ -58,7 +57,32 @@ let closure = { () -> () in
 }
 ```
 >- 대입과 동시에 클로저를 작성할 수 있다.
->- 기존에 클로저를 
-
+```swift
+let closure2 = closure
+```
+>- 기존에 클로저를 대입한 변수나 상수를 새로운 변수나 상수에 대입할 수 있다.
 - 함수의 파라미터 타입으로 클로저를 전달할 수 있다.
+```swift
+func doSomething(closure: () -> ()) {
+    closure()
+}
+
+func doSomething(closure: { () -> () in
+    print("Hello!")
+})
+```
+>- 이처럼 함수를 파라미터로 전달받는 함수가 있다, 하지만 파라미터를 클로저로 넘겨줘도 된다.
 - 함수의 반환 타입으로 클로저를 전달할 수 있다.
+```swift
+func doSomething() -> () -> () {
+    return { () -> () in
+        print("Hello!")
+    }
+}
+```
+>- 실제 Return을 할 때 함수가 아닌 클로저를 Return할 수 있다.
+```swfit
+let closure = doSomething()
+closure()
+```
+>- 또한 상수에 함수의 Return값( 클로저 )을 대입해서 위와 같이 실행할 수 있다.
