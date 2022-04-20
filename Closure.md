@@ -327,8 +327,101 @@ func doSomething(closure: @escaping () -> ()) {
 >- 중첩 함수에서 실행 후 중첩 함수를 리턴할 수 있다.
 
 <br><br><br>
-
+# Closure 의 Capture
+- Closure 란 내부 함수와 내부 함수에 영향을 미치는 주변 환경을 모두 포함한 객체이다.
+```swift
+func doSomething() {
+    var message = "Hi i am sodeul!"
+ 
+    //클로저 범위 시작
+    
+    var num = 10
+    let closure = { print(num) }
+ 
+    //클로저 범위 끝
+    
+    print(message)
+}
+// closure 라는 익명 함수는, Closure 내부에서 외부 변수인 num 이라는 변수를 사용하기 때문에 num 의 값을 Closure 내부적으로 저장하고 있다.
+// 이것을 Closure 에 의해 num의 값이 Capture 되었다 라고 한다.
+// message 변수는 Closure 내부에서 사용하지 않기 때문에 Closure 에 의해 값이 Capture 되지 않는다.
+```
+- Closure 의 값 Capture 방식
+>- Closure 는 값을 Capture 할 때, Value/Reference 타입에 관계 없이 Reference Capture 한다.
+>- 위 예시에서 살펴보면 num 은 Int 타입의 구조체 이고 이는 Value 타입이기 때문에, 값을 복사해서 저장해야 한다. 하지만 Closure 는 타입에 관계 없이 Capture 하는 값들을 Reference Capture 한다.
 
 ```swift
+func doSomething() {
+    var num: Int = 0
+    print("num check #1 = \(num)")
+    
+    let closure = {
+        print("num check #3 = \(num)")
+    }
+    
+    num = 20
+    print("num check #2 = \(num)")
+    closure()
+}
+// --> num check #1 = 0
+// --> num check #2 = 20
+// --> num check #3 = 20
 
+// Closure 는 num 이라는 외부 변수를 Closure 내부에서 사용하기에 num 을 Capture 할 것이다.
+// Closure 를 실행하기 전에 num 의 값을 외부에서 변경하면 Closure 내부에서 사용하는 num 의 값 또한 변경된다.
+
+
+func doSomething() {
+    var num: Int = 0
+    print("num check #1 = \(num)")
+    
+    let closure = {
+        num = 20
+        print("num check #3 = \(num)")
+    }
+    
+    closure()
+    print("num check #2 = \(num)")
+}
+// --> num check #1 = 0
+// --> num check #3 = 20
+// --> num check #2 = 20
+
+// Closure 내부에서 num 값을 변경하면 Closure 외부에 있는 num 의 값도 변경된다.
 ```
+
+<br><br><br>
+# Closure 의 Capture List
+- Closure 의 시작인 { 옆에 [ ] 를 이용하여 Capture 할 멤버를 나열한다. in 키워드도 함께 작성한다.
+```swift
+let closure = { [num, num2] in ...
+```
+- Capture List 를 사용하면 Value 타입의 경우 Value Capture 가 가능하게 된다.
+```swift
+func doSomething() {
+    var num: Int = 0
+    print("num check #1 = \(num)")
+    
+    let closure = { [num] in
+        print("num check #3 = \(num)")
+    }
+    
+    num = 20
+    print("num check #2 = \(num)")
+    closure()
+}
+// --> num check #1 = 0
+// --> num check #2 = 20
+// --> num check #3 = 0
+```
+>- Value 타입으로 Capture 한 경우, Closure 를 선언할 당시의 num 의 값을 Const Value Type( 상수 ) 으로 Capture 한다.
+>- 따라서 Closure 내부에서 Value Capture 된 값을 변경할 수 없다.
+```swift
+let closure = { [num, num2] in
+    num = 2 // Cannot assign to value: 'num' is an immutable capture
+```
+>- Closure 는 기본적으로 Value 타입도 Reference Capture 를 하지만, Closure Capture List 를 이용하면 Value Capture 도 가능하다.
+>- Reference 타입의 값은 Closure Capture List 에 작성한다 해도 Value Capture 가 되지 않고 Reference Capture 가 이루어진다.
+
+# Closure 와 ARC( Automatic Reference Counting )
+- 2022 04 21 계속..
