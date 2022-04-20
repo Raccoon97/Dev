@@ -220,4 +220,4 @@ doSomething { $0 + $1 + $2 }
 
 <br><br><br>
 # @autoclosure
-2022.04.18 계속..
+2022.04.20 계속..
