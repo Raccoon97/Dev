@@ -225,4 +225,110 @@ doSomething { $0 + $1 + $2 }
 func doSomething(closure: @autoclosure () -> ()) {
 }
 ```
->- 이렇게 autoclosure 를 사용하게 되면 실제로 Closure 를 전달받지는 않지만
+>- 이렇게 autoclosure 를 사용하게 되면 실제로 Closure 를 전달받지는 않지만, Closure 처럼 사용이 가능하다.
+>- 실제 Closure 와 다른 점은 실제로 전달하는 것이 아니기 때문에 파라미터로 값을 넘기는 것 처럼 ()를 통해 넘겨줄 수 있다.
+```swift
+func doSomething(closure: @autoclosure () -> ()) {
+closure()
+}
+
+doSomething(closure: 1 > 2)
+```
+>- 1 > 2는 Closure 가 아닌 일반 구문이지만 실제 함수 내에서는 일반 구문을 Closure 처럼 사용할 수 있다.
+>- 하지만 autoclosure 를 사용할 경우, 파라미터가 반드시 없어야 한다. 리턴 타입은 상관 없다.
+- @autoclosure 특징 : 지연된 실행( Delayed Evaluation )
+>- 원래 일반 구문이라면 작성되자마자 실행되어야 하지만 autoclosure 로 작성한 구문은 함수가 실행될 시점에 구문을 Closure 로 만들어 줌으로 함수 내에서 클로저를 실행할 때 까지 구문이 실행되지 않는다.
+```swift
+var names = ["Kim", "Park", "Lee"]
+
+func doSomething(@autoclosure closure: () -> String) {
+  closure()
+}
+
+names
+// ["Kim", "Park", "Lee"]
+
+doSomething(names.removeFirst())
+
+names
+// ["Park", "Lee"]
+```
+>- 지연된 실행은 autoclosure 가 아닌 일반 Closure 를 사용했을 때도 적용된다.
+```swift
+var names = ["Kim", "Park", "Lee"]
+
+let closure = {
+  names.removeFirst()
+}
+
+names
+// ["Kim", "Park", "Lee"]
+
+closure()
+
+names
+// ["Park", "Lee"]
+```
+>- 위와 같이 Closure 를 호출하기 전까지는 선언 단계에서 작성된 구문이 실행되지 않는다.
+>- 일반 구문을 autoclosure 로 래핑한 구문에서 지연된 실행이 발생하는 이유이다.
+>- autoclosure 속성은 기본적으로 @noescape 속성을 부여한다. 그 속성을 없애기 위해서는 (escaping) 을 이용한다.
+```swift
+func doSomething(@autoclosure(escaping) closure: () -> String) {
+  closure()
+}
+```
+<br><br><br>
+# @escaping
+- 지금까지의 Closure 는 모두 non-escaping Closure 이다.
+>- 함수 내부에서 직접 실행하기 위해서만 사용한다.
+>- Parameter로 받은 Closure 를 변수나 상수에 대입할 수 없다.
+>>- 실제로 변수나 상수에 Closure 를 대입하면, "Using non-escaping parameter 'closure' in a context expecting an @escaping closure" 과 같은 에러가 발생한다.
+>- 중첩 함수에서 Closure 를 사용할 경우, 중첩 함수를 리턴할 수 없다.
+>- 함수의 실행 흐름 밖으로 나갈 수 없으므로, 함수가 종료되기 전에 무조건 실행 되어야 한다.
+>>- 함수가 종료되고 나서 클로저가 실행될 수 없다.
+```swift
+func doSomething(closure: () -> ()) {
+    let f: () -> () = closure // Using non-escaping parameter 'closure' in a context expecting an @escaping closure
+}
+// 함수가 종료되고 나서 클로저가 실행될 수 없다는 에러가 발생함.
+```
+
+```swift
+func doSomething(closure: () -> ()) {
+    print("function start")
+    
+    DispatchQueue.main.asyncAfter(deadline: .now() + 10) { // Escaping closure captures non-escaping parameter 'closure'
+        closure()
+    }
+    print("function end")
+}
+// 함수가 끝나고 클로저가 실행되기 때문에 에러가 발생함.
+```
+
+```swift
+func outer(closure: () -> ()) -> () -> () {
+    func inner() {
+        closure()
+    }
+    return inner // Escaping local function captures non-escaping parameter 'closure'
+}
+// 중첩 함수 내부에서 매개 변수로 받은 클로저를 사용할 경우 중첩 함수를 리턴할 수 없기 때문에 에러가 발생함.
+```
+>- 위 에러의 원인은 non-escaping closure 의 주변 값 capture 방식에 있다.
+- 함수 실행을 벗어나서 함수가 끝난 후에도 Closure 를 실행하거나, 중첩 함수에서 실행 후 중첩 함수를 리턴하고 싶거나, 변수나 상수에 대입하고 싶은 경우에 @escaping 키워드를 사용한다.
+```swift
+func doSomething(closure: @escaping () -> ()) {
+}
+// Closure Parameter 타입 앞에 @escaping 을 붙여주면 된다.
+```
+- @escaping 키워드를 사용할 경우
+>- 변수나 상수에 Parameter 로 받은 Closure 를 대입할 수 있다.
+>- 함수가 종료된 후에도 Closure 가 실행될 수 있다.
+>- 중첩 함수에서 실행 후 중첩 함수를 리턴할 수 있다.
+
+<br><br><br>
+
+
+```swift
+
+```
