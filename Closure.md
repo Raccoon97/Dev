@@ -220,4 +220,9 @@ doSomething { $0 + $1 + $2 }
 
 <br><br><br>
 # @autoclosure
-2022.04.20 계속..
+- 파라미터로 전달된 일반 구문 또는 함수를 클로저로 래핑( Wrapping ) 하는 것
+```swift
+func doSomething(closure: @autoclosure () -> ()) {
+}
+```
+>- 이렇게 autoclosure 를 사용하게 되면 실제로 Closure 를 전달받지는 않지만
