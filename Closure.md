@@ -422,6 +422,6 @@ let closure = { [num, num2] in
 ```
 >- Closure 는 기본적으로 Value 타입도 Reference Capture 를 하지만, Closure Capture List 를 이용하면 Value Capture 도 가능하다.
 >- Reference 타입의 값은 Closure Capture List 에 작성한다 해도 Value Capture 가 되지 않고 Reference Capture 가 이루어진다.
-
+<br><br><br>
 # Closure 와 ARC( Automatic Reference Counting )
 - 2022 04 21 계속..
