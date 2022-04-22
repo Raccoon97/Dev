@@ -432,6 +432,9 @@ let closure = { [num, num2] in
 >- ARC 는 객체에 대한 Reference Count 를 관리하고 0이 되면 자동으로 메모리 해제한다.
 >- Run Time 에 계속 실행되는 게 아니라 Compile Time 에 실행된다.
 >- Retain Cycle 에는 유의해야 한다.
+>>- Retain Cycle --> 메모리를 차지하고 있는 Reference 인스턴스는 아주 강하게 연결되어 있다.
+>>- 인스턴스들 끼리 강하게 연결되어 있다가 nil 이 되면 그 아래 프로퍼티끼리 연결된 것들은 해제되지 않고 남아있게 되며 메모리 릭을 발생시킨다.
+>>- 이런 메모리 릭을 방지하고자 연결상태를 Strong, Weak, Unowned 으로 상황에 따라서 결정하는 것이 Retain Cycle 이다.
 >- Obj-C 에서는 MRC( Manual Reference Counting ), 수동으로 메모리를 관리 했다.
 ```obj-c
 - (void)setName:(NSString *)newName {
