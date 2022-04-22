@@ -540,8 +540,9 @@ func outer() {
 
 
 
-
+<br><br><br><br><br><br>
 
 - 참조
 >- [소들님](https://babbab2.tistory.com/81?category=828998)
 >- [수진님](https://sujinnaljin.medium.com/ios-arc-%EB%BF%8C%EC%8B%9C%EA%B8%B0-9b3e5dc23814)
+>- [Fomagran님](https://fomaios.tistory.com/entry/iOS-%EB%A9%B4%EC%A0%91%EC%A7%88%EB%AC%B8-Retain-Cycle%EC%9D%B4%EB%9E%80?category=890971)
