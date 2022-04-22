@@ -279,7 +279,9 @@ func doSomething(@autoclosure(escaping) closure: () -> String) {
 ```
 <br><br><br>
 # @escaping
-- 지금까지의 Closure 는 모두 non-escaping Closure 이다.
+- 지금까지의 Closure 는 모두 non-escaping Closure 이다, @escaping 키워드가 없는 Closure 는 모두 non-escaping Closure 이다.
+- non-escaping Closure 는 함수 내부에서만 쓰이기 때문에 메모리 관리가 용이해 성능이 향상되며 함수가 종료됨과 동시에 Closure 도 사용이 끝난다.
+- escaping 의 경우, 함수가 종료되더라도 실제 Closure 가 사용되지 않을 때 까지 메모리를 추적해줘야 한다.
 >- 함수 내부에서 직접 실행하기 위해서만 사용한다.
 >- Parameter로 받은 Closure 를 변수나 상수에 대입할 수 없다.
 >>- 실제로 변수나 상수에 Closure 를 대입하면, "Using non-escaping parameter 'closure' in a context expecting an @escaping closure" 과 같은 에러가 발생한다.
