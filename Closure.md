@@ -1,5 +1,4 @@
-🏠   [Go Main](https://github.com/Raccoon97/Swift/blob/main/README.md)   🏠
-
+# 🏠   [Go Main](https://github.com/Raccoon97/Swift/blob/main/README.md)   🏠
 - [Closure](https://github.com/Raccoon97/Swift/edit/main/Closure.md#closure)
 - [Closure의 표현식](https://github.com/Raccoon97/Swift/edit/main/Closure.md#closure%EC%9D%98-%ED%91%9C%ED%98%84%EC%8B%9D)
 - [1급 객체로서의 Closure](https://github.com/Raccoon97/Swift/edit/main/Closure.md#1%EA%B8%89-%EA%B0%9D%EC%B2%B4%EB%A1%9C%EC%84%9C%EC%9D%98-closure)
@@ -12,6 +11,12 @@
 - [Closure 의 Capture List](https://github.com/Raccoon97/Swift/blob/main/Closure.md#closure-%EC%9D%98-capture-list)
 - [Closure 와 ARC( Automatic Reference Counting )](https://github.com/Raccoon97/Swift/blob/main/Closure.md#closure-%EC%99%80-arc-automatic-reference-counting-)
 - [Named Closure](https://github.com/Raccoon97/Swift/blob/main/Closure.md#named-closure)
+
+
+
+<br><br><br>
+
+
 
 # Closure
 - Named Closure
@@ -63,7 +68,13 @@ let closure = { (name: String) -> String in
 closure("Raccoon")
 closure(name: "Raccoon")  //error!
 ```
+
+
+
 <br><br><br>
+
+
+
 # 1급 객체로서의 Closure
 - Closure 를 변수나 상수에 대입할 수 있다.
 ```swift
@@ -102,7 +113,13 @@ closure()
 ```
 >- 또한 상수에 함수의 Return 값( Closure )을 대입해서 위와 같이 실행할 수 있다.
 
+
+
+
 <br><br><br>
+
+
+
 # Closure 실행하기
 - Closure 가 대입된 변수나 상수로 호출하기
 ```swift
@@ -121,7 +138,13 @@ closure()
 ```
 >- 일회성, 클로저를 소괄호로 감싸고 끝에 호출 구문인 () 를 이용해서 실행할 수 있다.
 
+
+
+
 <br><br><br>
+
+
+
 # Closure 의 경량화
 - Trailling Closure
 >- 함수의 마지막 Parameter가 Closure 일 때, 이를 Parameter 형식이 아닌 함수 뒤에 붙여 사용하는 문법, 이 때, Argument Label 은 생략된다.
@@ -181,7 +204,11 @@ fetchData(success:  { () -> () in
 // 마지막 Parameter 만 Argument Label 을 생략할 수 있다.
 ```
 
+
+
 <br><br><br>
+
+
 
 # Closure의 경량 문법
 - 문법을 최적화하여 Closure 를 간단하게 쓸 수 있는 것
@@ -233,7 +260,12 @@ doSomething { $0 + $1 + $2 }
 ```
 >- Closure를 최종적으로 경량화 시킨 모습
 
+
+
 <br><br><br>
+
+
+
 # @autoclosure
 - 파라미터로 전달된 일반 구문 또는 함수를 클로저로 래핑( Wrapping ) 하는 것
 ```swift
@@ -292,7 +324,13 @@ func doSomething(@autoclosure(escaping) closure: () -> String) {
   closure()
 }
 ```
+
+
+
 <br><br><br>
+
+
+
 # @escaping
 - 지금까지의 Closure 는 모두 non-escaping Closure 이다, @escaping 키워드가 없는 Closure 는 모두 non-escaping Closure 이다.
 - non-escaping Closure 는 함수 내부에서만 쓰이기 때문에 메모리 관리가 용이해 성능이 향상되며 함수가 종료됨과 동시에 Closure 도 사용이 끝난다.
@@ -343,7 +381,12 @@ func doSomething(closure: @escaping () -> ()) {
 >- 함수가 종료된 후에도 Closure 가 실행될 수 있다.
 >- 중첩 함수에서 실행 후 중첩 함수를 리턴할 수 있다.
 
+
+
 <br><br><br>
+
+
+
 # Closure 의 Capture
 - Closure 란 내부 함수와 내부 함수에 영향을 미치는 주변 환경을 모두 포함한 객체이다.
 ```swift
@@ -407,7 +450,12 @@ func doSomething() {
 // Closure 내부에서 num 값을 변경하면 Closure 외부에 있는 num 의 값도 변경된다.
 ```
 
+
+
 <br><br><br>
+
+
+
 # Closure 의 Capture List
 - Closure 의 시작인 { 옆에 [ ] 를 이용하여 Capture 할 멤버를 나열한다. in 키워드도 함께 작성한다.
 ```swift
@@ -538,7 +586,12 @@ class Human {
 >- Closure 를 Lazy Initialization 으로 선언하여 강한 순환 참조가 일어난 경우, 인스턴스가 존재해야만 초기화가 가능하고, 이 때는 self 에 값이 있다고 가정하기 때문에 unowned 를 Optional Binding 을 하지 않고 사용할 수 있다.
 >>- Swift 5.0 부터는 unowned 도 Optional Type 이 되지만, Capture List 로 동작할 땐 Non-Optional Type 이 되는 듯 하다.
 
+
+
 <br><br><br>
+
+
+
 
 # Named Closure
 - Named Closure 는 전역 함수, 중첩 함수 를 뜻한다.
@@ -558,6 +611,9 @@ func outer() {
 
 
 <br><br><br><br><br><br>
+
+
+
 
 - 참조
 >- [소들님](https://babbab2.tistory.com/81?category=828998)
