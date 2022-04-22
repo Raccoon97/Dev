@@ -522,7 +522,9 @@ class Human {
 >- weak 의 경우 nil 을 할당받을 가능성이 있기에 Optional Type 으로 처리해줘야 하지만 unowned 의 경우엔 Non-Optional Type 으로 사용할 수 있다.
 >- Closure 를 Lazy Initialization 으로 선언하여 강한 순환 참조가 일어난 경우, 인스턴스가 존재해야만 초기화가 가능하고, 이 때는 self 에 값이 있다고 가정하기 때문에 unowned 를 Optional Binding 을 하지 않고 사용할 수 있다.
 >>- Swift 5.0 부터는 unowned 도 Optional Type 이 되지만, Capture List 로 동작할 땐 Non-Optional Type 이 되는 듯 하다.
+
 <br><br><br>
+
 # Named Closure
 - Named Closure 는 전역 함수, 중첩 함수 를 뜻한다.
 >- 전역 함수는 주변의 어떠한 값도 Capture 하지 않는다.
