@@ -426,7 +426,26 @@ let closure = { [num, num2] in
 >- Reference 타입의 값은 Closure Capture List 에 작성한다 해도 Value Capture 가 되지 않고 Reference Capture 가 이루어진다.
 <br><br><br>
 # Closure 와 ARC( Automatic Reference Counting )
-- ARC --> 인스턴스의 Reference Count 를 자동으로 계산하여 메모리를 관리하는 방법.
+- ARC
+>- WWDC2021 에서 ARC세션 - https://developer.apple.com/videos/play/wwdc2021/10216/
+>- 인스턴스의 Reference Count 를 자동으로 계산하여 메모리를 관리하는 방법.
+>- ARC 는 객체에 대한 Reference Count 를 관리하고 0이 되면 자동으로 메모리 해제한다.
+>- Run Time 에 계속 실행되는 게 아니라 Compile Time 에 실행된다.
+>- Retain Cycle 에는 유의해야 한다.
+>- Obj-C 에서는 MRC( Manual Reference Counting ), 수동으로 메모리를 관리 했다.
+```obj-c
+- (void)setName:(NSString *)newName {
+  [newName retain];
+  [name release];
+  name = newName;
+}
+// retain : retain count( Reference Count ) 증가를 통해 현재 Scope 에서 객체가 유지되는 것을 보장
+// release : retain count( Reference Count ) 를 감소시킨다, retain 후 필요없어질 때 release 한다.
+```
+>- 수동적인 MRC 와는 다르게 ARC 는 Compile Time 에 자동으로 retain, release 를 적절한 위치에 삽입하는 방식이다.
+>>- 동적 할당으로 object 가 생성되면 해당 정보는 HeapObject 라는 struct 로 관리된다.
+>>- HeapObject 안에는 Reference Count 도 포함된다.
+>>- Class 에 대한 HeapObject 를 통해 Reference Count 를 관리할 수 있다.
 ```swift
 class Human {
     var name = ""
@@ -515,3 +534,11 @@ func outer() {
 }
 ```
 >- 위 코드에서 inner() 라는 중첩 함수는 outer() 함수의 num 값을 Reference Capture 하게 된다.
+
+
+
+
+
+- 참조
+>- [소들님](https://babbab2.tistory.com/81?category=828998)
+>- [님](https://sujinnaljin.medium.com/ios-arc-%EB%BF%8C%EC%8B%9C%EA%B8%B0-9b3e5dc23814)
