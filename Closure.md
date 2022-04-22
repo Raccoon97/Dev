@@ -541,4 +541,4 @@ func outer() {
 
 - 참조
 >- [소들님](https://babbab2.tistory.com/81?category=828998)
->- [님](https://sujinnaljin.medium.com/ios-arc-%EB%BF%8C%EC%8B%9C%EA%B8%B0-9b3e5dc23814)
+>- [수진님](https://sujinnaljin.medium.com/ios-arc-%EB%BF%8C%EC%8B%9C%EA%B8%B0-9b3e5dc23814)
