@@ -424,4 +424,92 @@ let closure = { [num, num2] in
 >- Reference 타입의 값은 Closure Capture List 에 작성한다 해도 Value Capture 가 되지 않고 Reference Capture 가 이루어진다.
 <br><br><br>
 # Closure 와 ARC( Automatic Reference Counting )
-- 2022 04 21 계속..
+- ARC --> 인스턴스의 Reference Count 를 자동으로 계산하여 메모리를 관리하는 방법.
+```swift
+class Human {
+    var name = ""
+    lazy var getName: () -> String = {
+        return self.name
+    }
+    
+    init(name: String) {
+        self.name = name
+    }
+ 
+    deinit {
+        print("Human Deinit!")
+    }
+}
+// Closure 를 호출 시에만 초기화 되게끔 lazy 키워드를 사용했다.
+
+var name: Human? = .init(name: "Hong-Gildong")
+print(name!.getName())
+// name 이라는 인스턴스를 만들고 Closure 로 작성되어 있는 getName 이란 지연 저장 프로퍼티를 호출했다.
+// --> Hong-Gildong
+
+name = nil
+
+// name 인스턴스가 필요 없어서 nil을 할당을 했으니, 인스턴스의 Reference Count 가 0이 되어 deinit 이 호출되어야 한다.
+// deinit 함수가 호출되지 않았다.
+```
+- Closure 의 강한 순환 참조
+>- Closure 는 Reference 타입으로 Heap 에 존재한다.
+>- 위 코드에서 생성한 human 이라는 인스턴스는 getName 을 호출하는 순간 그 Closure 가 Heap 에 할당되며, 이 Closure 를 참조하게 된다.
+>- lazy 키워드를 사용하여 인스턴스 생성 직후가 아닌, 호출되순 순간에 Heap 에 할당된다.
+>- getName 이라는 Closure 는 self 를 통해 Human 인스턴스의 프로퍼티에 접근하고 있으며, Closure 는 값을 Capture 할 때, Strong Capture를 하게 된다.
+>- 따라서 이 때 Human 인스턴스의 Reference Count 가 증가한다.
+>- * Human 인스턴스는 Closure 를 참조하고, Closure 는 Human 인스턴스의 변수를 참조하기 때문에 둘 다 메모리에서 헤제되지 않는 강한 순환 참조가 발생한다.
+>- 강한 순환 참조는 weak, unowned 를 통해 해결할 수 있다.
+- Closure 의 강한 순환 참조 해결법
+>- Closure 가 Property 에 접근할 때 self 를 참조하면서 문제가 발생했기 때문에 self 에 대한 참조를 Closure Capture List 를 이용해 weak, unowned 로 Capture 한다.
+```swift
+
+class Human {
+    lazy var getName: () -> String? = { [weak self] in
+        return self?.name
+    }
+    
+    init(name: String) {
+        self.name = name
+    }
+ 
+    deinit {
+        print("Human Deinit!")
+    }
+}
+// weak 를 사용해서 Capture한 self 
+
+class Human {
+    lazy var getName: () -> String = { [unowned self] in
+        return self.name
+    }
+    
+    init(name: String) {
+        self.name = name
+    }
+ 
+    deinit {
+        print("Human Deinit!")
+    }
+}
+// unowned 를 사용해서 Capture한 self 
+```
+>- 이렇게 하면 인스턴스의 Reference Count 가 0이 되면서 deinit 이 정상적으로 출력된다.
+>- weak 의 경우 nil 을 할당받을 가능성이 있기에 Optional Type 으로 처리해줘야 하지만 unowned 의 경우엔 Non-Optional Type 으로 사용할 수 있다.
+>- Closure 를 Lazy Initialization 으로 선언하여 강한 순환 참조가 일어난 경우, 인스턴스가 존재해야만 초기화가 가능하고, 이 때는 self 에 값이 있다고 가정하기 때문에 unowned 를 Optional Binding 을 하지 않고 사용할 수 있다.
+>>- Swift 5.0 부터는 unowned 도 Optional Type 이 되지만, Capture List 로 동작할 땐 Non-Optional Type 이 되는 듯 하다.
+<br><br><br>
+# Named Closure
+- Named Closure 는 전역 함수, 중첩 함수 를 뜻한다.
+>- 전역 함수는 주변의 어떠한 값도 Capture 하지 않는다.
+>- 중첩 함수는 자신을 포함하고 있는 함수의 값을 Capture 한다.
+```swift
+func outer() {
+    var num: Int = 0
+    
+    func inner() {
+        print(num)
+    }
+}
+```
+>- 위 코드에서 inner() 라는 중첩 함수는 outer() 함수의 num 값을 Reference Capture 하게 된다.
