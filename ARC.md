@@ -60,4 +60,4 @@ reference2 = nil
 reference3 = nil
 // Prints "John Appleseed is being deinitialized"
 ```
-- 마지막 세 번째 변수에 nil 을 할당하여 마지막 강력한 참조를 끊게 되면 디이니셜라이저가 호출되면서 메시지가 출력된다, 
+- 마지막 세 번째 변수에 nil 을 할당하여 마지막 강력한 참조를 끊게 되면 이제 Person 인스턴스와 연결된 강력한 참조는 하나도 없으므로 디이니셜라이저가 호출되면서 메시지가 출력된다.
