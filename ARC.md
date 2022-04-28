@@ -66,4 +66,6 @@ reference3 = nil
 <br><br><br>
 # 클래스 인스턴스 간의 Strong Reference Cycle
 - 두 개 이상의 클래스 인스턴스를 사용해 서로에 대한 Strong Reference 를 발생시켜 각 인스턴스가 다른 인스턴스를 계속 유지시키는 경우를 Strong Reference Cycle 이라고 하며, 인스턴스의 Strong Reference 가 없어지지 않도록 코드를 작성할 수 있다.
-- Strong Reference Cycle 은 
+- 클래스 간의 관계 중 일부를 Strong Reference 가 아닌 Weak Reference, Unowned Reference 로 정의하여 Strong Reference Cycle 를 해결할 수 있다.
+>- [Resolving Strong Reference Cycles Between Class Instances](https://docs.swift.org/swift-book/LanguageGuide/AutomaticReferenceCounting.html#ID52)
+- 아래 예제는 어떻게 Strong Reference Cycle 이 발생하는지 보여준다.
