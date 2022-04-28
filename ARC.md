@@ -81,11 +81,11 @@ class Person {
 class Apartment {
     let unit: String
     init(unit: String) { self.unit = unit }
-    var tenant: Person?
+    var tennant: Person?
     deinit { print("Apartment \(unit) is being deinitialized") }
 }
 ```
-- Person 인스턴스에는 필수적으로 name, 선택적으로 apartment 프로퍼티를.   Apartment 인스턴스에는 필수적으로 unit, 선택적으로 tenant 프로퍼티를 가진다.
+- Person 인스턴스에는 필수적으로 name, 선택적으로 apartment 프로퍼티를.   Apartment 인스턴스에는 필수적으로 unit, 선택적으로 tennant 프로퍼티를 가진다.
 - 두 인스턴스 모두 메모리 할당 해제를 가시적으로 확인할 수 있는 메시지가 출력된다.
 ```swift
 var john: Person?
@@ -105,7 +105,7 @@ unit4A = Apartment(unit: "4A")
 - 이제 두 인스턴스를 서로 연결할 수 있다.
 ```swift
 john!.apartment = unit4A
-unit4A!.tenant = john
+unit4A!.tennant = john
 ```
 - 아래 이미지는 두 인스턴스를 연결한 후 Strong Reference 의 변화를 보여준다.
 
@@ -144,14 +144,14 @@ unit4A = nil
 - 프로퍼티, 변수 선언 시 앞에 weak 키워드를 배치한다.
 ```swift
 // 예시
-weak var: tenant: Person?
+weak var: tennant: Person?
 ```
 - 인스턴스를 Strong Reference 하지 않기 때문에 해당 인스턴스를 참조하는 동안 할당 해제될 수 있다.
 - ARC 는 참조하는 인스턴스가 할당 해제될 때 Weak Reference 를 nil 로 할당한다.
 - Weak Reference 는 런타임에 값을 nil 로 변경할 수 있도록 해야 하므로 항상 상수가 아닌 Optional Type 의 var 형식으로 선언된다.
 - ARC 가 Weak Reference 에 nil 을 할당할 때 Property Observer 는 호출되지 않는다. 
 >- Property Observer 는 무엇인가.. [Zedd님 블로그](https://zeddios.tistory.com/247]
-- 아래의 예시는 위의 예시와 같지만, Apartment 클래스의 tenant 프로퍼티가 Weak Reference 로 선언된다.
+- 아래의 예시는 위의 예시와 같지만, Apartment 클래스의 tennant 프로퍼티가 Weak Reference 로 선언된다.
 ```swift
 class Person {
     let name: String
@@ -163,7 +163,7 @@ class Person {
 class Apartment {
     let unit: String
     init(unit: String) { self.unit = unit }
-    weak var tenant: Person?
+    weak var tennant: Person?
     deinit { print("Apartment \(unit) is being deinitialized") }
 }
 ```
@@ -176,7 +176,7 @@ john = Person(name: "John Appleseed")
 unit4A = Apartment(unit: "4A")
 
 john!.apartment = unit4A
-unit4A!.tenant = john
+unit4A!.tennant = john
 ```
 - 아래 이미지는 두 인스턴스를 연결한 Reference 의 상태를 보여준다.
 
@@ -184,4 +184,36 @@ unit4A!.tenant = john
 
 ![image](https://docs.swift.org/swift-book/_images/weakReference01_2x.png)
 - Person 인스턴스에는 여전히 Apartment 인스턴스에 대한 Strong Reference 가 있다.
-- Apartment 인스턴스에는
+- Apartment 인스턴스에는 Person 인스턴스에 대한 Weak Reference 가 있다.
+- 즉, Person 인스턴스를 갖고 있는 john 변수를 nil 로 할당하면 더 이상 Strong Reference 가 존재하지 않게 된다.
+```swift
+john = nil
+// Prints "John Appleseed is being deinitialized"
+```
+- Person 인스턴스의 디이니셜라이저가 호출되며 메시지가 출력되었고, 더 이상 Strong Reference 가 없으므로 Apartment 인스턴스의 tennant 속성이 nil 로 바뀌게 된다.
+- 아래 이미지는 Person 인스턴스를 갖는 john 변수를 nil 로 할당한 뒤 Reference 의 변화를 보여준다.
+
+<br>
+
+![image](https://docs.swift.org/swift-book/_images/weakReference02_2x.png)
+- 이제 남아있는 유일한 Strong Reference 는 Apartment 인스턴스를 갖고 있는 unit4A 변수이다.
+```swift
+unit4A = nil
+// Prints "Apartment 4A is being deinitialized"
+```
+- Apartment 인스턴스의 디이니셜라이저가 호출되며 메시지가 출력되었고, 모든 Strong Reference 가 사라지게 되었다.
+- 아래 이미지는 Apartment 인스턴스를 갖는 unit4A 변수를 nil 로 할당한 뒤 Reference 의 변화를 보여준다.
+
+<br>
+
+![image](https://docs.swift.org/swift-book/_images/weakReference03_2x.png)
+- 다른 시스템에서의 Weak Reference
+>- Garbage Collector 를 사용하는 시스템 에서는 < Ex) Java, Python > weak 포인터가 간단한 캐싱 메커니즘을 수행하기 위해 사용된다.
+>- Garbage Collector 가 동작하면서 weak 포인터는 Strong Reference 가 없는 객체의 할당 해제를 수행하기 위해 사용된다.
+- ARC를 사용하면 Strong Reference 가 제거되는 즉시 다른 인스턴스에서 참조하는 Weak Reference 값이 할당 해제된다.
+- Strong Reference Cycle 방지 목적이 아닌 Strong Reference 가 없는 값의 할당 해제를 위해 Weak Reference 를 쓰는 것은 적합하지 않다.
+
+<br><br>
+
+## Unowned Reference
+- 계속..
