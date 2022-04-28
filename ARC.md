@@ -5,8 +5,10 @@
 - Swift 는 ARC 를 사용하여 앱의 메모리 사용량을 추적하고 관리한다.
 - 대부분의 경우 자동으로 메모리 관리가 이루어지며, ARC 는 해당 인스턴스가 더 이상 필요하지 않을 때 메모리를 자동으로 해제한다.
 >- Reference Counting 은 class 인스턴스에만 적용되며, struct 및 enum 은 Reference Type 이 아닌 Value Type 이므로 Reference 에 의해 저장 및 전달되지 않는다.
-
-![image](https://developer.apple.com/library/archive/releasenotes/ObjectiveC/RN-TransitioningToARC/Art/ARC_Illustration.jpg)
+- 아래 이미지는 기존 MRC( Manual Reference Counting ) 을 사용하여 retain/ release 코드를 넣어줬을 때와 ARC 를 사용했을 때 코드 생산성의 차이를 보여준다.
+<p align="center">
+  <img src="https://developer.apple.com/library/archive/releasenotes/ObjectiveC/RN-TransitioningToARC/Art/ARC_Illustration.jpg" alt="center" />
+</p>
 
 <br><br><br>
 # ARC 작동 방식
