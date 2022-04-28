@@ -32,12 +32,13 @@ class Person {
 }
 ```
 - Person 클래스에는 인스턴스의 생성자와, 인스턴스의 소멸자가 있다.
+- 생성자와 소멸자에는 메모리 할당과 메모리 할당 해제를 가시적으로 확인할 수 있는 메시지가 출력된다.
 ```swift
 var reference1: Person?
 var reference2: Person?
 var reference3: Person?
 ```
-- 다음 코드는 Person 클래스를 참조하는 변수를 정의한다. Optional Type 이므로 클래스 내부 프로퍼티는 nil 값으로 자동 초기화 된다.
+- Person 클래스를 참조하는 변수를 정의한다. Optional Type 이므로 내부 프로퍼티는 nil 값으로 자동 초기화 된다.
 - 미리 정의해둔 변수에 Person 인스턴스를 할당한다.
 ```swift
 reference1 = Person(name: "Raccoon97")
@@ -69,3 +70,32 @@ reference3 = nil
 - 클래스 간의 관계 중 일부를 Strong Reference 가 아닌 Weak Reference, Unowned Reference 로 정의하여 Strong Reference Cycle 를 해결할 수 있다.
 >- [Resolving Strong Reference Cycles Between Class Instances](https://docs.swift.org/swift-book/LanguageGuide/AutomaticReferenceCounting.html#ID52)
 - 아래 예제는 어떻게 Strong Reference Cycle 이 발생하는지 보여준다.
+```swift
+class Person {
+    let name: String
+    init(name: String) { self.name = name }
+    var apartment: Apartment?
+    deinit { print("\(name) is being deinitialized") }
+}
+
+class Apartment {
+    let unit: String
+    init(unit: String) { self.unit = unit }
+    var tenant: Person?
+    deinit { print("Apartment \(unit) is being deinitialized") }
+}
+```
+- Person 인스턴스에는 필수적으로 name, 선택적으로 apartment 프로퍼티를.   Apartment 인스턴스에는 필수적으로 unit, 선택적으로 tenant 프로퍼티를 가진다.
+- 두 인스턴스 모두 메모리 할당 해제를 가시적으로 확인할 수 있는 메시지가 출력된다.
+```swift
+var john: Person?
+var unit4A: Apartment?
+```
+- Person, Apartment 클래스를 참조하는 변수를 정의한다. Optional Type 이므로 내부 프로퍼티는 nil 값으로 자동 초기화 된다.
+- 미리 정의해둔 변수에 Person, Apartment 인스턴스를 할당한다.
+```swift
+john = Person(name: "John Appleseed")
+unit4A = Apartment(unit: "4A")
+```
+- 아래 
+![image](https://docs.swift.org/swift-book/_images/referenceCycle01_2x.png)
