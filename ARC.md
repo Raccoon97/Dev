@@ -97,5 +97,33 @@ var unit4A: Apartment?
 john = Person(name: "John Appleseed")
 unit4A = Apartment(unit: "4A")
 ```
-- 아래 
+- 아래 이미지는 두 인스턴스를 만들고 할당한 후 각 변수에 어떠한 Strong Reference 가 있는지 보여준다.
+
+<br>
+
 ![image](https://docs.swift.org/swift-book/_images/referenceCycle01_2x.png)
+- 이제 두 인스턴스를 서로 연결할 수 있다.
+```swift
+john!.apartment = unit4A
+unit4A!.tenant = john
+```
+- 아래 이미지는 두 인스턴스를 연결한 후 Strong Reference 의 변화를 보여준다.
+
+<br>
+
+![image](https://docs.swift.org/swift-book/_images/referenceCycle02_2x.png)
+- 이렇게 되면 두 인스턴스 사이에 Strong Reference Cycle 이 발생한다. 
+>- Person 인스턴스에 Apartment 인스턴스에 대한 Strong Reference 가,  Apartment 인스턴스에 Person 인스턴스에 대한 Strong Reference 가 발생하게 된다.
+
+```swift
+john = nil
+unit4A = nil
+```
+- 두 변수를 nil 로 할당했을 때 디이니셜라이저가 호출되지 않는다. ( 메시지가 출력되지 않음 )
+- Strong Reference Cycle 은 두 인스턴스가 메모리에서 할당 해제 되는 것을 방지하여 앱에서 메모리 누수를 일으킨다.
+- 아래 이미지는 두 변수를 nil 로 할당했을 때 Strong Reference 가 어떻게 남아있는지 보여준다.
+
+<br>
+
+![image](https://docs.swift.org/swift-book/_images/referenceCycle03_2x.png)
+- Person 인스턴스와 Apartment 인스턴스 
