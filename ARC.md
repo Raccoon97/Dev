@@ -126,4 +126,62 @@ unit4A = nil
 <br>
 
 ![image](https://docs.swift.org/swift-book/_images/referenceCycle03_2x.png)
-- Person 인스턴스와 Apartment 인스턴스 
+- Person 인스턴스와 Apartment 인스턴스 간의 Strong Reference 는 유지되며 끊을 수 없다.
+
+<br><br><br>
+# 클래스 인스턴스 간의 Strong Reference Cycle 해결
+- Swift 는 Strong Reference Cycle 을 해결하는 두 가지 방법을 제공한다
+>- Weak Reference: 한 쪽 인스턴스의 생명 주기가 더 짧은 경우 사용한다.( 먼저 할당 해제될 가능성이 높은 인스턴스 )
+>- Unowned Reference: 한 쪽 인스턴스의 생명 주기가 같거나 긴 경우 사용한다.( 더 나중에 할당 해제되거나 같이 할당 해제될 가능성이 높은 인스턴스 )
+- 두 가지 방법을 사용하면 한 인스턴스가 다른 인스턴스를 Strong Reference 하지 않고도 다른 인스턴스를 참조할 수 있다.
+- 즉, Strong Reference Cycle 이 발생되지 않고도 인스턴스가 서로를 참조할 수 있다.
+
+<br><br>
+
+## Weak Reference
+- ARC 가 참조된 인스턴스를 할당 해제하는 것을 막지 않는다.
+- Strong Reference Cycle 이 되는 것을 방지한다.
+- 프로퍼티, 변수 선언 시 앞에 weak 키워드를 배치한다.
+```swift
+// 예시
+weak var: tenant: Person?
+```
+- 인스턴스를 Strong Reference 하지 않기 때문에 해당 인스턴스를 참조하는 동안 할당 해제될 수 있다.
+- ARC 는 참조하는 인스턴스가 할당 해제될 때 Weak Reference 를 nil 로 할당한다.
+- Weak Reference 는 런타임에 값을 nil 로 변경할 수 있도록 해야 하므로 항상 상수가 아닌 Optional Type 의 var 형식으로 선언된다.
+- ARC 가 Weak Reference 에 nil 을 할당할 때 Property Observer 는 호출되지 않는다. 
+>- Property Observer 는 무엇인가.. [Zedd님 블로그](https://zeddios.tistory.com/247]
+- 아래의 예시는 위의 예시와 같지만, Apartment 클래스의 tenant 프로퍼티가 Weak Reference 로 선언된다.
+```swift
+class Person {
+    let name: String
+    init(name: String) { self.name = name }
+    var apartment: Apartment?
+    deinit { print("\(name) is being deinitialized") }
+}
+
+class Apartment {
+    let unit: String
+    init(unit: String) { self.unit = unit }
+    weak var tenant: Person?
+    deinit { print("Apartment \(unit) is being deinitialized") }
+}
+```
+- 두 변수와, 인스턴스 할당, 두 인스턴스 간의 연결은 위의 예시와 동일하다.
+```swift
+var john: Person?
+var unit4A: Apartment?
+
+john = Person(name: "John Appleseed")
+unit4A = Apartment(unit: "4A")
+
+john!.apartment = unit4A
+unit4A!.tenant = john
+```
+- 아래 이미지는 두 인스턴스를 연결한 Reference 의 상태를 보여준다.
+
+<br>
+
+![image](https://docs.swift.org/swift-book/_images/weakReference01_2x.png)
+- Person 인스턴스에는 여전히 Apartment 인스턴스에 대한 Strong Reference 가 있다.
+- Apartment 인스턴스에는
