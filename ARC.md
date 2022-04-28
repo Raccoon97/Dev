@@ -6,6 +6,8 @@
 - 대부분의 경우 자동으로 메모리 관리가 이루어지며, ARC 는 해당 인스턴스가 더 이상 필요하지 않을 때 메모리를 자동으로 해제한다.
 >- Reference Counting 은 class 인스턴스에만 적용되며, struct 및 enum 은 Reference Type 이 아닌 Value Type 이므로 Reference 에 의해 저장 및 전달되지 않는다.
 
+![image](https://developer.apple.com/library/archive/releasenotes/ObjectiveC/RN-TransitioningToARC/Art/ARC_Illustration.jpg)
+
 <br><br><br>
 # ARC 작동 방식
 - 인스턴스를 생성할 때 마다 ARC 는 해당 인스턴스에 대한 정보를 저장하기 위해 Heap 영역에 메모리를 할당한다.
@@ -208,9 +210,9 @@ unit4A = nil
 
 ![image](https://docs.swift.org/swift-book/_images/weakReference03_2x.png)
 - 다른 시스템에서의 Weak Reference
->- Garbage Collector 를 사용하는 시스템 에서는 < Ex) Java, Python > weak 포인터가 간단한 캐싱 메커니즘을 수행하기 위해 사용된다.
+>- Garbage Collector 를 사용하는 시스템 에서는 weak 포인터가 간단한 캐싱 메커니즘을 수행하기 위해 사용된다. < Ex) Java, Python >
 >- Garbage Collector 가 동작하면서 weak 포인터는 Strong Reference 가 없는 객체의 할당 해제를 수행하기 위해 사용된다.
-- ARC를 사용하면 Strong Reference 가 제거되는 즉시 다른 인스턴스에서 참조하는 Weak Reference 값이 할당 해제된다.
+- ARC를 사용하면 Strong Reference 가 제거되는 즉시 인스턴스에서 참조하는 Weak Reference 값이 할당 해제된다.
 - Strong Reference Cycle 방지 목적이 아닌 Strong Reference 가 없는 값의 할당 해제를 위해 Weak Reference 를 쓰는 것은 적합하지 않다.
 
 <br><br>
