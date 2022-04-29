@@ -148,7 +148,7 @@ unit4A = nil
 - 프로퍼티, 변수 선언 시 앞에 weak 키워드를 배치한다.
 ```swift
 // 예시
-weak var: tennant: Person?
+weak var tennant: Person?
 ```
 - 인스턴스를 Strong Reference 하지 않기 때문에 해당 인스턴스를 참조하는 동안 할당 해제될 수 있다.
 - ARC 는 참조하는 인스턴스가 할당 해제될 때 Weak Reference 를 nil 로 할당한다.
@@ -215,9 +215,56 @@ unit4A = nil
 >- Garbage Collector 를 사용하는 시스템 에서는 weak 포인터가 간단한 캐싱 메커니즘을 수행하기 위해 사용된다. < Ex) Java, Python >
 >- Garbage Collector 가 동작하면서 weak 포인터는 Strong Reference 가 없는 객체의 할당 해제를 수행하기 위해 사용된다.
 - ARC를 사용하면 Strong Reference 가 제거되는 즉시 인스턴스에서 참조하는 Weak Reference 값이 할당 해제된다.
-- Strong Reference Cycle 방지 목적이 아닌 Strong Reference 가 없는 값의 할당 해제를 위해 Weak Reference 를 쓰는 것은 적합하지 않다.
+- Strong Reference Cycle 방지 목적이 아닌 Strong Reference 가 0인 값의 할당 해제를 위해 Weak Reference 를 쓰는 것은 적합하지 않다.
 
 <br><br>
 
 ## Unowned Reference
-- 계속..
+- Weak Reference 와 마찬가지로 인스턴스를 Strong Reference 하지 않는다.
+- 다른 인스턴스의 생명 주기가 같거나 더 긴 경우에 Unowned Reference 를 사용한다.
+- 프로퍼티, 변수 선언 시 앞에 unowned 키워드를 배치한다.
+```swift
+// 예시
+unowned var tennant: Person?
+```
+- Weak Reference 는 값이 nil 이어도 괜찮지만 Unowned Reference 는 항상 값이 있어야 한다.
+- ARC 는 Unowned Reference 의 값을 nil 로 설정하지 않는다.
+>- 항상 할당 해제되지 않는다고 확신하는 인스턴스에만 Unowned Reference 를 사용한다.
+>- 인스턴스가 할당 해제된 후 Unowned Reference 값에 엑세스 하게 되면 런타임 오류가 발생한다.
+- 아래 예시는 어떻게 Unowned Reference 를 사용하는 방법을 보여준다.
+- Customer, CreditCard 라는 두 개의 클래스를 정의하는데 CreditCard 클래스는 항상 Customer 와 연결되며 CreditCard 인스턴스는 Unowned Reference 를 통해 언제든지 할당 해제될 수 있다.
+- CreditCard 인스턴스는 숫자 값과 Customer 인스턴스를 이니셜라이저에 전달 해야만 생성이 가능하다.
+```swift
+class Customer {
+    let name: String
+    var card: CreditCard?
+    init(name: String) {
+        self.name = name
+    }
+    deinit { print("\(name) is being deinitialized") }
+}
+
+class CreditCard {
+    let number: UInt64
+    unowned let customer: Customer
+    init(number: UInt64, customer: Customer) {
+        self.number = number
+        self.customer = customer
+    }
+    deinit { print("Card #\(number) is being deinitialized") }
+}
+```
+>- CreditCard 클래스의 numer 프로퍼티는 32비트 및 64비트 시스템에서 16자리의 카드 번호를 저장할 수 있을 만큼 Int 가 아닌 UInt64 로 정의한다.
+- Customer 클래스를 사용하기 위해 변수를 선언한다.
+```swift
+var john
+```
+- Customer 인스턴스를 만들고 card 프로퍼티에 CreditCard 인스턴스를 할당한다.
+```swift
+john = Customer(name: "John Appleseed")
+john!.card = CreditCard(number: 1234_5678_9012_3456, customer: john!)
+```
+- 아래 이미지는 두 인스턴스를 연결했을 때 Reference 상황을 보여준다.
+<br>
+
+![image](https://docs.swift.org/swift-book/_images/unownedReference01_2x.png)
