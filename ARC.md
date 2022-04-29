@@ -8,9 +8,8 @@
 >- [Unowned Reference](https://github.com/Raccoon97/Swift/blob/main/ARC.md#unowned-reference)
 >- [Unowned Optional Reference](https://github.com/Raccoon97/Swift/blob/main/ARC.md#unowned-optional-reference)
 >- [Unowned Reference 와 암시적으로 래핑 해제 된 Optional Properties](https://github.com/Raccoon97/Swift/blob/main/ARC.md#unowned-reference-%EC%99%80-%EC%95%94%EC%8B%9C%EC%A0%81%EC%9C%BC%EB%A1%9C-%EB%9E%98%ED%95%91-%ED%95%B4%EC%A0%9C-%EB%90%9C-optional-properties)
-- [Closure 의 Capture List](https://github.com/Raccoon97/Swift/blob/main/Closure.md#closure-%EC%9D%98-capture-list)
-- [Closure 와 ARC( Automatic Reference Counting )](https://github.com/Raccoon97/Swift/blob/main/Closure.md#closure-%EC%99%80-arc-automatic-reference-counting-)
-- [Named Closure](https://github.com/Raccoon97/Swift/blob/main/Closure.md#named-closure)
+- [Closure 를 위한 Strong Reference Cycle](https://github.com/Raccoon97/Swift/blob/main/ARC.md#closure-%EB%A5%BC-%EC%9C%84%ED%95%9C-strong-reference-cycle)
+- [Clousre 에 대한 Strong Reference Cycle 해결 - 작성중.. 2022_04_29](https://github.com/Raccoon97/Swift/blob/main/ARC.md#clousre-%EC%97%90-%EB%8C%80%ED%95%9C-strong-reference-cycle-%ED%95%B4%EA%B2%B0)
 
 
 
