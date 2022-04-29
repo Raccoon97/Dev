@@ -1,4 +1,20 @@
 # 🏠   [Go Main](https://github.com/Raccoon97/Swift/blob/main/README.md)   🏠
+- [ARC( Automatic Reference Counting )](https://github.com/Raccoon97/Swift/blob/main/ARC.md#arc-automatic-reference-counting-)
+- [ARC 작동 방식](https://github.com/Raccoon97/Swift/blob/main/ARC.md#arc-%EC%9E%91%EB%8F%99-%EB%B0%A9%EC%8B%9D)
+- [ARC 작동 방식의 예](https://github.com/Raccoon97/Swift/blob/main/ARC.md#arc-%EC%9E%91%EB%8F%99-%EB%B0%A9%EC%8B%9D%EC%9D%98-%EC%98%88)
+- [클래스 인스턴스 간의 Strong Reference Cycle](https://github.com/Raccoon97/Swift/blob/main/ARC.md#%ED%81%B4%EB%9E%98%EC%8A%A4-%EC%9D%B8%EC%8A%A4%ED%84%B4%EC%8A%A4-%EA%B0%84%EC%9D%98-strong-reference-cycle)
+- [클래스 인스턴스 간의 Strong Reference Cycle 해결](https://github.com/Raccoon97/Swift/blob/main/ARC.md#%ED%81%B4%EB%9E%98%EC%8A%A4-%EC%9D%B8%EC%8A%A4%ED%84%B4%EC%8A%A4-%EA%B0%84%EC%9D%98-strong-reference-cycle-%ED%95%B4%EA%B2%B0)
+>- [Weak Reference](https://github.com/Raccoon97/Swift/blob/main/ARC.md#weak-reference)
+>- [Unowned Reference](https://github.com/Raccoon97/Swift/blob/main/ARC.md#unowned-reference)
+>- [Unowned Optional Reference](https://github.com/Raccoon97/Swift/blob/main/ARC.md#unowned-optional-reference)
+>- [Unowned Reference 와 암시적으로 래핑 해제 된 Optional Properties](https://github.com/Raccoon97/Swift/blob/main/ARC.md#unowned-reference-%EC%99%80-%EC%95%94%EC%8B%9C%EC%A0%81%EC%9C%BC%EB%A1%9C-%EB%9E%98%ED%95%91-%ED%95%B4%EC%A0%9C-%EB%90%9C-optional-properties)
+- [Closure 의 Capture List](https://github.com/Raccoon97/Swift/blob/main/Closure.md#closure-%EC%9D%98-capture-list)
+- [Closure 와 ARC( Automatic Reference Counting )](https://github.com/Raccoon97/Swift/blob/main/Closure.md#closure-%EC%99%80-arc-automatic-reference-counting-)
+- [Named Closure](https://github.com/Raccoon97/Swift/blob/main/Closure.md#named-closure)
+
+
+
+
 
 <br><br><br>
 # ARC( Automatic Reference Counting )
@@ -349,3 +365,164 @@ department.courses = [intro, intermediate, advanced]
 >- 각 인스턴스의 프로퍼티는 항상 값을 가져야 하며, 초기화가 완료되면 각 인스턴스의 프로퍼티는 nil 이면 안된다.
 >>- 한 클래스의 Unowned 프로퍼티를 다른 클래스의 암시적으로 래핑되지 않은 Optional 프로퍼티와 결합으로 해결이 가능하다. 두 프로퍼티 모두 Optional Wrapping 없이 직접 엑세스 할 수 있으며 Reference Cycle 이 발생하는 것일 피할 수 있다.
 
+- 아래 예시는 Country, City 두 클래스를 정의하며 각각 클래스는 다른 클래스의 인스턴스를 프로퍼티로 저장한다.
+- 모든 Country 는 항상 City 가 있어야 하며 모든 City 는 항상 Country 에 속해야 한다.
+```swift
+class Country {
+    let name: String
+    var capitalCity: City!
+    init(name: String, capitalName: String) {
+        self.name = name
+        self.capitalCity = City(name: capitalName, country: self)
+    }
+}
+
+class City {
+    let name: String
+    unowned let country: Country
+    init(name: String, country: Country) {
+        self.name = name
+        self.country = country
+    }
+}
+```
+
+- City 의 이니셜라이저는 Country 이니셜라이저 내에서 호출된다.
+- 이렇게 하면 Country 이니셜라이저가 호출되기 전까지 City 이니셜라이저는 Country 전달될 수 없다.
+- Country 의 프로퍼티인 capitalCity 뒤에 ! 를 붙여서 암시적으로 래핑되지 않은 Optional 프로퍼티로 선언한다.
+- 이렇게 하면 capitalCity 에는 nil 값이 있으므로 Country 의 name, capitalName 을 정하는 즉시 Country 의 이니셜라이저가 호출된다.
+- Strong Reference Cycle 을 발생시키지 않고도 Country 및 City 인스턴스를 만들 수 있다.
+
+```swift
+var country = Country(name: "Canada", capitalName: "Ottawa")
+print("\(country.name)'s capital city is called \(country.capitalCity.name)")
+// Prints "Canada's capital city is called Ottawa"
+```
+
+<br><br><br>
+
+# Closure 를 위한 Strong Reference Cycle
+- 클래스 인스턴스 프로퍼티에 Closure 를 할당하고 해당 Closure 의 본문이 인스턴스를 Capture 하는 경우에도 Strong Reference Cycle 이 발생할 수 있다.
+- 이 Capture 는 Closure 가 인스턴스의 self.property, self.method 를 Capture 해서 발생하는데 self 가 Strong Reference Cycle 을 발생시킨다.
+-  이 Strong Reference Cycle 은 Closure 가 Class 와 같은 Reference 유형이기 때문에 발생한다.
+>- 프로퍼티에 Closure 를 할당하면 해당 Closure 에 대한 Reference 를 할당하는 것이다.
+- 두 개의 Strong Reference Cycle 이 서로를 유지하고 있는데 이번엔 Class - Class 가 아닌 Class - Closure 인 경우이다.
+- Swift 는 Closure Capture List 라는 솔루션을 제공한다.
+- 아래 예시는 Class - Closure 간 Strong Reference Cycle 의 발생을 보여준다.
+```swift
+class HTMLElement {
+
+    let name: String
+    let text: String?
+
+    lazy var asHTML: () -> String = {
+        if let text = self.text {
+            return "<\(self.name)>\(text)</\(self.name)>"
+        } else {
+            return "<\(self.name) />"
+        }
+    }
+
+    init(name: String, text: String? = nil) {
+        self.name = name
+        self.text = text
+    }
+
+    deinit {
+        print("\(name) is being deinitialized")
+    }
+
+}
+
+var paragraph: HTMLElement? = HTMLElement(name: "p", text: "hello, world")
+print(paragraph!.asHTML())
+// Prints "<p>hello, world</p>"
+```
+- HTMLElement Class 는 HTMLElement 인스턴스와 기본값으로 사용되는 Closure 사이에 Strong Reference Cycle 을 발생시킨다.
+- 아래 이미지는 발생된 Strong Reference Cycle 을 보여준다.
+
+<br>
+
+![image](https://docs.swift.org/swift-book/_images/closureReferenceCycle01_2x.png)
+>- Clousre 가 여러 번 Reference 하더라도 인스턴스의 self 에 대한 Strong Reference 는 하나만 Capture 된다.
+- paragraph 변수를 nil 로 할당하고 Strong Reference 를 끊는다 해도 Closure 와 HTMLElement 인스턴스 사이의 Strong Reference Cycle 은 사라지지 않는다.
+```swift
+paragraph = nil
+```
+- HTMLElement 의 디이니셜라이저 메시지는 출력되지 않았다.
+
+<br><br><br>
+# Clousre 에 대한 Strong Reference Cycle 해결
+- Clousre Capture List 를 정의하여 Closure 와 Class 인스턴스 간의 Strong Reference Cycle 을 해결한다.
+- Captue List 는 Closure 본문 내에서 하나 이상의 Reference Type 을 Capture 할 때 사용할 규칙을 정의한다.
+
+
+
+
+Swift requires you to write self.someProperty or self.someMethod() (rather than just someProperty or someMethod()) whenever you refer to a member of self within a closure. This helps you remember that it’s possible to capture self by accident.
+
+Defining a Capture List
+Each item in a capture list is a pairing of the weak or unowned keyword with a reference to a class instance (such as self) or a variable initialized with some value (such as delegate = self.delegate). These pairings are written within a pair of square braces, separated by commas.
+
+Place the capture list before a closure’s parameter list and return type if they’re provided:
+
+lazy var someClosure = {
+    [unowned self, weak delegate = self.delegate]
+    (index: Int, stringToProcess: String) -> String in
+    // closure body goes here
+}
+If a closure doesn’t specify a parameter list or return type because they can be inferred from context, place the capture list at the very start of the closure, followed by the in keyword:
+
+lazy var someClosure = {
+    [unowned self, weak delegate = self.delegate] in
+    // closure body goes here
+}
+Weak and Unowned References
+Define a capture in a closure as an unowned reference when the closure and the instance it captures will always refer to each other, and will always be deallocated at the same time.
+
+Conversely, define a capture as a weak reference when the captured reference may become nil at some point in the future. Weak references are always of an optional type, and automatically become nil when the instance they reference is deallocated. This enables you to check for their existence within the closure’s body.
+
+NOTE
+
+If the captured reference will never become nil, it should always be captured as an unowned reference, rather than a weak reference.
+
+An unowned reference is the appropriate capture method to use to resolve the strong reference cycle in the HTMLElement example from Strong Reference Cycles for Closures above. Here’s how you write the HTMLElement class to avoid the cycle:
+
+class HTMLElement {
+
+    let name: String
+    let text: String?
+
+    lazy var asHTML: () -> String = {
+        [unowned self] in
+        if let text = self.text {
+            return "<\(self.name)>\(text)</\(self.name)>"
+        } else {
+            return "<\(self.name) />"
+        }
+    }
+
+    init(name: String, text: String? = nil) {
+        self.name = name
+        self.text = text
+    }
+
+    deinit {
+        print("\(name) is being deinitialized")
+    }
+
+}
+This implementation of HTMLElement is identical to the previous implementation, apart from the addition of a capture list within the asHTML closure. In this case, the capture list is [unowned self], which means “capture self as an unowned reference rather than a strong reference”.
+
+You can create and print an HTMLElement instance as before:
+
+var paragraph: HTMLElement? = HTMLElement(name: "p", text: "hello, world")
+print(paragraph!.asHTML())
+// Prints "<p>hello, world</p>"
+Here’s how the references look with the capture list in place:
+
+../_images/closureReferenceCycle02_2x.png
+This time, the capture of self by the closure is an unowned reference, and doesn’t keep a strong hold on the HTMLElement instance it has captured. If you set the strong reference from the paragraph variable to nil, the HTMLElement instance is deallocated, as can be seen from the printing of its deinitializer message in the example below:
+
+paragraph = nil
+// Prints "p is being deinitialized"
