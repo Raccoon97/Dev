@@ -231,7 +231,7 @@ unowned var tennant: Person?
 - ARC 는 Unowned Reference 의 값을 nil 로 설정하지 않는다.
 >- 항상 할당 해제되지 않는다고 확신하는 인스턴스에만 Unowned Reference 를 사용한다.
 >- 인스턴스가 할당 해제된 후 Unowned Reference 값에 엑세스 하게 되면 런타임 오류가 발생한다.
-- 아래 예시는 어떻게 Unowned Reference 를 사용하는 방법을 보여준다.
+- 아래 예시는 안전하게 Unowned Reference 를 사용하는 방법을 보여준다.
 - Customer, CreditCard 라는 두 개의 클래스를 정의하는데 CreditCard 클래스는 항상 Customer 와 연결되며 CreditCard 인스턴스는 Unowned Reference 를 통해 언제든지 할당 해제될 수 있다.
 - CreditCard 인스턴스는 숫자 값과 Customer 인스턴스를 이니셜라이저에 전달 해야만 생성이 가능하다.
 ```swift
@@ -268,3 +268,84 @@ john!.card = CreditCard(number: 1234_5678_9012_3456, customer: john!)
 <br>
 
 ![image](https://docs.swift.org/swift-book/_images/unownedReference01_2x.png)
+- Customer 인스턴스에 CreditCard 인스턴스에 대한 Strong Reference 가 있다.
+- CreditCard 인스턴스에 Customer 인스턴스에 대한 Unowned Reference 가 있다.
+- Unowned Reference 때문에 john 변수에 nil 을 할당하면 더이상 Strong Reference 가 없게 된다.
+
+```swift
+john = nil
+// Prints "John Appleseed is being deinitialized"
+// Prints "Card #1234567890123456 is being deinitialized"
+```
+- Customer 인스턴스에 더이상 Strong Reference 가 없기 때문에 할당이 해제된다.
+- CreditCard 인스턴스를 이어주던 Customer 의 Strong Reference 가 없기 때문에 CreditCard 인스턴스도 할당이 해제된다.
+>- Swift 는 성능상의 이유로 런타임 안전검사를 비활성화 하는 경우 Unsafe Unowned Reference 를 제공한다.
+>- 사용자는 해당 Unsafe Unowned Reference 를 점검할 책임을 갖는다.
+>- Unsafe Unowned Reference 를 사용하여 코드를 짰을 때, 만약 Unowned Reference 를 사용한 인스턴스가 할당이 해제된 후 엑세스하려고 하면 프로그램은 그 인스턴스가 있던 메모리 위치에 엑세스 하려고 하는데 이는 안전하지 않은 작업이다. 
+
+<br><br>
+
+## Unowned Optional Reference
+- 클래스에 대한 Optional Reference 를 unowned 로 표시할 수 있다.
+- ARC의 관점에서 Unowned Reference 와 Weak Reference 는 동일한 맥락에서 사용이 가능하다.
+- 동일한 맥락에서 사용이 가능하지만 Unowned Reference 를 사용할 때는 항상 유효한 개체를 Reference 하거나 nil 인지 확인해야 한다.
+- 아래 예시는 Unowned Optional Reference 의 예시이다.
+```swift
+class Department {
+    var name: String
+    var courses: [Course]
+    init(name: String) {
+        self.name = name
+        self.courses = []
+    }
+}
+
+class Course {
+    var name: String
+    unowned var department: Department
+    unowned var nextCourse: Course?
+    init(name: String, in department: Department) {
+        self.name = name
+        self.department = department
+        self.nextCourse = nil
+    }
+}
+```
+- Department 클래스와 Course 클래스가 있으며 Course 클래스 내부에는 Unowned Reference 가 2가지 있다.
+```swift
+let department = Department(name: "Horticulture")
+
+let intro = Course(name: "Survey of Plants", in: department)
+let intermediate = Course(name: "Growing Common Herbs", in: department)
+let advanced = Course(name: "Caring for Tropical Plants", in: department)
+
+intro.nextCourse = intermediate
+intermediate.nextCourse = advanced
+department.courses = [intro, intermediate, advanced]
+```
+- 위의 코드는 Department 인스턴스 하나와 3개의 Course 인스턴스를 생성하게 된다.
+- 각 Course 인스턴스 끼리는 Unowned Optional Reference 로, Department 인스턴스와 Course 인스턴스 끼리는 Unowned Reference 로 연결되어있다.
+- 아래의 이미지는 Reference 를 시각적으로 나타낸다.
+<br>
+
+![image](https://docs.swift.org/swift-book/_images/unownedOptionalReference_2x.png)
+
+- Unowned Optional Reference 는 Strong Reference 가 없으면 ARC가 할당을 해제하게 된다.
+- ARC 에서 Unowned Reference 와 동일하게 동작한다.
+>- 할당 해제되지 않은 다른 인스턴스를 항상 Reference 하도록 해야 한다. 
+- Unowned Optional Reference 는 nil 이 할당될 수 있다.
+
+<br><br>
+
+## Unowned Reference 와 암시적으로 래핑 해제 된 Optional Properties
+- 앞서 살펴본 Weak Reference 와 Unowned Reference 의 예시는 Strong Reference 가 사라져야 하는 시나리오이다.
+- 시나리오 1 : Person, Apartment 예제
+>- 둘 다 nil 일 수 있는 인스턴스가 서로 Strong Reference Cycle 를 유발할 가능성이 있는 상황
+>>- Weak Reference 로 해결이 가능하다.
+- 시나리오 2 : Customer, CreditCard 예제
+>- nil 이 될 수 있는 인스턴스와 nil 이 될 수 없는 인스턴스 사이에 Strong Reference Cycle 이 발생될 가능성이 있는 상황
+>>- Unowned Referece 로 해결이 가능하다.
+- 시나리오 3 : 
+>- 각 인스턴스의 프로퍼티는 항상 값을 가져야 하며, 초기화가 완료되면 각 인스턴스의 프로퍼티는 nil 이면 안된다.
+>>- 한 클래스의 Unowned 프로퍼티를 다른 클래스의 암시적으로 래핑되지 않은 Optional 프로퍼티와 결합으로 해결이 가능하다. 두 프로퍼티 모두 Optional Wrapping 없이 직접 엑세스 할 수 있으며 Reference Cycle 이 발생하는 것일 피할 수 있다.
+
