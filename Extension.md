@@ -1,9 +1,10 @@
 
 
 # Extension
-- Extension 은 기존 Class, Struct, Enum, Protocol 에 새로운 기능을 추가한다.
+- Extension 은 기존 Class, Struct, Enum, Protocol 에 새로운 기능( Property, Method, Initializer, Deinitializer ) 을 추가한다.
 - 원본 소스에 접근하지 못하는 타입들도 새로운 기능을 만들 수 있다. ( 원본 소스는 그대로 두고 원하는 기능만 추가 )
 - Extension 은 Obj-C 의 Category 와 유사하다. ( 익명 Category )
+- 새 기능을 추가할 수 있지만 오버라이드는 할 수 없다.
 
 <br><br><br>
 
@@ -60,7 +61,45 @@ extension Int {
 <br><br><br>
 
 # 이니셜라이저
-- Extension 은 새로운 이니셜라이저를 추가할 수 있지만, 기존에 지정되어있던 이니셜라이저, 디이니셜라이저를 추가할 수는 없다.
+### 클래스에서의 이니셜라이저, 디이니셜라이저 Extension
+-  Designated initializer, deinitializer 는 추가할 수 없다.
+-  Convenience initializer 는 추가할 수 있다. ( Convenience 는 init 에만 사용할 수 있음 )
+-  Convenience initializer 는 최종적으로 Designated initializer 를 호출해야 한다.
+```swift
+
+// Designated
+      // 클래스의 init Extension
+      extension NSString {
+        init { print("init") } 
+      } // Error
+        // Designated initializer cannot be declared in an extension of 'NSString'; did you mean this to be a convenience initializer?
+
+      // 클래스의 deinit Extension
+      extension NSString {
+        deinit { print("deinit") } 
+      } // Error
+        // Deinitializers may only be declared within a class
+
+// Convenience
+    // 클래스의 convenience init Extension
+    extension NSString {
+      convenience init(name: NSString) {
+        self.init()
+    } // PASS
+
+    // 클래스의 convenience deinit Extension
+    extension NSString {
+      convenience deinit(name: NSString) {
+        self.deinit()
+    } // Error
+      // 'convenience' may only be used on 'init' declarations
+      // Deinitalizers may only be declared within a class
+```
+### 구조체에서의 Extension
+- Extension 으로 이니셜라이저를 추가할 경우 Memberwise Initalizer( 기본 생성자 ) 를 보전하며 새로운 이니셜라이저를 추가할 수 있다.
+- 구조체는 클래스와 달리 이니셜라이저를 따로 구현하지 않았을 경우에 Memberwise 라는 이니셜라이저를 자동으로 제공한다.
+- 직접 구조체에 이니셜라이저를 구현하면 Memberwise Initializer 는 제공되지 않는다.
+
 - Extension 을 사용하여 다른 모듈에서 선언된 구조에 이니셜라이저를 추가하는 경우, 추가된 이니셜라이저는 정의된 모듈에서 기존 이니셜라이저가 호출되기 전까지 엑세스할 수 없다.
 - ⭐️⭐️⭐️⭐️⭐️ 도와주세요 이 부분은 잘 이해가 가지 않아요. ⭐️⭐️⭐️⭐️⭐️
 >- 다른 타입이 사용자 타입의 이니셜라이저 인자로 받거나 타입의 기본 구현의 부분에 포함되지 않는 추가적인 초기화 옵션을 제공하도록 확장이 가능하다.
