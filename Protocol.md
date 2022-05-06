@@ -496,6 +496,38 @@ func wishHappyBirthday(to celebrator: Named & Aged) {
   print("Happy birthday, \(celebrator.name), you're \(celebrator.age)!")
 }
 let birthdayPerson = Person(name: "Malcolm", age: 21)
-wishHappyBirthday(to: birthdayPerson)
-// Prints "Happy birthday, Malcolm, you're 21!"
+wishHappyBirthday(to: birthdayPerson) //  "Happy birthday, Malcolm, you're 21!"
+
+
+// Location 프로토콜과 위의Named 프로토콜을 따르는 City 클래스의 구현
+class Location {
+  var latitude: Double
+  var longitude: Double
+  init(latitude: Double, longitude: Double) {
+    self.latitude = latitude
+    self.longitude = longitude
+  }
+}
+class City: Location, Named {
+  var name: String
+  init(name: String, latitude: Double, longitude: Double) {
+    self.name = name
+    super.init(latitude: latitude, longitude: longitude)
+  }
+}
+func beginConcert(in location: Location & Named) {
+  print("Hello, \(location.name)!")
+}
+
+let seattle = City(name: "Seattle", latitude: 47.6, longitude: -122.3)
+beginConcert(in: seattle)
+// Prints "Hello, Seattle!"
 ```
+<br><br><br>
+
+# Protocol Conform 확인
+- 어떤 타입이 특정 Protocol 을 따르는지 다음과 같은 방법으로 확인할 수 있다.
+- is 를 이용하여 어떤 타입이 특정 Protocol 을 따르는지 확인 가능하다. 따르면 true/ 따르지 않으면 false 반환
+- as? 는 특정 Protocol 을 따르는 경우 그 Optional 타입의 Protocol 타입으로 다운캐스트를 하게 되고 따르지 않는 경우 nil 을 반환한다.
+- as! 는 강제로 특정 Protocol 을 따르도록 정의한다. 다운캐스트에 실패하면 런타임 에러가 발생한다.
+- 아래 
