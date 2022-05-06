@@ -730,3 +730,8 @@ print(equalNumbers.allEqual()) // "true"
 print(differentNumbers.allEqual()) // "false"
 
 ```
+
+<br><br><br>
+
+참조
+- [Swift Document](https://docs.swift.org/swift-book/LanguageGuide/Protocols.html)
