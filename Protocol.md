@@ -532,22 +532,24 @@ beginConcert(in: seattle)
 - as! 는 강제로 특정 Protocol 을 따르도록 정의한다. 다운캐스트에 실패하면 런타임 에러가 발생한다.
 - 아래 코드는 as? 확인 방법의 예시이다.
 ```swift
-// area 라는 
+// area 라는 값을 필요로 하는 HasArea Protocol 을 선언한다.
 protocol HasArea {
     var area: Double { get }
 }
 
-class Circle: HasArea {
+// HasArea Protocol 을 따르는 Circle, Country Class 를 선언한다.
+class Circle: HasArea { // Computed Property 구현
   let pi = 3.1415927
   var radius: Double
   var area: Double { return pi radius radius }
   init(radius: Double) { self.radius = radius }
 }
 class Country: HasArea {
-  var area: Double
+  var area: Double  // Stored Property 구현
   init(area: Double) { self.area = area }
 }
 
+// HasArea Protocol 을 따르지 않는 Animal Class 를 선언한다.
 class Animal {
   var legs: Int
   init(legs: Int) { self.legs = legs }
