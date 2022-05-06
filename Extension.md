@@ -8,6 +8,9 @@
 - [서브스크립트](https://github.com/Raccoon97/Swift/blob/main/Extension.md#%EC%84%9C%EB%B8%8C%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8)
 - [중첩 타입](https://github.com/Raccoon97/Swift/blob/main/Extension.md#%EC%A4%91%EC%B2%A9-%ED%83%80%EC%9E%85)
 
+
+<br><br><br>
+
 # Extension
 - Extension 은 기존 Class, Struct, Enum, Protocol 에 새로운 기능( Property, Method, Initializer, Deinitializer ) 을 추가한다.
 - 원본 소스에 접근하지 못하는 타입들도 새로운 기능을 만들 수 있다. ( 원본 소스는 그대로 두고 원하는 기능만 추가 )
