@@ -1,4 +1,27 @@
+# 🏠   [Go Main](https://github.com/Raccoon97/Swift/blob/main/README.md)   🏠
+- [Protocol](https://github.com/Raccoon97/Swift/blob/main/Protocol.md#protocol)
+- [Protocol 문법](https://github.com/Raccoon97/Swift/blob/main/Protocol.md#protocol-%EB%AC%B8%EB%B2%95)
+- [Property 요구사항](https://github.com/Raccoon97/Swift/blob/main/Protocol.md#property-%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD)
+- [Method 요구사항](https://github.com/Raccoon97/Swift/blob/main/Protocol.md#method-%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD)
+- [Mutating Method 요구사항](https://github.com/Raccoon97/Swift/blob/main/Protocol.md#mutating-method-%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD)
+- [이니셜라이저 요구사항](https://github.com/Raccoon97/Swift/blob/main/Protocol.md#%EC%9D%B4%EB%8B%88%EC%85%9C%EB%9D%BC%EC%9D%B4%EC%A0%80-%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD)
+>- [Class 에서 Protocol 필수 이니셜라이저의 구현](https://github.com/Raccoon97/Swift/blob/main/Protocol.md#class-%EC%97%90%EC%84%9C-protocol-%ED%95%84%EC%88%98-%EC%9D%B4%EB%8B%88%EC%85%9C%EB%9D%BC%EC%9D%B4%EC%A0%80%EC%9D%98-%EA%B5%AC%ED%98%84)
+>- [Failable 이니셜라이저 요구사항](https://github.com/Raccoon97/Swift/blob/main/Protocol.md#failable-%EC%9D%B4%EB%8B%88%EC%85%9C%EB%9D%BC%EC%9D%B4%EC%A0%80-%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD)
+- [타입으로써의 Protocol](https://github.com/Raccoon97/Swift/blob/main/Protocol.md#%ED%83%80%EC%9E%85%EC%9C%BC%EB%A1%9C%EC%8D%A8%EC%9D%98-protocol)
+- [Delegation](https://github.com/Raccoon97/Swift/blob/main/Protocol.md#delegation)
+- [Extension 을 이용해 Protocol 따르게 하기](https://github.com/Raccoon97/Swift/blob/main/Protocol.md#extension-%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%B4-protocol-%EB%94%B0%EB%A5%B4%EA%B2%8C-%ED%95%98%EA%B8%B0)
+>- [조건적으로 Protocol 을 따르기](https://github.com/Raccoon97/Swift/blob/main/Protocol.md#%EC%A1%B0%EA%B1%B4%EC%A0%81%EC%9C%BC%EB%A1%9C-protocol-%EC%9D%84-%EB%94%B0%EB%A5%B4%EA%B8%B0)
+>- [Extension 을 이용해 Protocol 사용 선언하기](https://github.com/Raccoon97/Swift/blob/main/Protocol.md#extension-%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%B4-protocol-%EC%82%AC%EC%9A%A9-%EC%84%A0%EC%96%B8%ED%95%98%EA%B8%B0)
+- [Protocol 타입 콜렉션](https://github.com/Raccoon97/Swift/blob/main/Protocol.md#protocol-%ED%83%80%EC%9E%85-%EC%BD%9C%EB%A0%89%EC%85%98)
+- [Property 상속](https://github.com/Raccoon97/Swift/blob/main/Protocol.md#property-%EC%83%81%EC%86%8D)
+- [Protocol 합성](https://github.com/Raccoon97/Swift/blob/main/Protocol.md#protocol-%ED%95%A9%EC%84%B1)
+- [Protocol Conform 확인](https://github.com/Raccoon97/Swift/blob/main/Protocol.md#protocol-conform-%ED%99%95%EC%9D%B8)
+- [Optional Protocol 요구조건](https://github.com/Raccoon97/Swift/blob/main/Protocol.md#optional-protocol-%EC%9A%94%EA%B5%AC%EC%A1%B0%EA%B1%B4)
+- [Protocol Extension](https://github.com/Raccoon97/Swift/blob/main/Protocol.md#protocol-extension)
+>- [기본 구현 제공](https://github.com/Raccoon97/Swift/blob/main/Protocol.md#%EA%B8%B0%EB%B3%B8-%EA%B5%AC%ED%98%84-%EC%A0%9C%EA%B3%B5)
+>- [Protocol Extension 에 제약 추가](https://github.com/Raccoon97/Swift/blob/main/Protocol.md#protocol-extension-%EC%97%90-%EC%A0%9C%EC%95%BD-%EC%B6%94%EA%B0%80)
 
+<br><br><br>
 
 # Protocol
 - Protocol 은 특정 기능 수행에 필수적인 요소를 정의한 청사진이다.
@@ -689,8 +712,6 @@ extension PrettyTextRepresentable {
 - 위에 특정 조건에서만 따르게 하기랑은 다른 내용이지만 똑같이 where 키워드를 사용한다.
 - 아래 코드는 Collection 의 Element 가 Equatable 인 경우에만 적용되는 allEqual() Method 를 구현한 예시이다.
 ```swift
-
-// Collection 의 모든 Element 가 Equatable 한지 비교하는 것
 extension Collection where Element: Equatable {
   func allEqual() -> Bool {
     for element in self {
@@ -709,6 +730,3 @@ print(equalNumbers.allEqual()) // "true"
 print(differentNumbers.allEqual()) // "false"
 
 ```
-
-참조
-- [Swift 공식문서](https://docs.swift.org/swift-book/LanguageGuide/Protocols.html)
