@@ -652,6 +652,7 @@ for _ in 1...5 {
 
 # Protocol Extension
 - Extension 을 이용해 Protocol 을 확장할 수 있다.
+- Extension 을 이용해 구현을 추가할 수 있어도 다른 Protocol 로 확장/ 상속할 수는 없으며 그렇게 하려면 Protocol 자체에 구현해야 한다.
 - 아래 코드는 RandomNumberGenerator 에 randomBool() 을 추가하여 사용하는 예시이다.
 ```swift
 extension RandomNumberGenerator {
@@ -660,7 +661,49 @@ extension RandomNumberGenerator {
   }
 }
 
+// 아래 코드와 같이 generator.random(), generator.randomBool() 둘 다 이용할 수 있다.
 let generator = LinearCongruentialGenerator()
 print("Here's a random number: \(generator.random())") // "Here's a random number: 0.3746499199817101"
 print("And here's a random Boolean: \(generator.randomBool())") // "And here's a random Boolean: true"
+```
+
+<br>
+
+### 기본 구현 제공
+- Extension 을 기본 구현을 제공하는데 사용할 수 있다.
+- 특정 Protocol 을 따르는 타입 중에서 그 Protocol 의 요구사항에 대해 자체적으로 구현한게 있으면 그것을 사용하고 아니면 기본 구현을 사용한다.
+- Protocol 자체에서는 선언만 가능한데, Extension 을 이용해 기본 구현을 제공할 수 있다.
+- 아래 코드는 PrettyTextRepresentable Protocol 에서 prettyTextualDescription Property 를 textualDescription 를 반환하도록 구현한 예시이다.
+```swift
+extension PrettyTextRepresentable {
+  var prettyTextualDescription: String {
+    return textualDescription
+  }
+}
+```
+
+<br>
+
+### Protocol Extension 에 제약 추가
+- Protocol Extension 이 특정 조건에서만 적용되도록 선언할 수 있다.
+- 위에 특정 조건에서만 따르게 하기랑은 다른 내용이지만 똑같이 where 키워드를 사용한다.
+- 아래 코드는 Collection 의 Element 가 Equatable 인 경우에만 적용되는 allEqual() Method 를 구현한 예시이다.
+```swift
+extension Collection where Element: Equatable {
+  func allEqual() -> Bool {
+    for element in self {
+      if element != self.first {
+        return false
+      }
+    }
+    return true
+  }
+}
+
+let equalNumbers = [100, 100, 100, 100, 100]
+let differentNumbers = [100, 100, 200, 100, 200]
+
+print(equalNumbers.allEqual()) // "true"
+print(differentNumbers.allEqual()) // "false"
+
 ```
