@@ -530,4 +530,43 @@ beginConcert(in: seattle)
 - is 를 이용하여 어떤 타입이 특정 Protocol 을 따르는지 확인 가능하다. 따르면 true/ 따르지 않으면 false 반환
 - as? 는 특정 Protocol 을 따르는 경우 그 Optional 타입의 Protocol 타입으로 다운캐스트를 하게 되고 따르지 않는 경우 nil 을 반환한다.
 - as! 는 강제로 특정 Protocol 을 따르도록 정의한다. 다운캐스트에 실패하면 런타임 에러가 발생한다.
-- 아래 
+- 아래 코드는 as? 확인 방법의 예시이다.
+```swift
+// area 라는 
+protocol HasArea {
+    var area: Double { get }
+}
+
+class Circle: HasArea {
+  let pi = 3.1415927
+  var radius: Double
+  var area: Double { return pi radius radius }
+  init(radius: Double) { self.radius = radius }
+}
+class Country: HasArea {
+  var area: Double
+  init(area: Double) { self.area = area }
+}
+
+class Animal {
+  var legs: Int
+  init(legs: Int) { self.legs = legs }
+}
+
+let objects: [AnyObject] = [
+  Circle(radius: 2.0),
+  Country(area: 243_610),
+  Animal(legs: 4)
+]
+
+for object in objects {
+  if let objectWithArea = object as? HasArea {
+      print("Area is \(objectWithArea.area)")
+  } else {
+      print("Something that doesn't have an area")
+  }
+}
+// Area is 12.5663708
+// Area is 243610.0
+// Something that doesn't have an area
+```
