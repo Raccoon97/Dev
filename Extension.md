@@ -224,3 +224,9 @@ func printIntegerKinds(_ numbers: [Int]) {
 }
 printIntegerKinds([3, 19, -27, 0, -6, 0, 7]) // "+ + - 0 - 0 + "
 ```
+
+
+<br><br><br>
+
+참조
+- [Swift Document](https://docs.swift.org/swift-book/LanguageGuide/Extensions.html)
