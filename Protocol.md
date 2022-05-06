@@ -610,7 +610,6 @@ class ThreeSource: NSObject, CounterDataSource {
 }
 
 // Counter 인스턴스의 dataSource 를 ThreeSource 로 부터 입력받아 값을 증가시킬 수 있다.
-
 var counter = Counter()
 counter.dataSource = ThreeSource()
 for _ in 1...4 {
@@ -622,6 +621,7 @@ for _ in 1...4 {
 // 9
 // 12
 
+// 복잡한 예제로 CounterDataSource 를 이용해 어떤 값을 0에 수렴하도록 만드는 클래스를 선언한다.
 class TowardsZeroSource: NSObject, CounterDataSource {
     func increment(forCount count: Int) -> Int {
         if count == 0 {
@@ -634,6 +634,7 @@ class TowardsZeroSource: NSObject, CounterDataSource {
     }
 }
 
+// -4 부터 시작하지만 TowardZeroSource 의 increment 에 의해 counter.increment() 가 호출될 때 마다 0에 가까워지면서 결국 0에 수렴한다.
 counter.count = -4
 counter.dataSource = TowardsZeroSource()
 for _ in 1...5 {
@@ -645,4 +646,21 @@ for _ in 1...5 {
 // -1
 // 0
 // 0
+```
+
+<br><br><br>
+
+# Protocol Extension
+- Extension 을 이용해 Protocol 을 확장할 수 있다.
+- 아래 코드는 RandomNumberGenerator 에 randomBool() 을 추가하여 사용하는 예시이다.
+```swift
+extension RandomNumberGenerator {
+  func randomBool() -> Bool {
+    return random() > 0.5
+  }
+}
+
+let generator = LinearCongruentialGenerator()
+print("Here's a random number: \(generator.random())") // "Here's a random number: 0.3746499199817101"
+print("And here's a random Boolean: \(generator.randomBool())") // "And here's a random Boolean: true"
 ```
