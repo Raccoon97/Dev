@@ -344,4 +344,20 @@ class DiceGameTracker: DiceGameDelegate {
   }
 }
 ```
-- DiceGameTracker 를 이용해서 
+- DiceGameTracker 를 이용해서 게임을 진행시킨다. 게임으 tracking 관련된 작업은 DiceGameTracker 가 위임 받아 그 곳에서 싫행된다.
+```swift
+let tracker = DiceGameTracker()
+let game = SnakesAndLadders()
+game.delegate = tracker
+game.play()
+// Started a new game of Snakes and Ladders
+// The game is using a 6-sided dice
+// Rolled a 3
+// Rolled a 5
+// Rolled a 4
+// Rolled a 5
+// The game lasted for 4 turns
+```
+
+# Extension 을 이용해 Protocol 따르게 하기
+- 이미 
