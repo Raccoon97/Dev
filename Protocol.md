@@ -689,6 +689,8 @@ extension PrettyTextRepresentable {
 - 위에 특정 조건에서만 따르게 하기랑은 다른 내용이지만 똑같이 where 키워드를 사용한다.
 - 아래 코드는 Collection 의 Element 가 Equatable 인 경우에만 적용되는 allEqual() Method 를 구현한 예시이다.
 ```swift
+
+// Collection 의 모든 Element 가 Equatable 한지 비교하는 것
 extension Collection where Element: Equatable {
   func allEqual() -> Bool {
     for element in self {
@@ -707,3 +709,6 @@ print(equalNumbers.allEqual()) // "true"
 print(differentNumbers.allEqual()) // "false"
 
 ```
+
+참조
+- [Swift 공식문서](https://docs.swift.org/swift-book/LanguageGuide/Protocols.html)
