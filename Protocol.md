@@ -555,12 +555,15 @@ class Animal {
   init(legs: Int) { self.legs = legs }
 }
 
+// Circle, Country, Animal 의 인스턴스를 objects Array 에 넣는다.
 let objects: [AnyObject] = [
   Circle(radius: 2.0),
   Country(area: 243_610),
   Animal(legs: 4)
 ]
 
+// Array 를 순회하며 as? HasArea 구문을 사용해 Protocol 을 따르는지 확인한 후 따르는 경우 HasArea 타입으로 다운캐스팅 한다.
+  // 다운캐스팅 - 부모클래스의 타입을 자식클래스의 타입으로 다운하여 캐스팅한다 
 for object in objects {
   if let objectWithArea = object as? HasArea {
       print("Area is \(objectWithArea.area)")
@@ -568,7 +571,78 @@ for object in objects {
       print("Something that doesn't have an area")
   }
 }
+// Circle, Country 인스턴스는 HasArea 를 따르기 때문에 area 값이 반환되고, Animal 인스턴스는 else 절이 실행된다.
 // Area is 12.5663708
 // Area is 243610.0
 // Something that doesn't have an area
+```
+
+<br><br><br>
+
+# Optional Protocol 요구조건
+- Protocol 을 선언하면서 필수 구현이 아닌 Optional 구현 조건을 정의할 수 있다.
+- 이 Protocol 의 정의를 위해 @objc 키워드를 Protocol 앞에 붙이고, 개별 Func, Property 에는 @objc 와 Optional 키워드를 붙인다.
+- @objc Protocol 은 Class 타입에서만 사용할 수 있고, Struct, Enum 에서는 사용할 수 없다.
+- 아래 코드는 두 가지 Optional 구현을 할 수 있는 Protocol 의 예시이다.
+```swift
+@objc protocol CounterDataSource {
+    @objc optional func increment(forCount count: Int) -> Int
+    @objc optional var fixedIncrement: Int { get }
+}
+
+// Counter Class 에서 CounterDataSource 를 따르는 dataSource 를 선언
+class Counter {
+    var count = 0
+    var dataSource: CounterDataSource?
+    func increment() {
+        if let amount = dataSource?.increment?(forCount: count) {
+            count += amount
+        } else if let amount = dataSource?.fixedIncrement {
+            count += amount
+        }
+        // increment?(forCount: count), fixedIncrement 는 Optional 이므로 구현이 안되어이 있을 수 있기 때문에 Optional Chaining 을 이용해 확인해본다.
+    }
+}
+
+// CounterDataSource Protocol 을 따르는 ThreeSource Class 를 선언한다.
+class ThreeSource: NSObject, CounterDataSource {
+    let fixedIncrement = 3
+}
+
+// Counter 인스턴스의 dataSource 를 ThreeSource 로 부터 입력받아 값을 증가시킬 수 있다.
+
+var counter = Counter()
+counter.dataSource = ThreeSource()
+for _ in 1...4 {
+    counter.increment()
+    print(counter.count)
+}
+// 3
+// 6
+// 9
+// 12
+
+class TowardsZeroSource: NSObject, CounterDataSource {
+    func increment(forCount count: Int) -> Int {
+        if count == 0 {
+            return 0
+        } else if count < 0 {
+            return 1
+        } else {
+            return -1
+        }
+    }
+}
+
+counter.count = -4
+counter.dataSource = TowardsZeroSource()
+for _ in 1...5 {
+    counter.increment()
+    print(counter.count)
+}
+// -3
+// -2
+// -1
+// 0
+// 0
 ```
