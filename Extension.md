@@ -95,17 +95,20 @@ extension Int {
       // 'convenience' may only be used on 'init' declarations
       // Deinitalizers may only be declared within a class
 ```
-### 구조체에서의 Extension
-- Extension 으로 이니셜라이저를 추가할 경우 Memberwise Initalizer( 기본 생성자 ) 를 보전하며 새로운 이니셜라이저를 추가할 수 있다.
+### 구조체에서의 이니셜라이저
+- Extension 으로 이니셜라이저를 추가할 경우 Memberwise Initalizer( 기본 생성자 ) 를 유지한 채 새로운 이니셜라이저를 추가할 수 있다.
 - 구조체는 클래스와 달리 이니셜라이저를 따로 구현하지 않았을 경우에 Memberwise 라는 이니셜라이저를 자동으로 제공한다.
 - 직접 구조체에 이니셜라이저를 구현하면 Memberwise Initializer 는 제공되지 않는다.
+- 구조체에서는 Convenience 키워드를 사용할 수 없다.
+- 구조체에서는 디이니셜라이저를 사용할 수 없다.
+```swift
+struct test { }
 
-- Extension 을 사용하여 다른 모듈에서 선언된 구조에 이니셜라이저를 추가하는 경우, 추가된 이니셜라이저는 정의된 모듈에서 기존 이니셜라이저가 호출되기 전까지 엑세스할 수 없다.
-- ⭐️⭐️⭐️⭐️⭐️ 도와주세요 이 부분은 잘 이해가 가지 않아요. ⭐️⭐️⭐️⭐️⭐️
->- 다른 타입이 사용자 타입의 이니셜라이저 인자로 받거나 타입의 기본 구현의 부분에 포함되지 않는 추가적인 초기화 옵션을 제공하도록 확장이 가능하다.
->- 모든 저장 속성에 기본 값을 주고 사용자 이니셜라이저를 정의하지 않는 값 타입에 이니셜라이저를 추가하기 위해 확장을 사용한다면, 확장 이니셜라이저 안으로부터 값 타입을 위한 기본 이니셜라이저와 멤버 이니셜라이저를 호출한다.
-- ⭐️⭐️⭐️⭐️⭐️ 도와주세요 이 부분은 잘 이해가 가지 않아요. ⭐️⭐️⭐️⭐️⭐️
-
+  // 구조체의 init Extension
+  extension test {
+    init(value: Int { self.x = value } 
+  } // PASS
+```
 
 <br><br><br>
 
