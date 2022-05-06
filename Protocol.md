@@ -359,6 +359,8 @@ game.play()
 // The game lasted for 4 turns
 ```
 
+<br><br><br>
+
 # Extension 을 이용해 Protocol 따르게 하기
 - 이미 존재하는 타입에 Protocol 을 따르게 하기 위해 Extension 을 사용할 수 있다.
 - 원래 값에 접근 권한이 없어도 Extension 을 활용해 기능을 확장할 수 있다.
@@ -399,4 +401,101 @@ print(myDice.textualDescription) // "[A 6-sided dice, A 12-sided dice]"
 ```
 
 ### Extension 을 이용해 Protocol 사용 선언하기
+- 어떤 Protocol 을 사용하는 모든 조건을 만족하지만 아직 그 Protocol 을 따른다는 선언을 하지 않았다면, 빈 Extension 으로 선언할 수 있다.
+- 아래 코드는 Protocol 을 따른다는 선언은 Extension 에 하고 Protocol 을 따르기 위한 구현은 Struct 에 구현해 사용하는 예시이다.
+```swift
+struct Hamster {
+  var name: String
+  var textualDescription: String {
+    return "A hamster named \(name)"
+  }
+}
+extension Hamster: TextRepresentable { }
+
+let simonTheHamster = Hamster(name: "Simon")
+let somthingTextRepresentable: TextRepresentable = simonTheHamster
+print(somethingTextRepresentable.textualDescription) // "A hamster named Simon"
+```
+- Protocol 의 요구사항을 기술하는 것만으로 Protocol 의 사용 조건을 충족시킬 수 없다.
+- 반드시 어떤 Protocol 을 따르는지 기술해야 한다.
+
+<br><br><br>
+
+# Protocol 타입 콜렉션
+- Protocol 을 Array, Dictionary 등 콜렉션 타입에 넣기 위한 타입으로 사용할 수 있다.
+- 아래 코드는 Protocol 을 따르는 Array 의 사용 예시이다.
+```swift
+let things: [TextRepresentable] = [game, d12, simonTheHamster]
+// 모든 객체는 TextRepresentable 을 따르므로 textualDescription Propety 를 갖는다.
+
+for things in things {
+  print(thing.textualDescription)
+}
+// A game of Snakes and Ladders with 25 squares
+// A 12-sided dice
+// A hamster named Simon
+```
+
+<br><br><br>
+
+# Property 상속
+- Class 상속처럼 Protocol 도 상속할 수 있다.
+- 여러 Protocol 을 상속받는 경우 콤마(,) 로 구분한다.
+```swift
+protocol InheritingProtocol: SomeProtocol, AnotherProtocol {
+  // protocol definition goes here
+}
+```
+- 아래 코드는 TextRepresentable Protocol 을 상속받아 새로운 Protocol PrettyRepresentable 을 구현하여 사용하는 예시이다.
+```swift
+protocol PrettyTextRepresentable: TextRepresentable {
+  var prettyTextualDescription: String { get }
+}
+
+extension SnakesAndLadders: PrettyTextRepresentable {
+  var prettyTextualDescription: String {
+    var output = textualDescription + ":\n"
+    for index in 1...finalSquare {
+      switch board[index] {
+      case let ladder where ladder > 0:
+        output += "▲ "
+      case let snake where snake < 0:
+        output += "▼ "
+      default:
+        output += "○ "
+      }
+    }
+    return output
+  }
+}
+
+print(game.prettyTextualDescription)
+// A game of Snakes and Ladders with 25 squares:
+// ○ ○ ▲ ○ ○ ▲ ○ ○ ▲ ▲ ○ ○ ○ ▼ ○ ○ ○ ○ ▼ ○ ○ ▼ ○ ▼ ○
+```
+
+<br><br><br>
+
+# Protocol 합성
+- 동시에 여러 Protocol 을 따르는 타입을 선언할 수 있다. 
+- 아래 코드는 동시에 여러 Protocol 을 따르는 방법의 예시이다.
+```swift
+protocol Named {
+  var name: String { get }
+}
+protocol Aged {
+  var age: Int { get }
+}
+
+// 동시에 Named, Aged Protocol 을 따르는 Struct 이다.
+struct Person: Named, Aged {
+  var name: String
+  var age: Int
+}
+func wishHappyBirthday(to celebrator: Named & Aged) {
+  print("Happy birthday, \(celebrator.name), you're \(celebrator.age)!")
+}
+let birthdayPerson = Person(name: "Malcolm", age: 21)
+wishHappyBirthday(to: birthdayPerson)
+// Prints "Happy birthday, Malcolm, you're 21!"
 ```
