@@ -38,7 +38,7 @@ protocol SomeProtocol {
 }
 ```
 - Protocol 을 따르는 타입은 아래와 같이 작성한다.
-```swif
+```swift
 struct SomeStructure: FirstProtocol, AnotherProtocol {
   // structure definition goes here
 }
