@@ -360,4 +360,43 @@ game.play()
 ```
 
 # Extension 을 이용해 Protocol 따르게 하기
-- 이미 
+- 이미 존재하는 타입에 Protocol 을 따르게 하기 위해 Extension 을 사용할 수 있다.
+- 원래 값에 접근 권한이 없어도 Extension 을 활용해 기능을 확장할 수 있다.
+>- 이미 Extension 으로 확장된 타입에 Extension 을 추가하면 그 타입에 추가된 기능을 사용할 수 있다.
+```swift
+protocol TextRepresentable {
+  var textualDescription: String { get }
+}
+
+extension Dice: TextRepresentable {
+  var textualDescription: String {
+    return "A \(sides)-sided dice"
+  }
+}
+
+let d12 = Dice(sides: 12, generator: LinearCongruentialGenerator())
+print(d12.textualDescription) // "A 12-sided dice"
+```
+
+<br>
+
+### 조건적으로 Protocol 을 따르기
+- 특정 조건을 만족시킬 때만 Protocol 을 따르도록 제한할 수 있다.
+- where 키워드를 이용해 정의한다.
+- 아래 코드는 TextRepresentable을 따르는 Array중에 Array의 각 원소가 TextRepresentable인 경우에만 따르는 프로토콜을 정의한다.
+```swift
+extension Array: TextRepresentable where Element: TextRepresentable {
+  var textualDescription: String {
+    let itemsAsText = self.map { $0.textualDescription }
+    return "[" + itemsAsText.joined(separator: ", ") + "]"
+  }
+}
+let myDice = [d6, d12]
+print(myDice.textualDescription) // "[A 6-sided dice, A 12-sided dice]"
+
+// Array 의 각 원소가 TextRepresentable 을 따르기 때문에 textualDecription Property 를 사용할 수 있다.
+// textualDescription는 Array의 모든 아이템을 순회하고 각각의 textualDescription를 결합해 반환하는 Method 이다.
+```
+
+### Extension 을 이용해 Protocol 사용 선언하기
+```
