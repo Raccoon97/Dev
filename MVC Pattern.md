@@ -11,7 +11,7 @@
 <br>
 
 <p align="center">
-  <img src="https://developer.apple.com/library/archive/documentation/General/Conceptual/DevPedia-CocoaCore/Art/model_view_controller_2x.png" alt="center" width="600" height="300" />
+  <img src="https://user-images.githubusercontent.com/101554627/167997796-34cb28da-ded7-4f4a-9334-ce0518c884a3.png" alt="center" />
 </p>
 
 <br><br><br>
