@@ -4,6 +4,7 @@
 - 소프트웨어 디자인 패턴 중 하나이다.
 - Application 을 3 개의 영역으로 분할하고 각 영역에 고유한 역할을 부여하는 방식이다.
 - MVC Pattern 을 도입하면 비즈니스 로직 영역과 UI 영역이 분리되므로 서로 영향을 주지 않고 유지보수가 가능하다.
+>- 업무에 필요한 데이터 처리를 수행하는 로직
 - UIKit 을 사용하는 앱의 구조는 MVC 디자인 패턴을 기반으로 한다.
 
 <br>
@@ -54,9 +55,82 @@
 <br><br><br>
 
 # MVC Pattern 의 예시
+- 기존 코드
 ```swift
-// 기존 코드
+// ViewController.swift
+
 import UIKit
+
+class ViewController: UIViewController {
+  @IBOutlet weak var message: UILabel!
+  @IBOutlet weak var emailTxtField: UITextField!
+  @IBOutlet weak var passwdTxtField: UITextField!
+  
+  var user_Email: String
+  var user_Passwd: String
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    message.isHidden = true
+  }
+  
+  @IBAction func didPressLogin(_ sender: UIButton) {
+    guard let email = emailTxtField.text else {return}
+    guard let passwd = passwdTxtField.text else {return}
+    
+    user_Email = email
+    user_Passwd = passwd
+    
+    if user_Email == "test@gmail.com" && user_Passwd == "12345" {
+      message.text = "로그인 성공"
+      message.text.isHidden = false
+    }
+  }
+}
+```
+
+- MVC Pattern 으로 변경한 코드
+```swift
+// ViewController.swift --> View, Controller
+
+import UIKit
+
+// Controller
+class ViewController: UIViewController {
+
+  // View
+  @IBOutlet weak var message: UILabel!
+  @IBOutlet weak var emailTxtField: UITextField!
+  @IBOutlet weak var passwdTxtField: UITextField!
+  
+  var user: User!
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    message.isHidden = true
+  }
+  
+  @IBAction func didPressLogin(_ sender: UIButton) {
+    guard let email = emailTxtField.text else {return}
+    guard let passwd = passwdTxtField.text else {return}
+    
+    user = User(email: email, passwd: passwd
+    
+    if user.email == "test@gmail.com" && user.passwd == "12345" {
+      message.text = "로그인 성공"
+      message.text.isHidden = false
+    }
+  }
+}
+```
+```swift
+// User.swift --> Model
+import Foundation
+
+struct User {
+  var email: String
+  var passwd: String
+}
 ```
 
 <br><br><br>
