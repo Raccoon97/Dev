@@ -9,7 +9,7 @@
 <br>
 
 <p align="center">
-  <img src="https://koenig-media.raywenderlich.com/uploads/2019/01/01-MVC-Diagram.png" alt="center" width="600" height="300" />
+  <img src="https://developer.apple.com/library/archive/documentation/General/Conceptual/DevPedia-CocoaCore/Art/model_view_controller_2x.png" alt="center" width="600" height="300" />
 </p>
 
 <br><br><br>
