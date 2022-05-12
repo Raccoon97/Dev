@@ -54,6 +54,10 @@
 <br><br><br>
 
 # MVC Pattern 의 예시
+```swift
+// 기존 코드
+import UIKit
+```
 
 <br><br><br>
 
