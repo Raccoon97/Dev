@@ -37,6 +37,7 @@
 <br><br><br>
 
 # V - View
+- 주로 ViewController 에 작성한다.
 - 사용자 이벤트를 수신하고, 데이터를 시각적으로 표현한다.
 - View 와 Model 은 상호작용이 불가하고 ViewModel 에 의해 동작된다.
 
