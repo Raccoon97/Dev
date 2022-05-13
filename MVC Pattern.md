@@ -155,3 +155,12 @@ struct User {
 - Controller 가 View 의 생명주기까지 관랗기 때문에 View 와 Controller 를 분리하기 어렵다.
 >- 재사용성이 떨어지고 유닛 테스트를 진행하기 어렵다.
 - 대부분의 코드가 Controller 에 밀집될 수 있는데, 그런 이유로 MVC를 Massive View Controller 라고 부르기도 한다.
+
+<br><br><br>
+
+# 참조
+- [강준현님](https://junhyunny.github.io/information/design-pattern/mvc-pattern/)
+- [Mozilla](https://developer.mozilla.org/ko/docs/Glossary/MVC)
+- [sh9404님](https://lsh424.tistory.com/44)
+- [Heechan님](https://medium.com/hcleedev/ios-%EA%B0%9C%EB%B0%9C-mvc-%ED%8C%A8%ED%84%B4%EA%B3%BC-uikit%EC%9D%98-viewcontroller-3fdb52f6b4b8)
+- [Choi-Log님](https://choi-log-life.tistory.com/entry/iOS-MVC-Pattern)
