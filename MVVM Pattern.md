@@ -1,3 +1,14 @@
+# 🏠   [Go Main](https://github.com/Raccoon97/Swift/blob/main/README.md)   🏠
+- [MVVM Pattern](https://github.com/Raccoon97/Swift/blob/main/MVVM%20Pattern.md#mvvm-pattern)
+- [M - Model](https://github.com/Raccoon97/Swift/blob/main/MVVM%20Pattern.md#m---model)
+- [V - View](https://github.com/Raccoon97/Swift/blob/main/MVVM%20Pattern.md#v---view)
+- [VM - ViewModel](https://github.com/Raccoon97/Swift/blob/main/MVVM%20Pattern.md#vm---viewmodel)
+- [Data Binding](https://github.com/Raccoon97/Swift/blob/main/MVVM%20Pattern.md#data-binding)
+- [MVVM Pattern 예시](https://github.com/Raccoon97/Swift/blob/main/MVVM%20Pattern.md#mvvm-%EC%98%88%EC%8B%9C)
+- [MVVM Pattern 의 장/단점](https://github.com/Raccoon97/Swift/blob/main/MVVM%20Pattern.md#mvvm-%EC%9D%98-%EC%9E%A5%EB%8B%A8%EC%A0%90
+
+<br><br><br>
+
 # MVVM Pattern
 - 소프트웨어 디자인 패턴 중 하나이다.
 - MVC  Pattern 에서 Controller 를 빼고 ViewModel 을 추가한 Pattern 이다.
@@ -49,7 +60,7 @@
 
 <br><br><br>
 
-# MVVM 예시
+# MVVM Pattern 의 예시
 - 기존 코드
 ```swift
 class ViewController: UIViewController {
@@ -215,7 +226,7 @@ class ViewModel: NSObject {
 
 <br><br><br>
 
-# MVVM 의 장/단점
+# MVVM Pattern 의 장/단점
 ### 장점
 - View 와 Model 이 서로 전혀 연관이 없기에 독립성을 유지할 수 있다.
 - 독립성이 유지되어 효율적인 유닛테스트가 가능하다.
