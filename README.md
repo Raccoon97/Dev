@@ -1,19 +1,15 @@
-# Swift
+# Language Guide
+
+ ## [Closure](https://github.com/Raccoon97/Swift/blob/main/Closure.md) - 2022. 04. 22
+ ## [ARC](https://github.com/Raccoon97/Swift/blob/main/ARC.md) - 2022.04.25
+ ## [Protocol](https://github.com/Raccoon97/Swift/blob/main/Protocol.md) - 2022.05.04
+ ## [Extension](https://github.com/Raccoon97/Swift/blob/main/Extension.md) - 2022.05.04
 
 <br><br>
 
-## Language Guide
-
- #### [Closure](https://github.com/Raccoon97/Swift/blob/main/Closure.md) - 2022. 04. 22
- #### [ARC](https://github.com/Raccoon97/Swift/blob/main/ARC.md) - 2022.04.25
- #### [Protocol](https://github.com/Raccoon97/Swift/blob/main/Protocol.md) - 2022.05.04
- #### [Extension](https://github.com/Raccoon97/Swift/blob/main/Extension.md) - 2022.05.04
-
-<br><br>
-
-## Patterns
- #### [MVC Pattern](https://github.com/Raccoon97/Swift/blob/main/MVC%20Pattern.md) - 2022.05.12
- #### [MVVM Pattern](https://github.com/Raccoon97/Swift/blob/main/MVVM%20Pattern.md) - 2022.05.12
+# Patterns
+ ## [MVC Pattern](https://github.com/Raccoon97/Swift/blob/main/MVC%20Pattern.md) - 2022.05.12
+ ## [MVVM Pattern](https://github.com/Raccoon97/Swift/blob/main/MVVM%20Pattern.md) - 2022.05.12
 
 <br><br><br><br><br>
 
