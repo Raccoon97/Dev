@@ -212,13 +212,16 @@ class ViewModel: NSObject {
     
 }
 ```
+
+<br><br><br>
+
 # MVVM 의 장/단점
 ### 장점
 - View 와 Model 이 서로 전혀 연관이 없기에 독립성을 유지할 수 있다.
 - 독립성이 유지되어 효율적인 유닛테스트가 가능하다.
 - ViewModel 에서는 UIKit 관련 코드가 없고 Controller 와의 의존성도 없기 때문에 유닛테스트 하기가 좋다.
 - View 와 ViewModel 의 관계는 N:1 관계이다.
-- 
+
 ### 단점
 - 초보자의 경우 MVVM 을 구현하기 어렵다.
 - 간단한 UI 에서 MVVM 은 과하다.
