@@ -4,12 +4,14 @@
  ## [ARC](https://github.com/Raccoon97/Swift/blob/main/ARC.md) - 2022.04.25
  ## [Protocol](https://github.com/Raccoon97/Swift/blob/main/Protocol.md) - 2022.05.04
  ## [Extension](https://github.com/Raccoon97/Swift/blob/main/Extension.md) - 2022.05.04
+ ## [Type Casting](https://github.com/Raccoon97/Swift/blob/main/Type%20Casting.md) - 2022.05.20
 
 <br><br>
 
 # Patterns
  ## [MVC Pattern](https://github.com/Raccoon97/Swift/blob/main/MVC%20Pattern.md) - 2022.05.12
  ## [MVVM Pattern](https://github.com/Raccoon97/Swift/blob/main/MVVM%20Pattern.md) - 2022.05.12
+ ## [Singleton Pattern](https://github.com/Raccoon97/Swift/blob/main/Singleton%20Pattern.md) - 2022.05.20
 
 <br><br><br><br><br>
 
