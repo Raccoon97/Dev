@@ -5,6 +5,7 @@
 - 인스턴스의 타입을 확인하거나 인스턴스를 같은 계층에 있는 superclass 또는 subclass 로 취급하는 방법이다.
 - Type Casting 에는 is 와 as 두 연산자를 사용한다.
 - Type Casting 을 이용하면 특정 프로토콜을 따르는지 확인할 수 있다.
+- Casting 은 실제 인스턴스나 값을 바꾸는 것이 아니라 지정한 타입으로 취급하는 것이다.
 
 <br><br><br>
 
@@ -65,14 +66,33 @@ for item in library {
   }
 }
 
-print("Media library contains \(movieCount) movies and \(songCount) songs") --> "Media library contains 2 movies and 3 songs"
+print("Media library contains \(movieCount) movies and \(songCount) songs")
+// "Media library contains 2 movies and 3 songs"
 ```
 
 <br><br><br>
 
 # Downcasting
-- 특정 클래스 타입의 
-상
+- 특정 클래스 타입의 상수나 변수는 특정 서브크래스의 인스턴스를 참조하고 있을 수 있다.
+- as? 와 as! 연산자를 이용해 어떤 타입의 인스턴스인지 확인할 수 있다.
+- as? 는 특정 타입이 맞는지 확신할 수 없을 때 사용한다.
+- as! 는 특정 타입이 맞는지 확신할 수 있을 때 사용한다 단, 해당 타입이 아니라면 런타임 에러가 발생한다.
+- 아래 예시는 배열의 mediaItem 이 Movie 또는 Song 인스턴스 일 수 있기 때문에 다운캐스팅을 위해 as? 를 사용한 코드이다.
+```swift
+for item in library {
+  if let movie = item as? Movie {
+    print("Movie: \(movie.name), dir. \(movie.director)")
+  } else if let song = item as? Song {
+    print("Song: \(song.name), by \(song.artist)")
+  }
+}
+
+// Movie: Casablanca, dir. Michael Curtiz
+// Song: Blue Suede Shoes, by Elvis Presley
+// Movie: Citizen Kane, dir. Orson Welles
+// Song: The One And Only, by Chesney Hawkes
+// Song: Never Gonna Give You Up, by Rick Astley
+```
 
 
 <br><br><br>
