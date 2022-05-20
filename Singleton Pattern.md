@@ -116,6 +116,8 @@ if let appName = appInfo.name,
 >- Singleton 내부의 객체의 데이터를 동기적으로 처리하지 않으면 꼬여버릴 가능성도 존재한다.
 - 여기저기서 쉽게 접근할 수 있기 때문에 의존성을 만들어낸다.
 
+# Singleton Pattern 을 사용하면 안되는 이유가 무엇인지??
+
 <br><br><br>
 
 # 참조
