@@ -1,3 +1,9 @@
+# 🏠   [Go Main](https://github.com/Raccoon97/Swift/blob/main/README.md)   🏠
+- [Type Casting](https://github.com/Raccoon97/Swift/blob/main/Type%20Casting.md#type-casting)
+- [Type Casting 을 위한 클래스 계층구조 선언](https://github.com/Raccoon97/Swift/blob/main/Type%20Casting.md#type-casting-%EC%9D%84-%EC%9C%84%ED%95%9C-%ED%81%B4%EB%9E%98%EC%8A%A4-%EA%B3%84%EC%B8%B5%EA%B5%AC%EC%A1%B0-%EC%84%A0%EC%96%B8)
+- [Type 확인](https://github.com/Raccoon97/Swift/blob/main/Type%20Casting.md#type-%ED%99%95%EC%9D%B8)
+- [Downcasting](https://github.com/Raccoon97/Swift/blob/main/Type%20Casting.md#downcasting)
+- [Any, AnyObject 의 Type Casting](https://github.com/Raccoon97/Swift/blob/main/Type%20Casting.md#any-anyobject-%EC%9D%98-type-casting)
 
 <br><br><br>
 
@@ -6,6 +12,11 @@
 - Type Casting 에는 is 와 as 두 연산자를 사용한다.
 - Type Casting 을 이용하면 특정 프로토콜을 따르는지 확인할 수 있다.
 - Casting 은 실제 인스턴스나 값을 바꾸는 것이 아니라 지정한 타입으로 취급하는 것이다.
+- Upcasting -> subclass 의 인스턴스를 superclass 의 Type 으로 참조한다.
+>- Upcasting 은 항상 성공하며, 직접 타입을 명시해서 사용할 수 있고, as 연산자를 사용해서 할 수도 있다.
+- Downcasting -> superclass 인스턴스를 subclass 의 Type 으로 참조한다.
+>- Upcasting 된 인스턴스를 다시 원래 subclass Type 으로 참조할 때 사용한다.
+>- Downcasting 은 실패할 수 있기 때문에 as?, as! 연산자를 사용한다.
 
 <br><br><br>
 
@@ -73,7 +84,7 @@ print("Media library contains \(movieCount) movies and \(songCount) songs")
 <br><br><br>
 
 # Downcasting
-- 특정 클래스 타입의 상수나 변수는 특정 서브크래스의 인스턴스를 참조하고 있을 수 있다.
+- 특정 클래스 타입의 상수나 변수는 특정 서브클래스의 인스턴스를 참조하고 있을 수 있다.
 - as? 와 as! 연산자를 이용해 어떤 타입의 인스턴스인지 확인할 수 있다.
 - as? 는 특정 타입이 맞는지 확신할 수 없을 때 사용한다.
 - as! 는 특정 타입이 맞는지 확신할 수 있을 때 사용한다 단, 해당 타입이 아니라면 런타임 에러가 발생한다.
@@ -98,7 +109,54 @@ for item in library {
 <br><br><br>
 
 # Any, AnyObject 의 Type Casting
+- Swift 에서는 두 가지 특별한 타입이 있다.
+- Any --> 함수 타입을 포함한 모든 타입을 나타낸다.
+- AnyObject --> 모든 클래스 타입의 인스턴스를 나타낸다
+- 아래 예시는 Any 타입을 as 를 이용해 Type Casting 하는 코드이다.
+```swift
+var things = [Any]()
 
+things.append(0)
+things.append(0.0)
+things.append(42)
+things.append(3.14159)
+things.append("hello")
+things.append((3.0, 5.0))
+things.append(Movie(name: "Ghostbusters", director: "Ivan Reitman"))
+things.append({ (name: String) -> String in "Hello, \(name)" })
+
+for thing in things {
+  switch thing {
+  case 0 as Int:
+    print("zero as an Int")
+  case 0 as Double:
+    print("zero as a Double")
+  case let someInt as Int:
+    print("an integer value of \(someInt)")
+  case let someDouble as Double where someDouble > 0:
+    print("a positive double value of \(someDouble)")
+  case is Double:
+    print("some other double value that I don't want to print")
+  case let someString as String:
+    print("a string value of \"\(someString)\"")
+  case let (x, y) as (Double, Double):
+    print("an (x, y) point at \(x), \(y)")
+  case let movie as Movie:
+    print("a movie called \(movie.name), dir. \(movie.director)")
+  case let stringConverter as (String) -> String:
+    print(stringConverter("Michael"))
+  default:
+    print("something else")
+  }
+}
+```
+- Int, Double 뿐 아니라 Tuple, Func 또한 Any 타입에 포함될 수 있다는 것을 확인할 수 있다.
+- Optional 타입 또한 포함하지만 Any 타입을 사용해야 하는 곳에 Optional 을 사용하면 경고가 발생된다.
+```swift
+let optionalNumber: Int? = 3 things.append(optionalNumber) // 경고 
+things.append(optionalNumber as Any) // 경고 없음
+```
 <br><br><br>
 
 # 참조
+- [Apple Document](https://docs.swift.org/swift-book/LanguageGuide/TypeCasting.html)
