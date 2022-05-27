@@ -1,4 +1,18 @@
-
+# 🏠   [Go Main](https://github.com/Raccoon97/Swift/blob/main/README.md)   🏠
+- [GCD( Grand Central Dispatch )](https://github.com/Raccoon97/Swift/blob/main/GCD.md#gcd-grand-central-dispatch-)
+- [GCD 의 구조](https://github.com/Raccoon97/Swift/blob/main/GCD.md#gcd-%EC%9D%98-%EA%B5%AC%EC%A1%B0)
+  - [Dispatch Queue](https://github.com/Raccoon97/Swift/blob/main/GCD.md#dispatch-queue)
+  - [Dispatch Group](https://github.com/Raccoon97/Swift/blob/main/GCD.md#dispatch-groups)
+  - [Dispatch Semaphores](https://github.com/Raccoon97/Swift/blob/main/GCD.md#dispatch-semaphores)
+  - [Dispatch WorkItem](https://github.com/Raccoon97/Swift/blob/main/GCD.md#dispatch-work-item)
+  - [Dispatch Sources](https://github.com/Raccoon97/Swift/blob/main/GCD.md#dispatch-sources)
+- [GCD 의 사용](https://github.com/Raccoon97/Swift/blob/main/GCD.md#gcd-%EC%9D%98-%EC%82%AC%EC%9A%A9)
+  - [Dispatch Queue](https://github.com/Raccoon97/Swift/blob/main/GCD.md#dispatch-queue-1)
+  - [Dispatch WorkItem](https://github.com/Raccoon97/Swift/blob/main/GCD.md#dispatch-workitem)
+  - [Dispatch Group](https://github.com/Raccoon97/Swift/blob/main/GCD.md#dispatch-group)
+  - [Dispatch Semaphores](https://github.com/Raccoon97/Swift/blob/main/GCD.md#dispatch-semaphores-1)
+- [GCD 의 장/단점](https://github.com/Raccoon97/Swift/blob/main/GCD.md#gcd-%EC%9D%98-%EC%9E%A5%EB%8B%A8%EC%A0%90)
+- [주의](https://github.com/Raccoon97/Swift/blob/main/GCD.md#%EC%A3%BC%EC%9D%98)
 <br><br><br>
 
 # GCD( Grand Central Dispatch )
@@ -252,6 +266,8 @@ DispatchQueue.global().async {
 - tableView 혹은 collectionView 를 이용한 List 를 보여주는 동작에서 Image 에 대한 다운로드를 MainQueue 에서 모두 수행할 경우 버벅임이 일어난다.
 - Image DownLoad 는 globalQueue( Concurrent Queue ) 에서 수행시키고 Download 완료 시 UI 갱신만 MainQueue 에서 호출해야 한다.
 - UI 갱신이 필요하지 않고, 수행시간이 길거나, 수행에 소비되는 리소스가 큰 경우 Councurrent Queue 를 이용하면 좋다.
+
+<br><br><br>
 
 # 참조
 - [Aske님](https://burzum17.tistory.com/8)
