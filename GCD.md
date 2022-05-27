@@ -2,6 +2,7 @@
 <br><br><br>
 
 # GCD( Grand Central Dispatch )
+- 직접적으로 Thread 를 관리하지 않고 작업을 Queue 로 보내 분산처리 하는 방법
 - iOS SDK 에는 비동기 처리를 위한 NSOperation 및 NSOpercisionQueue 클래스가 있었고 애플은 또 다른 방법으로 GCD 를 발표했다.
 - GCD 는 멀티코어 시스템에서 동시성 실행을 제공하는 프레임워크이다.
 - 기존 GCD 는 C 라이브러리 처럼 저수준의 API로 제공되어서 쉽게 사용하기 어려웠다.
