@@ -35,6 +35,16 @@
 - Block Coding 을 기반으로 이해하기 쉽다.
 - 사용하기 쉬운 인터페이스를 제공한다.
 - OS 에서 자동으로 Thread 풀 관리를 수행한다.
+- Serial
+  - 이전 작업이 끝나면 다음 작업을 순차적으로 실행하는 직렬 형태의 Queue
+  - 하나의 작업을 실행하고 끝날 때까지 대기열에 있는 다른 작업을 잠시 미룬 뒤 그 작업이 끝나면 실행된다.
+
+![다운로드](https://user-images.githubusercontent.com/101554627/170698624-bf1951ec-5ad6-4fa4-8755-0bc552ab4379.png)
+- Concurrent
+  - 이전 작업이 끝날 때까지 기다리지 않고 병렬 형태로 동시에 실행되는 Queue
+  - 대기열에 있는 작업을 동시에 별도의 Thread 를 사용하여 실행한다.
+
+![다운로드 (1)](https://user-images.githubusercontent.com/101554627/170698649-40b37c6b-5aa4-476a-ab93-88c9c98fda75.png)
 
 <br>
 
