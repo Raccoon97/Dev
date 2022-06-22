@@ -1,11 +1,11 @@
 # 🏠   [Go Main](https://github.com/Raccoon97/Swift/blob/main/README.md)   🏠
-- [MVVM Pattern](https://github.com/Raccoon97/Swift/blob/main/MVVM%20Pattern.md#mvvm-pattern)
-- [M - Model](https://github.com/Raccoon97/Swift/blob/main/MVVM%20Pattern.md#m---model)
-- [V - View](https://github.com/Raccoon97/Swift/blob/main/MVVM%20Pattern.md#v---view)
-- [VM - ViewModel](https://github.com/Raccoon97/Swift/blob/main/MVVM%20Pattern.md#vm---viewmodel)
-- [Data Binding](https://github.com/Raccoon97/Swift/blob/main/MVVM%20Pattern.md#data-binding)
-- [MVVM Pattern 예시](https://github.com/Raccoon97/Swift/blob/main/MVVM%20Pattern.md#mvvm-%EC%98%88%EC%8B%9C)
-- [MVVM Pattern 의 장/단점](https://github.com/Raccoon97/Swift/blob/main/MVVM%20Pattern.md#mvvm-%EC%9D%98-%EC%9E%A5%EB%8B%A8%EC%A0%90)
+- [MVVM Pattern](https://github.com/Raccoon97/Swift/blob/main/Patterns/MVVM%20Pattern.md#mvvm-pattern)
+- [M - Model](https://github.com/Raccoon97/Swift/blob/main/Patterns/MVVM%20Pattern.md#m---model)
+- [V - View](https://github.com/Raccoon97/Swift/blob/main/Patterns/MVVM%20Pattern.md#v---view)
+- [VM - ViewModel](https://github.com/Raccoon97/Swift/blob/main/Patterns/MVVM%20Pattern.md#vm---viewmodel)
+- [Data Binding](https://github.com/Raccoon97/Swift/blob/main/Patterns/MVVM%20Pattern.md#data-binding)
+- [MVVM Pattern 예시](https://github.com/Raccoon97/Swift/blob/main/Patterns/MVVM%20Pattern.md#mvvm-%EC%98%88%EC%8B%9C)
+- [MVVM Pattern 의 장/단점](https://github.com/Raccoon97/Swift/blob/main/Patterns/MVVM%20Pattern.md#mvvm-%EC%9D%98-%EC%9E%A5%EB%8B%A8%EC%A0%90)
 
 <br><br><br>
 
