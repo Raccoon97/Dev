@@ -1,9 +1,9 @@
 # 🏠   [Go Main](https://github.com/Raccoon97/Swift/blob/main/README.md)   🏠
-- [Type Casting](https://github.com/Raccoon97/Swift/blob/main/Type%20Casting.md#type-casting)
-- [Type Casting 을 위한 클래스 계층구조 선언](https://github.com/Raccoon97/Swift/blob/main/Type%20Casting.md#type-casting-%EC%9D%84-%EC%9C%84%ED%95%9C-%ED%81%B4%EB%9E%98%EC%8A%A4-%EA%B3%84%EC%B8%B5%EA%B5%AC%EC%A1%B0-%EC%84%A0%EC%96%B8)
-- [Type 확인](https://github.com/Raccoon97/Swift/blob/main/Type%20Casting.md#type-%ED%99%95%EC%9D%B8)
-- [Downcasting](https://github.com/Raccoon97/Swift/blob/main/Type%20Casting.md#downcasting)
-- [Any, AnyObject 의 Type Casting](https://github.com/Raccoon97/Swift/blob/main/Type%20Casting.md#any-anyobject-%EC%9D%98-type-casting)
+- [Type Casting](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/Type%20Casting.md#type-casting)
+- [Type Casting 을 위한 클래스 계층구조 선언](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/Type%20Casting.md#type-casting-%EC%9D%84-%EC%9C%84%ED%95%9C-%ED%81%B4%EB%9E%98%EC%8A%A4-%EA%B3%84%EC%B8%B5%EA%B5%AC%EC%A1%B0-%EC%84%A0%EC%96%B8)
+- [Type 확인](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/Type%20Casting.md#type-%ED%99%95%EC%9D%B8)
+- [Downcasting](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/Type%20Casting.md#downcasting)
+- [Any, AnyObject 의 Type Casting](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/Type%20Casting.md#any-anyobject-%EC%9D%98-type-casting)
 
 <br><br><br>
 
