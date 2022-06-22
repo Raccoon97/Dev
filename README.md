@@ -13,7 +13,7 @@
   - [App Life Cycle]() - 2022. 06. 22
   - [Scene Delegate]() - 2022. 06. 22
   - [ViewController Life Cycle]() - 2022. 06. 22
-  - [Frame, Bounds]() - 2022. 06. 22
+  - [Frame 과 Bounds]() - 2022. 06. 22
   - [TableView 와 CollectionView]() - 2022. 06. 22
 
 <br><br>
