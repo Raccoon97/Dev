@@ -4,7 +4,7 @@
   - [Main Run Loop](https://github.com/Raccoon97/Swift/blob/main/App%20Life%20Cycle.md#main-run-loop)
   - [App State](https://github.com/Raccoon97/Swift/blob/main/App%20Life%20Cycle.md#app-state)
   - [AppDelegate 객체의 메소드 호출](https://github.com/Raccoon97/Swift/blob/main/App%20Life%20Cycle.md#appdelegate-%EA%B0%9D%EC%B2%B4%EC%9D%98-%EB%A9%94%EC%86%8C%EB%93%9C-%ED%98%B8%EC%B6%9C)
-  - [Not Running](https://github.com/Raccoon97/Swift/blob/main/App%20Life%20Cycle.md#Not%20Running)
+  - [Not Running](https://github.com/Raccoon97/Swift/blob/main/App%20Life%20Cycle.md#not-running)
   - [In-active](https://github.com/Raccoon97/Swift/blob/main/App%20Life%20Cycle.md#In-active)
   - [Active](https://github.com/Raccoon97/Swift/blob/main/App%20Life%20Cycle.md#Active)
   - [Background](https://github.com/Raccoon97/Swift/blob/main/App%20Life%20Cycle.md#Background)
