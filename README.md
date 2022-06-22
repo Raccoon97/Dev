@@ -9,6 +9,13 @@
 
 <br><br>
 
+# iOS
+  - [App Life Cycle]()
+  - [Scene Delegate]()
+  - [ViewController Life Cycle]()
+  - [Frame, Bounds]()
+  - [TableView 와 CollectionView]()
+
 # Patterns
   - [MVC Pattern](https://github.com/Raccoon97/Swift/blob/main/MVC%20Pattern.md) - 2022.05.12
   - [MVVM Pattern](https://github.com/Raccoon97/Swift/blob/main/MVVM%20Pattern.md) - 2022.05.12
