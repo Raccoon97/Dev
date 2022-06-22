@@ -1,16 +1,16 @@
 # 🏠   [Go Main](https://github.com/Raccoon97/Swift/blob/main/README.md)   🏠
-- [Closure](https://github.com/Raccoon97/Swift/blob/main/Closure.md#closure)
-- [Closure의 표현식](https://github.com/Raccoon97/Swift/blob/main/Closure.md#closure%EC%9D%98-%ED%91%9C%ED%98%84%EC%8B%9D)
-- [1급 객체로서의 Closure](https://github.com/Raccoon97/Swift/blob/main/Closure.md#1%EA%B8%89-%EA%B0%9D%EC%B2%B4%EB%A1%9C%EC%84%9C%EC%9D%98-closure)
-- [Closure 실행하기](https://github.com/Raccoon97/Swift/blob/main/Closure.md#closure-%EC%8B%A4%ED%96%89%ED%95%98%EA%B8%B0)
-- [Closure 의 경량화](https://github.com/Raccoon97/Swift/blob/main/Closure.md#closure-%EC%9D%98-%EA%B2%BD%EB%9F%89%ED%99%94)
-- [Closure의 경량 문법](https://github.com/Raccoon97/Swift/blob/main/Closure.md#closure%EC%9D%98-%EA%B2%BD%EB%9F%89-%EB%AC%B8%EB%B2%95)
-- [@autoclosure](https://github.com/Raccoon97/Swift/blob/main/Closure.md#autoclosure)
-- [@escaping](https://github.com/Raccoon97/Swift/blob/main/Closure.md#escaping)
-- [Closure 의 Capture](https://github.com/Raccoon97/Swift/blob/main/Closure.md#closure-%EC%9D%98-capture)
-- [Closure 의 Capture List](https://github.com/Raccoon97/Swift/blob/main/Closure.md#closure-%EC%9D%98-capture-list)
-- [Closure 와 ARC( Automatic Reference Counting )](https://github.com/Raccoon97/Swift/blob/main/Closure.md#closure-%EC%99%80-arc-automatic-reference-counting-)
-- [Named Closure](https://github.com/Raccoon97/Swift/blob/main/Closure.md#named-closure)
+- [Closure](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/Closure.md#closure)
+- [Closure의 표현식](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/Closure.md#closure%EC%9D%98-%ED%91%9C%ED%98%84%EC%8B%9D)
+- [1급 객체로서의 Closure](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/Closure.md#1%EA%B8%89-%EA%B0%9D%EC%B2%B4%EB%A1%9C%EC%84%9C%EC%9D%98-closure)
+- [Closure 실행하기](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/Closure.md#closure-%EC%8B%A4%ED%96%89%ED%95%98%EA%B8%B0)
+- [Closure 의 경량화](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/Closure.md#closure-%EC%9D%98-%EA%B2%BD%EB%9F%89%ED%99%94)
+- [Closure의 경량 문법](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/Closure.md#closure%EC%9D%98-%EA%B2%BD%EB%9F%89-%EB%AC%B8%EB%B2%95)
+- [@autoclosure](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/Closure.md#autoclosure)
+- [@escaping](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/Closure.md#escaping)
+- [Closure 의 Capture](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/Closure.md#closure-%EC%9D%98-capture)
+- [Closure 의 Capture List](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/Closure.md#closure-%EC%9D%98-capture-list)
+- [Closure 와 ARC( Automatic Reference Counting )](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/Closure.md#closure-%EC%99%80-arc-automatic-reference-counting-)
+- [Named Closure](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/Closure.md#named-closure)
 
 
 
