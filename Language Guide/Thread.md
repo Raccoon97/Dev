@@ -1,9 +1,9 @@
 # 🏠   [Go Main](https://github.com/Raccoon97/Swift/blob/main/README.md)   🏠
-- [Thread](https://github.com/Raccoon97/Swift/blob/main/Thread.md#thread)
-- [Thread Safe](https://github.com/Raccoon97/Swift/blob/main/Thread.md#thread-safe)
-- [atomic](https://github.com/Raccoon97/Swift/blob/main/Thread.md#atomic)
-- [non-atomic](https://github.com/Raccoon97/Swift/blob/main/Thread.md#non-atomic)
-- [Thread Safe 를 위한 방법](https://github.com/Raccoon97/Swift/blob/main/Thread.md#thread-safe-%EB%A5%BC-%EC%9C%84%ED%95%9C-%EB%B0%A9%EB%B2%95)
+- [Thread](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/Thread.md#thread)
+- [Thread Safe](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/Thread.md#thread-safe)
+- [atomic](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/Thread.md#atomic)
+- [non-atomic](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/Thread.md#non-atomic)
+- [Thread Safe 를 위한 방법](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/Thread.md#thread-safe-%EB%A5%BC-%EC%9C%84%ED%95%9C-%EB%B0%A9%EB%B2%95)
 
 <br><br><br>
 
