@@ -77,5 +77,36 @@
   <img width="569" alt="스크린샷 2022-06-22 오후 12 56 05" src="https://user-images.githubusercontent.com/101554627/174940201-6a6831e1-ad13-4be3-813b-1628254d8c98.png">
  </p>
  
- # AppDelegate 객체의 메소드 호출
- </p>
+# AppDelegate 객체의 메소드 호출
+- App 의 Life Cycle 상태에 따라서 AppDelegate 객체의 SceneDelegate 에서 특정 메소드를 호출하게 된다.
+
+## Not Running 
+```swift
+application(_ :willFinishLaunchingWithOptions)
+// 
+```
+
+## Inactive 
+```swift
+application(_ :willFinishLaunchingWithOptions)
+```
+
+## Active
+```swift
+application(_ :willFinishLaunchingWithOptions)
+```
+
+## Background
+```swift
+application(_ :willFinishLaunchingWithOptions)
+```
+
+## Foreground
+```swift
+application(_ :willFinishLaunchingWithOptions)
+```
+
+## Suspended
+```swift
+application(_ :willFinishLaunchingWithOptions)
+```
