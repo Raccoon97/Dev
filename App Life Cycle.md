@@ -1,4 +1,17 @@
 # 🏠   [Go Main]()   🏠
+- [App Life Cycle]()
+ - [기기 부팅부터 App 실행까지의 단계]()
+ - [Main Run Loop]()
+- [App State]()
+- [AppDelegate 객체의 메소드 호출]()
+ - [Not Running]()
+ - [Inactive]()
+ - [Active]()
+ - [Background]()
+- [Foreground]()
+- [Suspended]()
+- []()
+- []()
 - []()
 
 <br><br><br>
@@ -50,7 +63,7 @@
 
 <br>
 
-- Inactive( Foreground )
+- In-active( Foreground )
   - App 이 실행되면서 Foreground 에 진입하나 어떠한 이벤트도 받지 않는 상태, 앱의 상태 전환 과정에서 잠깐 머무는 단계
 
 <br>
@@ -83,30 +96,98 @@
 ## Not Running 
 ```swift
 application(_ :willFinishLaunchingWithOptions)
-// 
+// App 을 실행할 때 최초로 실행할 코드를 작성하면 좋다.
+// 필요한 주요 객체들을 생성하고 앱 실행 준비가 끝나기 직전에 호출된다.
+
+applicationDidFinishLaunching(_ :)
+// App 실행을 위한 모든 준비가 끝난 후 화면이 사용자에게 보여지기 전에 호출된다.
+// 주로 초기화 코드를 이 곳에 작성한다.
+
+applicationWillTerminate(_ :)
+// App 이 종료되기 직전에 호출된다.
 ```
 
-## Inactive 
+## In-active 
 ```swift
-application(_ :willFinishLaunchingWithOptions)
+sceneWillEnterForeground(_ :)
+// App 이 Background 나 Not Running 에서 Foreground 로 들어가기 직전에 호출된다.
+// 비활성화 상태를 거쳐 활성화 상태가 된다.
+
+sceneWillResignActive(_ :)
+// App Switcher 모드 ( 홈 바 쓸어올렷을 경우, 홈 버튼 두 번 눌렀을 경우
 ```
 
 ## Active
 ```swift
-application(_ :willFinishLaunchingWithOptions)
+sceneDidBecomeActive(_ :)
+// App 이 비활성화 상태에서 활성 상태로 진입하고 난 직후 호출된다.
+// App 이 실제로 사용되기 전에, 마지막으로 준비할 수 있는 코드를 작성할 수 있다.
 ```
 
 ## Background
 ```swift
-application(_ :willFinishLaunchingWithOptions)
-```
-
-## Foreground
-```swift
-application(_ :willFinishLaunchingWithOptions)
+sceneDidEnterBackground(_ :)
+// App 이 Background 상태로 들어갔을 때 호출된다.
+// Suspended 상태가 되기 전 중요한 데이터를 저장하는 등 종료하기 전 필요한 작업을 한다.
 ```
 
 ## Suspended
 ```swift
-application(_ :willFinishLaunchingWithOptions)
+// 따로 호출되는 메소는 없으며 Background 상태에서 특별한 작업이 없을 때 Suspended 상태가 된다.
 ```
+
+<br><br><br>
+
+# iOS12 까지와 iOS13 이후의 차이점
+## iOS12 까지
+- SceneDelegate 없음
+- Scene 을 지원하지 않는다. 이 경우 모든 Life Cycle 관련 이벤트들은 AppDelegate 에 전달된다.
+- 각각의 상태에 접근하기 위해 사용되는 파일이 AppDelegate.swift 이다.
+```swift
+// AppDelegate.swift
+import UIKit
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+ var window: UIWindow?
+ 
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        return true
+    }
+    
+    func applciationWillResignActive(_ application: UIApplication) {
+    }
+    
+    func applciationDidEnterBackground(_ application: UIApplication) {
+    }
+    
+    func applciationWillEnterForeground(_ application: UIApplication) {
+    }
+    
+    func applciationDidBecomeActive(_ application: UIApplication) {
+    }
+    
+    func applciationWillTerminate(_ application: UIApplication) {
+    }
+```
+- 위 코드를 보면 AppDelegate 객체는 UIResponder 와 UIApplicationDelegate 를 상속 및 참조하고 있다.
+- UIResponder 는 App 에서 발생하는 이벤트들을 담고 잇는 추상형 인터페이슥 객체로 View 와 사용자 이벤트간의 연결을 관리하는 역할을 한다.
+- UIApplicationDelegate 는 UIApplication 객체의 작업에 개발자가 접근할 수 있도록 하는 메소드 들을 담고 있다.
+
+<br>
+
+## iOS13 이후
+- SceneDelegate 있음
+- SceneDelegate 는 UI Life Cycle 을 관리하는 클래스이다.
+- iOS12 까지는 하나의 앱이 하나의 Window 만 가지기 때문에 AppDelegate 클래스가 UI Life Cycle 관리 까지 했다.
+- iOS13 부터 하나의 앱에 여러 개의 Window 를 동시에 사용할 수 있게 되어서 SceneDelegate 클래스가 추가되었다.
+- Scene 을 지원하는 경우 Scene 별로 별도의 Life Cycle 을 가지게 된다.
+- Scene 하나는 디바이스에서 돌아가는 App 의 UI 인스턴스 하나를 나타낸다.
+- 하나의 App 은 여러개의 Scene 을 가질 수 있으며, 이를 개별적으로 띄우거나 숨길 수 있다.
+
+
+<br><br><br>
+
+# 참조
+- [마나사님](https://manasaprema04.medium.com/application-life-cycle-in-ios-f7365d8c1636)
+- [쿠로미님](https://blog.naver.com/PostView.naver?blogId=soojin_2604&logNo=222423840595&parentCategoryNo=&categoryNo=&viewDate=&isShowPopularPosts=false&from=postView)
