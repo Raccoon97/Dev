@@ -1,5 +1,14 @@
 # 🏠   [Go Main](https://github.com/Raccoon97/Swift/blob/main/README.md)   🏠
-- []()
+- [Frame](https://github.com/Raccoon97/Swift/blob/main/iOS/Frame%20%EA%B3%BC%20Bounds.md#frame)
+  - [frame.origin](https://github.com/Raccoon97/Swift/blob/main/iOS/Frame%20%EA%B3%BC%20Bounds.md#frameorigin)
+  - [frame.size](https://github.com/Raccoon97/Swift/blob/main/iOS/Frame%20%EA%B3%BC%20Bounds.md#framesize)
+  - [transformation frame.origin/ frame.size](https://github.com/Raccoon97/Swift/blob/main/iOS/Frame%20%EA%B3%BC%20Bounds.md#transformation-frameorigin-framesize)
+  - [frame.origin 의 변경](https://github.com/Raccoon97/Swift/blob/main/iOS/Frame%20%EA%B3%BC%20Bounds.md#frameorigin-%EC%9D%98-%EB%B3%80%EA%B2%BD)
+- [Bounds](https://github.com/Raccoon97/Swift/blob/main/iOS/Frame%20%EA%B3%BC%20Bounds.md#bounds)
+  - [bounds.origin](https://github.com/Raccoon97/Swift/blob/main/iOS/Frame%20%EA%B3%BC%20Bounds.md#boundsorigin)
+  - [bounds.size](https://github.com/Raccoon97/Swift/blob/main/iOS/Frame%20%EA%B3%BC%20Bounds.md#boundssize)
+  - [transformation bounds.origin/ bounds.size](https://github.com/Raccoon97/Swift/blob/main/iOS/Frame%20%EA%B3%BC%20Bounds.md#transformation-boundsorigin-boundssize)
+  - [bounds.origin 의 변경](https://github.com/Raccoon97/Swift/blob/main/iOS/Frame%20%EA%B3%BC%20Bounds.md#boundsorigin-%EC%9D%98-%EB%B3%80%EA%B2%BD)
 
 
 <br><br><br>
