@@ -33,9 +33,9 @@
 # iOS
   - [App Life Cycle](https://github.com/Raccoon97/Swift/blob/main/iOS/App%20Life%20Cycle.md) - 2022. 06. 22
   - [Scene Delegate](https://github.com/Raccoon97/Swift/blob/main/iOS/Scene%20Delegate.md) - 2022. 06. 22
-  - [ViewController Life Cycle](https://github.com/Raccoon97/Swift/blob/main/iOS/ViewController%20Life%20Cycle.md) - 2022. 06. 22
-  - [Frame 과 Bounds](https://github.com/Raccoon97/Swift/blob/main/iOS/Frame%20%EA%B3%BC%20Bounds.md) - 2022. 06. 22
-  - [TableView 와 CollectionView](https://github.com/Raccoon97/Swift/blob/main/iOS/TableView%20%EC%99%80%20CollectionView.md) - 2022. 06. 22
+  - [ViewController Life Cycle](https://github.com/Raccoon97/Swift/blob/main/iOS/ViewController%20Life%20Cycle.md) - 2022. 06. 23
+  - [Frame 과 Bounds](https://github.com/Raccoon97/Swift/blob/main/iOS/Frame%20%EA%B3%BC%20Bounds.md) - 2022. 06. 24
+  - [TableView 와 CollectionView](https://github.com/Raccoon97/Swift/blob/main/iOS/TableView%20%EC%99%80%20CollectionView.md) - 2022. 06. 24
 
 <br><br>
 
