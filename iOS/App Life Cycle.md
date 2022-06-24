@@ -132,7 +132,7 @@ sceneDidEnterBackground(_ :)
 
 ## Suspended
 ```swift
-// 따로 호출되는 메소는 없으며 Background 상태에서 특별한 작업이 없을 때 Suspended 상태가 된다.
+// 따로 호출되는 메소드는 없으며 Background 상태에서 특별한 작업이 없을 때 Suspended 상태가 된다.
 ```
 
 <br><br><br>
