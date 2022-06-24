@@ -5,6 +5,10 @@
 <br><br><br>
 
 # Scene Delegate
+- 화면에 무엇( Window/ Scene )을 보여줄지 관리하는 역할을 한다.
+
+<br>
+
 ## iOS12 까지의 App Delegate
 - 하나의 App 에 하나의 Window 이다.
 
@@ -43,12 +47,81 @@
 - Scene 들은 같은 메모리와 App 프로세스 공간을 공유하면서 서로 동시에 실행된다.
 - 하나의 App 은 여러 Scene 과 SceneDelegate 객체를 동시에 활성화할 수 있다.
 
-## Sub
-### TinySub
+<br>
 
+## Scene Delegate 의 메소드 호출
 
-<p aling="center"> Image Center
-</p>
+<br>
+
+### scene(_ : willConnectTo: options: )
+```swift
+func scene(_ scene: UIScene, 
+           willConnectTo session: UISceneSession, 
+           options connectionOptions: UIScene.ConnectionOptions) {
+  guard let _ = (scene as? UIWindowScene) else { return }
+}
+// 제일 처음으로 호출되는 메소드로 첫 Content View, 새로운 UIWindow 를 생성하고 Window 의 RootViewController 를 설정한다.
+// 이 때의 Window 는 사용자가 보는 Window 가 아닌 App 이 동작하는 ViewPort 이다.
+// 첫 View 를 만들 때 쓰이지만 과거에 Disconnected 된 UI 를 되돌릴 때 사용하기도 한다.
+```
+
+<br>
+
+### sceneWillEnterForeground(_ :)
+```swift
+func sceneWillEnterForeground(_ scene: UIScene) {
+}
+// 첫 View 가 생성되면 sceneWillEnterForeground 가 호출된다.
+// Background -> Foreground 인 경우와 최초 Active 상태가 되었을 때 호출된다.
+```
+
+<br>
+
+### sceneDidBecomeActive(_ :)
+```swift
+func sceneDidBecomeActive(_ scene: UIScene) {
+}
+// Scene 이 설정되고 화면에 보여지면서 사용 준비가 끝난 상태이다.
+// Inactive -> Active 상태에서 호출된다.
+```
+
+<br>
+
+### sceneWillResignActive(_ :)
+```swift
+func sceneWillResignActive(_ scene: UIScene) {
+}
+// Active 한 상태에서 Inactive 상태로 빠질 때 호출된다.
+// App 사용 중 전화가 오는 것 처럼 임시 Interruption 때문에 호출될 수 있다.
+```
+
+<br>
+
+### sceneDidEnterBackground(_ :)
+```swift
+func sceneDidEnterBackground(_ scene: UIScene) {
+}
+// Scene 이 Foreground 에서 Background 로 전환될 때 호출된다.
+// 다시 Foreground 로 돌아올 때 복원될 수 있게 상태 정보를 저장하거나, 데이터를 저장, 공유 자원을 반환하는 일을 한다.
+```
+
+<br>
+
+### sceneDidDisconnect(_ :)
+```swift
+func sceneDidDisconnect(_ scene: UIScene) {
+}
+// Scene 이 Background 가 되었을 때 시스템이 자원을 확보하기 위해 Disconnect 할 수 있다 --> Suspended
+// Scene 이 해당 메소드로 전달되면 Session 이 끊어지게되며, Disconnect 는 App 의 종료와는 다르다
+```
+
+<br>
+
+<br>
+
+<br>
 
 # 참조
-- []()
+- [https://ios-development.tistory.com/53](Jake님)
+- [https://sueaty.tistory.com/134](Sueaty님)
+- [https://velog.io/@dev-lena/iOS-AppDelegate%EC%99%80-SceneDelegate](Lena)
