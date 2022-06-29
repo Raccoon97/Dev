@@ -20,6 +20,8 @@
 
 <img width="960" alt="프레젠테이션1" src="https://user-images.githubusercontent.com/101554627/176492414-bd3bc7ca-fc33-473a-a7bf-6a92cc8f4aa8.png">
 
+<br><br>
+
 ## UINavigationViewController 에서 관리하는 개체
 
 ![image](https://user-images.githubusercontent.com/101554627/176494081-c5fdcaaf-fe17-4e39-a964-cf394613209b.png)
