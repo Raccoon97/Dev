@@ -36,7 +36,7 @@
 
 - navigationBar < UINavigationBar >
   - 앱을 사용함에 있어 상단에 타이틀, 뒤로가기, 설정 등 UI 요소들의 영역을 Navigation Bar 라고 한다.
-  - UINavigationController 를 사용하면 따로 UI 를 추가할 필요 없이 ViewController 에 UI 를 설정할 수 있다.
+  - UINavigationController 를 사용하면 따로 UI 를 추가할 필요 없이 사용할 수 있다.
 
 <br>
 
@@ -48,9 +48,12 @@
 
 - delegate < Custom Delegate Object >
   - UITableViewDelegate 처럼 UINavigationController 에도 특정 Event 에서 사용할 수 있는 delegate 가 선언되어 있다.
-  - 특정 ViewController 를 보여주거나, 커스텀 애니메이션을 제공한다. 
+  - 특정 ViewController 를 보여주고 사라지게 하거나, 커스텀 애니메이션을 제공한다. 
   - UINavigationControllerDelegate 프로토콜을 준수해야 한다.
 
+<br><br>
+
+## UINavigationController 의 사용
 
 
 ## Sub
