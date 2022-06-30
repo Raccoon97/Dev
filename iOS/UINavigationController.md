@@ -53,7 +53,11 @@
 
 <br><br>
 
-## UINavigationController 의 사용
+# UINavigationController 의 사용
+
+<br>
+
+## StoryBoard 구현
 - StoryBoard 에 Root ViewController 와 Child ViewController 가 있다고 가정한다.
 - Root ViewController 의 Go Child 버튼을 탭하면 Child ViewController 가 보이게 된다.
   - 이 때, Go Child 버튼의 Segue 는 Push 로 해준다.
@@ -86,7 +90,154 @@
 
 <br>
 
+- Navigation Controller 를 적용해서 Root ViewController 와 Child ViewController 를 표시하는 결과
 
+<p align="center">
+<img width="300" alt="ezgif-2-0dad8dc71a" src="https://user-images.githubusercontent.com/101554627/176648998-6e19f16a-b0de-4127-8ce6-37a85892149e.gif">
+</p>
+
+
+<br><br>
+
+## Code 구현
+
+```swift
+import UIKit
+
+
+// 버튼의 3가지 위치를 미리 지정.
+let statBtnRect = CGRect(x: 50, y: 100, width: 300, height: 52)
+let commonBtnRect = CGRect(x: 100, y: 100, width: 200, height: 52)
+let dimissBtnRect = CGRect(x: 100, y: 162, width: 200, height: 52)
+
+// 버튼을 만들고 View 에 띄우는 함수
+// 3 개의 뷰컨트롤러에 겹치는 부분이 많아 코드가 길어져서 상단으로 빼놓았다.
+func makeButton(
+                _ viewSelf: UIViewController ,  // viewSelf - 각 ViewController 인스턴스를 사용하기 위함
+                _ view_: UIView,                // view     - 각 ViewController 의 View 를 사용하기 위함
+                _ btn: UIButton,                // btn      - 버튼의 위치와 모양을 지정해서 View 에 띄우기 위함
+                _ title: String,                // title    - 버튼의 Title 을 다양하게 사용하기 위함
+                _ function: Selector,           // function - 코드로 구현함에 따라 objc 함수를 작성하고 사용하기 위함
+                _ rect: CGRect                  // rect     - 버튼의 위치를 다양하게 지정하기 위함
+                ) {
+    
+    // 버튼의 Title 을 지정한다.
+    btn.setTitle(title, for: .normal)
+    
+    // 버튼을 View 에 추가한다.
+    view_.addSubview(btn)
+    
+    // 버튼의 배경색을 지정한다.
+    btn.backgroundColor = .clear
+    
+    // 버튼의 Title 색깔을 지정한다.
+    btn.setTitleColor(.systemBlue, for: .normal)
+    
+    // 버튼의 위치를 지정한다.
+    btn.frame = rect
+    
+    // 버튼이 호출되는 곳과 어떤 작업을, 어떤 이벤트가 발생되었을 때 하게 되는지 지정한다.
+    btn.addTarget(viewSelf, action: function, for: .touchUpInside)
+}
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+// View 시작지점, 버튼을 눌러 네비게이션 컨트롤러를 사용한다.
+class ViewController: UIViewController {
+    
+    // 탭하면 네비게이션 컨트롤러를 사용하게되는 버튼
+    private let button = UIButton()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        // 버튼을 만들어 View 에 띄워준다.
+        makeButton(self, view, button, "네비게이션 컨트롤러 사용하기", #selector(didTapButton_ToNav), statBtnRect)
+    }
+        
+    // 버튼을 눌렀을 때 실행되는 함수
+    @objc private func didTapButton_ToNav() {
+        
+        // Root 뷰컨트롤러는 RootViewController 이다.
+        let rootVC = RootViewController()
+        
+        // 지정한 rootVC 를 갖고 UINavigationController 를 선언해준다.
+        let navVC = UINavigationController(rootViewController: rootVC)
+        
+        // FullScreen 스타일로 Modal 하겠다고 미리 설정해준다.
+        navVC.modalPresentationStyle = .fullScreen
+        
+        // UINavigationController 를 갖는 Root 뷰컨트롤러를 보여준다.
+        present(navVC, animated: true)
+    }
+    
+
+}
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+// Root 뷰컨트롤러, 네비게이션 컨트롤러의 최상위 뷰
+class RootViewController: UIViewController {
+    
+    // 다음 뷰컨트롤러를 Push 할 버튼과 네비게이션 컨트롤러를 끝내는 버튼
+    private let button_PushView = UIButton()
+    private let button_Dimiss = UIButton()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        // 배경이 없을 경우 View 가 올라오지 않음, Title 은 상관 없음
+        view.backgroundColor = .white
+        title = "네비게이션 컨트롤러"
+        
+        // 버튼 2개를 만들어 View 에 띄워준다. Push, Dismiss
+        makeButton(self, view, button_PushView, "다른 뷰컨트롤러 Push 하기", #selector(didTapButton_PushView), commonBtnRect)
+        makeButton(self, view, button_Dimiss, "돌아가기", #selector(didTapButton_Dismiss), dimissBtnRect)
+    }
+    
+    // 다른 뷰컨트롤러를 Push 하는 함수
+    @objc private func didTapButton_PushView() {
+        let vc = SecondViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    // 네비게이션 컨트롤러 시작 전으로 돌아가는 함수
+    @objc private func didTapButton_Dismiss(){
+        dismiss(animated: true)
+    }
+    
+}
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+// 두 번째 뷰컨트롤러
+class SecondViewController: UIViewController {
+    
+    // 현재 뷰컨트롤러를 Pop 할 버튼
+    private let button = UIButton()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // 배경이 없을 경우 View 가 올라오지 않음, Title 은 상관 없음
+        view.backgroundColor = .white
+        title = "2번째 장"
+        
+        // 버튼을 만들어 View 에 띄워준다. Pop
+        makeButton(self, view, button, "현재 뷰컨트롤러 Pop하기", #selector(didTapButton_PopView), commonBtnRect)
+    }
+    
+    // 현재 뷰컨트롤러를 Pop 하는 함수
+    @objc private func didTapButton_PopView() {
+        navigationController?.popViewController(animated: true)
+    }
+}
+
+
+```
 
 ## Sub
 
