@@ -123,6 +123,16 @@ func sceneDidDisconnect(_ scene: UIScene) {
 
 <br>
 
+# 심화 - iOS 에서의 Scene
+- 하나의 앱에서 여러 개의 Scene 을 가질 수 있게 되었다. 
+- 과연 iPhone 을 사용할 때에도 위의 명제가 참인지 확인해보도록 하자.
+
+
+
+<br>
+
+<br>
+
 <br>
 
 # 참조
