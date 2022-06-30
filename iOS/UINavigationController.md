@@ -54,6 +54,38 @@
 <br><br>
 
 ## UINavigationController 의 사용
+- StoryBoard 에 Root ViewController 와 Child ViewController 가 있다고 가정한다.
+- Root ViewController 의 Go Child 버튼을 탭하면 Child ViewController 가 보이게 된다.
+  - 이 때, Go Child 버튼의 Segue 는 Push 로 해준다.
+
+<br>
+
+<p align="center">
+<img width="600" alt="스크린샷 2022-06-30 오후 6 41 14" src="https://user-images.githubusercontent.com/101554627/176646159-d9f44469-0ada-49d3-bd40-7cef0814252f.png">
+</p>
+
+<br>
+
+- Root ViewController 를 선택한 뒤 Editor -> Embed In -> Navigation Controller 를 선택한다.
+
+<br>
+
+<p align="center">
+<img width="600" alt="스크린샷 2022-06-30 오후 6 43 35" src="https://user-images.githubusercontent.com/101554627/176646347-2eed793c-cfab-4ca1-997e-2fba5f104cbb.png">
+</p>
+
+<br>
+
+- 정상적으로 Navigation Controller 가 추가되었고 Child ViewController 에서는 < back 표시를 확인할 수 있다.
+
+<br>
+
+<p align="center">
+<img width="946" alt="스크린샷 2022-06-30 오후 6 47 40" src="https://user-images.githubusercontent.com/101554627/176647578-5df3ede1-348b-48ed-9b8f-e9124a2454c0.png">
+</p>
+
+<br>
+
 
 
 ## Sub
