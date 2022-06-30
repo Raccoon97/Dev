@@ -239,12 +239,18 @@ class SecondViewController: UIViewController {
 
 ```
 
-## Sub
+- 위 코드를 실행하게 되면 아래와 같은 결과를 얻을 수 있다.
+- 불필요한 코드를 제외하기 위해 필요한 버튼과 라벨만 넣어서 초라하다..
+
+<p align="center">
+<img width="300" alt="코드구현gif" src="https://user-images.githubusercontent.com/101554627/176740506-da22913e-5311-45a0-896d-c4f675846e95.gif">
+</p>
 
 
-
+<br><br><br>
 
 
 # 참조
 - [Apple Developer Documentation](https://developer.apple.com/documentation/uikit/uinavigationcontroller)
-- []()
+- [iseeu95님](https://velog.io/@iseeu95/UINavigationController-%EC%97%90-%EB%8C%80%ED%95%B4)
+- [통스님](https://tong94.tistory.com/26)
