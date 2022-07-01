@@ -124,10 +124,20 @@ func sceneDidDisconnect(_ scene: UIScene) {
 <br>
 
 # 심화 - iOS 에서의 Scene
-- iOS 13 에서 Scene 이 발표된 이후 하나의 앱에서 여러 개의 Scene 을 가질 수 있게 되었다.
+- SceneDelegate 는 왜 생겼는지 알아보자.
 - 과연 iPhone 을 사용할 때에도 위의 명제가 참인지 확인해보도록 하자.
 - 하나의 프로젝트를 사용해서 iPad Pro 3rd, iPhone 12 Pro 두 가지 기기에 대해서 테스트를 진행해보았다.
 
+<br>
+
+## SceneDelegate 의 출현 배경
+- iOS 12 까지는 AppDelegate 가 App 에 이벤트를 알리거나 UI 상태를 알리는 역할을 한다.
+  - App 들이 하나의 프로세스와 하나의 UI 인스턴스를 갖고 있기 때문에 AppDelegate 하나로 충분하다.
+- iOS 13 부터는 하나의 프로세스가 여러 UI 인스턴스를 가질 수 있다.
+  - 프로세스 이벤트와 Lift Cycle 에 경우 그대로 AppDelegate 가 담당한다.
+- _1:1 인 AppDelegate 말고 1:N 이 되는, UI LifeCycle 관리가 필요하기 때문에 SceneDelegate 가 출현하게 되었다._
+
+<br>
 <br>
 
 ## 방법
