@@ -6,7 +6,7 @@
 - [Scene Delegate 의 메소드 호출](https://github.com/Raccoon97/Swift/blob/main/iOS/Scene%20Delegate.md#scene-delegate-%EC%9D%98-%EB%A9%94%EC%86%8C%EB%93%9C-%ED%98%B8%EC%B6%9C)
 - [심화 - iOS 에서의 Scene](https://github.com/Raccoon97/Swift/blob/main/iOS/Scene%20Delegate.md#%EC%8B%AC%ED%99%94---ios-%EC%97%90%EC%84%9C%EC%9D%98-scene)
   - [SceneDelegate 의 출현 배경](https://github.com/Raccoon97/Swift/blob/main/iOS/Scene%20Delegate.md#scenedelegate-%EC%9D%98-%EC%B6%9C%ED%98%84-%EB%B0%B0%EA%B2%BD)
-  - [명제 확인]()
+  - [명제 확인](https://github.com/Raccoon97/Swift/blob/main/iOS/Scene%20Delegate.md#%EB%AA%85%EC%A0%9C-%ED%99%95%EC%9D%B8)
   - [iPad](https://github.com/Raccoon97/Swift/blob/main/iOS/Scene%20Delegate.md#ipad)
   - [iPhone](https://github.com/Raccoon97/Swift/blob/main/iOS/Scene%20Delegate.md#iphone)
   - [결과](https://github.com/Raccoon97/Swift/blob/main/iOS/Scene%20Delegate.md#%EA%B2%B0%EA%B3%BC)
