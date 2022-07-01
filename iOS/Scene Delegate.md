@@ -124,9 +124,46 @@ func sceneDidDisconnect(_ scene: UIScene) {
 <br>
 
 # 심화 - iOS 에서의 Scene
-- 하나의 앱에서 여러 개의 Scene 을 가질 수 있게 되었다. 
+- iOS 13 에서 Scene 이 발표된 이후 하나의 앱에서 여러 개의 Scene 을 가질 수 있게 되었다.
 - 과연 iPhone 을 사용할 때에도 위의 명제가 참인지 확인해보도록 하자.
+- 하나의 프로젝트를 사용해서 iPad Pro 3rd, iPhone 12 Pro 두 가지 기기에 대해서 테스트를 진행해보았다.
 
+<br>
+
+## 방법
+- Info.plist 의 Enable Multiple Windows 를 YES 로 변경시킨다.
+- AppDelegate 에서 multipleScene 여부와 기기 정보를 확인한다.
+- SceneDelegate 에서 Scene 을 생성할 때 마다 출력되게 한다.
+
+<br>
+
+## iPad
+- 확인 결과 
+  - supportsMultipleScene = true
+  - Enable Multiple Windows = YES
+  - Scene 을 새로 만들 때 마다 SceneDelegate 에서 출력이 된다.
+
+![스크린샷 2022-07-01 오후 8 02 42](https://user-images.githubusercontent.com/101554627/176884985-d323acf4-d20c-43e8-aa18-e20efd92a6cc.png)
+
+
+<br><br>
+
+## iPhone
+- 확인 결과 
+  - supportsMultipleScene = false
+  - Enable Multiple Windows = YES
+  - Scene 을 하나 이상 만들 수 없다.
+
+![스크린샷 2022-07-01 오후 8 05 09](https://user-images.githubusercontent.com/101554627/176884995-35fb4f49-02b8-4cbd-ae80-8098f45a8389.png)
+
+<br><br>
+
+## 결과
+- 프로젝트 설정 상에서 Enable Multiple Windows 는 활성화가 가능하며 iPhone, iPad 둘 다 적용된다.
+- 하지만 실제 App 구동 시 AppDelegate 에서 supportsMultipleScene 은 iPhone = false, iPad = true 로 갈리게 된다.
+- iOS 13 이후로 하나의 앱이 여러 개의 Scene 을 갖을 수 있다고 했지만, 실제로 iPadOS 만 가능하다.
+- 현재 출시된 iPhone 용 Split View App 들은 Web Browser 기반으로 하나의 페이지를 나누어 각각 App 을 사용할 수 있게 해준다.
+  - 실제 기기에서 구동되는 App 이 아니며, Web 으로 접근이 가능한 App 들만 가능하다.
 
 
 <br>
@@ -136,6 +173,7 @@ func sceneDidDisconnect(_ scene: UIScene) {
 <br>
 
 # 참조
-- [https://ios-development.tistory.com/53](Jake님)
-- [https://sueaty.tistory.com/134](Sueaty님)
-- [https://velog.io/@dev-lena/iOS-AppDelegate%EC%99%80-SceneDelegate](Lena)
+- [Jake님](https://ios-development.tistory.com/53)
+- [Sueaty님](https://sueaty.tistory.com/134)
+- [Lena님](https://velog.io/@dev-lena/iOS-AppDelegate%EC%99%80-SceneDelegate)
+- [iPadOS Tutorial](https://www.raywenderlich.com/5814609-adopting-scenes-in-ipados)
