@@ -5,10 +5,11 @@
 - [Scene 이란?](https://github.com/Raccoon97/Swift/blob/main/iOS/Scene%20Delegate.md#scene-%EC%9D%B4%EB%9E%80)
 - [Scene Delegate 의 메소드 호출](https://github.com/Raccoon97/Swift/blob/main/iOS/Scene%20Delegate.md#scene-delegate-%EC%9D%98-%EB%A9%94%EC%86%8C%EB%93%9C-%ED%98%B8%EC%B6%9C)
 - [심화 - iOS 에서의 Scene](https://github.com/Raccoon97/Swift/blob/main/iOS/Scene%20Delegate.md#%EC%8B%AC%ED%99%94---ios-%EC%97%90%EC%84%9C%EC%9D%98-scene)
-  - [SceneDelegate 의 출현 배경]()
+  - [SceneDelegate 의 출현 배경](https://github.com/Raccoon97/Swift/blob/main/iOS/Scene%20Delegate.md#scenedelegate-%EC%9D%98-%EC%B6%9C%ED%98%84-%EB%B0%B0%EA%B2%BD)
   - [명제 확인]()
-  - ㅑㅖ
-  - [명제 확인]I
+  - [iPad](https://github.com/Raccoon97/Swift/blob/main/iOS/Scene%20Delegate.md#ipad)
+  - [iPhone](https://github.com/Raccoon97/Swift/blob/main/iOS/Scene%20Delegate.md#iphone)
+  - [결과](https://github.com/Raccoon97/Swift/blob/main/iOS/Scene%20Delegate.md#%EA%B2%B0%EA%B3%BC)
 
 <br><br><br>
 
@@ -144,7 +145,7 @@ func sceneDidDisconnect(_ scene: UIScene) {
 <br>
 <br>
 
-## 
+## 명제 확인
 - Info.plist 의 Enable Multiple Windows 를 YES 로 변경시킨다.
 - AppDelegate 에서 multipleScene 여부와 기기 정보를 확인한다.
 - SceneDelegate 에서 Scene 을 생성할 때 마다 출력되게 한다.
