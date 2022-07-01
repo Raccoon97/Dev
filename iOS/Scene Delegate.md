@@ -4,7 +4,7 @@
 - [iOS13 이후로 바뀐 App Delegate](https://github.com/Raccoon97/Swift/blob/main/iOS/Scene%20Delegate.md#ios13-%EC%9D%B4%ED%9B%84%EB%A1%9C-%EB%B0%94%EB%80%90-app-delegate)
 - [Scene 이란?](https://github.com/Raccoon97/Swift/blob/main/iOS/Scene%20Delegate.md#scene-%EC%9D%B4%EB%9E%80)
 - [Scene Delegate 의 메소드 호출](https://github.com/Raccoon97/Swift/blob/main/iOS/Scene%20Delegate.md#scene-delegate-%EC%9D%98-%EB%A9%94%EC%86%8C%EB%93%9C-%ED%98%B8%EC%B6%9C)
--[심화 - iOS 에서의 Scene](https://github.com/Raccoon97/Swift/blob/main/iOS/Scene%20Delegate.md#%EC%8B%AC%ED%99%94---ios-%EC%97%90%EC%84%9C%EC%9D%98-scene)
+- [심화 - iOS 에서의 Scene](https://github.com/Raccoon97/Swift/blob/main/iOS/Scene%20Delegate.md#%EC%8B%AC%ED%99%94---ios-%EC%97%90%EC%84%9C%EC%9D%98-scene)
 
 <br><br><br>
 
