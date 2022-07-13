@@ -44,12 +44,29 @@
 
 - Perform Selector Source 를 사용해야 하는 경우
 
+<br><br><br>
+
+# RunLoop 에서 수신하는 Event Source 와 구조
+- Input Source
+  - 다른 Thread 나 Application 에서 온 비동기 이벤트
+  - 핸들러에 비동기 이벤트를 전달하고 runUtilDate 메소드가 종료된다.
+- Timer
+  - 예약된 시간 또는 반복 간격으로 발생하는 동기 이벤트
+  - 핸들러에 이벤트를 전달하지만 RunLoop 를 종료하지는 않는다.
+
+- RunLoop 는 동작에 대해 노티피케이션을 생성한다.
+- 등록된 RunLoop 옵저버를 통해 알림을 수신하고 추가 처리를 위해 Thread 에 구현하는 것이 가능하다.
+
+<p align="center">
+  <img width="569" alt="img1" src="https://user-images.githubusercontent.com/101554627/178672201-ecca75bd-237e-4665-95e7-3373a4052b46.png">
+</p>
+
+<br><br><br>
 
 # RunLoop 를 실행시키는 방법
 - run()
   - run 메소드를 실행하기 전 정의해 놓았던 Input Source, Timer 는 영구적으로 처리한다.
   - run 메소드 전의 Timer 와 후의 Timer 를 실행한 모습 
-  - Timer 1 은 실행된다. Timer 2 는 실행되지 않는다.
 
 <p align="center">
   <img width="569" alt="img1" src="https://user-images.githubusercontent.com/101554627/178679960-a60b02f0-7fd7-4b49-84c7-433f04e4c3c8.gif">
@@ -62,32 +79,34 @@
 <br>
 
 - run(until: )
-  - 지정된 기간까지 메소드를 실행하기 전 정의해 놓았던 Input Source 를 처리한다.
+  - 메소드를 실행하기 전 정의해 놓았던 Input Source, Timer 를 지정된 기간까지 처리한다.
+  - Loop 의 실행 시간을 지정할 수 있다.
+
+<p align="center">
+  <img width="569" alt="img1" src="https://user-images.githubusercontent.com/101554627/178682892-b64a3880-b72b-4730-babe-c707cfb38111.gif">
+</p>
 
 <br>
 
 - acceptInput(fotMode: before:)
+  - Loop 를 한 번 실행하는데, 해당 모드 또는 지정된 날짜까지만 입력을 허용한다.
+
+<br><br>
+
+## RunLoop 의 모드
+
+|모드|이름|설명|
+|------|---|---|
+|Default|RunLoop.Mode.default(Cocoa)<br/><br/>kCFRunLoopDefaultMode(Core Foundtaion)|대부분 연산에 대한 기본 모드이다.|
+|Modal|RunLoop.Mode.modalPanel(Cocoa)|Modal Panel 에서 발생한 이벤트만 처리한다.<br/><br/>macOS 에서만 사용 가능하다.|
+|Event Tracking|RunLoop.Mode.EventTracking(Cocoa)|특정 이벤트 루프 중에 다른 이벤트 발생을 막아야 할 때 사용한다.( 마우스 드래깅 이벤트 등 )<br/><br/>macOS 에서만 사용 가능하다.|
+|Tracking|RunLoop.Mode.tracking(Cocoa)|컨트롤을 추적하고 있는 상황에서 사용한다.<br/><br/>iOS, tvOS 에서 사용 가능하다.|
+|Common modes|RunLoop.Mode.common(Cocoa)<br/><br/>kCFRunLoopCommonModes(Core Foundation)|여러 Mode 의 집합이다.<br/><br/>이 옵션으로 추가된 이벤트 소스나 옵저버는 common 모드에 속한 모든 모드에 속하게 된다.<br/><br/>기본 값으로 Cocoa 는 default, modal, eventTracking/ tracking 모드가 속하게 되고, Core Foundation 은 default 모드만 속해있다.<br/><br/>여기에 새로운 모드를 추가하려면 CFRunLoopAddCommonMode(::) 메소드를 사용하면 된다. (제거 기능은 없다. )|
 
 <br><br><br>
 
-# RunLoop 에서 수신하는 Event Source
-- Input Source
-  - 다른 Thread 나 Application 에서 온 비동기 이벤트
-- Timer
-  - 예약된 시간 또는 반복 간격으로 발생하는 동기 이벤트
-
-
-<p align="center">
-  <img width="569" alt="img1" src="https://user-images.githubusercontent.com/101554627/178672201-ecca75bd-237e-4665-95e7-3373a4052b46.png">
-</p>
-  
-  
-## Sub
-### TinySub
-
-
-
-
 
 # 참조
-- []()
+- [라이노님](https://jcsoohwancho.github.io/2019-09-01-%EC%8A%A4%EB%A0%88%EB%93%9C-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D(2)-RunLoop/)
+- [엠아이노님](https://minosaekki.tistory.com/54)
+- [소들님](https://babbab2.tistory.com/68)
