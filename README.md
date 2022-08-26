@@ -50,7 +50,7 @@
 
 # Etc
   - []()
-  - [](https://github.com/Raccoon97/Swift/blob/main/Etc/SnapKit%20%EC%82%AC%EC%9A%A9.md)
+  - [SnapKit 사용](https://github.com/Raccoon97/Swift/blob/main/Etc/SnapKit%20%EC%82%AC%EC%9A%A9.md)
 
 <br><br><br><br><br>
 
