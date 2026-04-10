@@ -21,7 +21,7 @@ from datetime import datetime
 sys.path.insert(0, str(Path(__file__).parent))
 
 from config import (
-    FundConfig, KISConfig, AlpacaConfig,
+    FundConfig, KISConfig,
     SchedulerConfig, SignalConfig,
 )
 from db.models import init_db
@@ -123,6 +123,11 @@ class DualTrader:
         logger.info("[KR] 장 시작 전 스크리닝 시작")
         try:
             self.kr_market.authenticate()
+            # KIS 토큰을 미국 시장 클라이언트에도 공유
+            self.us_market.share_token(
+                self.kr_market.access_token,
+                self.kr_market.token_expires_at,
+            )
             self.kr_watchlist = self.screener.screen_kr_stocks(self.kr_market)
             logger.info("[KR] 관심 종목 %d개 선정: %s",
                         len(self.kr_watchlist), self.kr_watchlist[:5])

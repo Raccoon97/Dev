@@ -26,16 +26,6 @@ class KISConfig:
     IS_PAPER = os.getenv("KIS_IS_PAPER", "true").lower() == "true"
 
 
-class AlpacaConfig:
-    """Alpaca Markets API 설정"""
-    API_KEY = os.getenv("ALPACA_API_KEY", "")
-    SECRET_KEY = os.getenv("ALPACA_SECRET_KEY", "")
-    BASE_URL = os.getenv("ALPACA_BASE_URL", "https://paper-api.alpaca.markets")  # 페이퍼
-    # 실거래: https://api.alpaca.markets
-    DATA_URL = "https://data.alpaca.markets"
-    IS_PAPER = os.getenv("ALPACA_IS_PAPER", "true").lower() == "true"
-
-
 class TelegramConfig:
     """텔레그램 봇 설정"""
     BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
