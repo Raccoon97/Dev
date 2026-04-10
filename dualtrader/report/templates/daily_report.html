@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>DualTrader 일간 보고서 - {{ date }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5; color: #333; padding: 20px;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        .header {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white; padding: 24px; border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .header h1 { font-size: 22px; margin-bottom: 4px; }
+        .header .date { font-size: 14px; opacity: 0.8; }
+        .card {
+            background: white; border-radius: 12px; padding: 20px;
+            margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .card h2 {
+            font-size: 16px; color: #1a1a2e; margin-bottom: 12px;
+            border-bottom: 2px solid #eee; padding-bottom: 8px;
+        }
+        .metric-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+        }
+        .metric {
+            background: #f8f9fa; border-radius: 8px; padding: 12px;
+        }
+        .metric .label { font-size: 12px; color: #666; }
+        .metric .value { font-size: 20px; font-weight: 700; margin-top: 4px; }
+        .positive { color: #e74c3c; }
+        .negative { color: #3498db; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th { text-align: left; padding: 8px; background: #f8f9fa; color: #666; font-weight: 600; }
+        td { padding: 8px; border-bottom: 1px solid #eee; }
+        .pnl-positive { color: #e74c3c; font-weight: 600; }
+        .pnl-negative { color: #3498db; font-weight: 600; }
+        .watchlist { display: flex; flex-wrap: wrap; gap: 8px; }
+        .watchlist .chip {
+            background: #e8f4f8; color: #16213e; padding: 6px 12px;
+            border-radius: 16px; font-size: 13px; font-weight: 500;
+        }
+        .footer {
+            text-align: center; color: #999; font-size: 12px;
+            margin-top: 20px; padding: 12px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>DualTrader 일간 보고서</h1>
+        <div class="date">{{ date }} {{ time }}</div>
+    </div>
+
+    <!-- 자산 현황 -->
+    <div class="card">
+        <h2>자산 현황</h2>
+        <div class="metric-grid">
+            <div class="metric">
+                <div class="label">총 자산</div>
+                <div class="value">{{ total_asset }}</div>
+            </div>
+            <div class="metric">
+                <div class="label">초기 대비</div>
+                <div class="value {{ 'positive' if initial_pct >= 0 else 'negative' }}">
+                    {{ initial_pct_str }}
+                </div>
+            </div>
+            <div class="metric">
+                <div class="label">KRW 파트</div>
+                <div class="value">{{ krw_total }}</div>
+            </div>
+            <div class="metric">
+                <div class="label">USD 파트</div>
+                <div class="value">{{ usd_total }}</div>
+            </div>
+            <div class="metric">
+                <div class="label">미실현 손익</div>
+                <div class="value {{ 'positive' if unrealized_pnl >= 0 else 'negative' }}">
+                    {{ unrealized_pnl_str }}
+                </div>
+            </div>
+            <div class="metric">
+                <div class="label">환율 (USD/KRW)</div>
+                <div class="value">{{ exchange_rate }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 전일 매매 내역 -->
+    <div class="card">
+        <h2>전일 매매 내역</h2>
+        <p style="margin-bottom:8px; font-size:14px;">
+            매수 {{ buy_count }}건 / 매도 {{ sell_count }}건 /
+            실현 손익: <span class="{{ 'pnl-positive' if realized_pnl >= 0 else 'pnl-negative' }}">
+                {{ realized_pnl_str }}
+            </span>
+        </p>
+        {% if orders %}
+        <table>
+            <thead>
+                <tr><th>시장</th><th>종목</th><th>구분</th><th>수량</th><th>가격</th><th>상태</th></tr>
+            </thead>
+            <tbody>
+                {% for o in orders %}
+                <tr>
+                    <td>{{ o.market }}</td>
+                    <td>{{ o.symbol }}</td>
+                    <td>{{ o.side }}</td>
+                    <td>{{ o.quantity }}</td>
+                    <td>{{ o.price }}</td>
+                    <td>{{ o.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="color:#999; font-size:14px;">매매 내역이 없습니다.</p>
+        {% endif %}
+    </div>
+
+    <!-- 현재 보유 포지션 -->
+    <div class="card">
+        <h2>현재 보유 포지션</h2>
+        {% if positions %}
+        <table>
+            <thead>
+                <tr><th>시장</th><th>종목</th><th>수량</th><th>진입가</th><th>현재가</th><th>수익률</th></tr>
+            </thead>
+            <tbody>
+                {% for p in positions %}
+                <tr>
+                    <td>{{ p.market }}</td>
+                    <td>{{ p.symbol }} {{ p.name }}</td>
+                    <td>{{ p.quantity }}</td>
+                    <td>{{ p.entry_price }}</td>
+                    <td>{{ p.current_price }}</td>
+                    <td class="{{ 'pnl-positive' if p.pnl_pct >= 0 else 'pnl-negative' }}">
+                        {{ p.pnl_pct_str }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="color:#999; font-size:14px;">보유 포지션이 없습니다.</p>
+        {% endif %}
+    </div>
+
+    <!-- 관심 종목 -->
+    {% if watchlist_kr or watchlist_us %}
+    <div class="card">
+        <h2>내일 관심 종목</h2>
+        {% if watchlist_kr %}
+        <p style="font-size:13px; color:#666; margin-bottom:6px;">KR</p>
+        <div class="watchlist" style="margin-bottom:12px;">
+            {% for s in watchlist_kr %}
+            <span class="chip">{{ s }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% if watchlist_us %}
+        <p style="font-size:13px; color:#666; margin-bottom:6px;">US</p>
+        <div class="watchlist">
+            {% for s in watchlist_us %}
+            <span class="chip">{{ s }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="footer">
+        DualTrader v0.1.0 &mdash; 자동 생성 보고서
+    </div>
+</div>
+</body>
+</html>
