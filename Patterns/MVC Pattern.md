@@ -123,7 +123,7 @@ class ViewController: UIViewController {
     guard let email = emailTxtField.text else {return}
     guard let passwd = passwdTxtField.text else {return}
     
-    user = User(email: email, passwd: passwd
+    user = User(email: email, passwd: passwd)
     
     if user.email == "test@gmail.com" && user.passwd == "12345" {
       message.text = "로그인 성공"
@@ -152,7 +152,7 @@ struct User {
 
 ### 단점
 - View 와 Controller 가 너무 밀접하게 연결되어 있다.
-- Controller 가 View 의 생명주기까지 관랗기 때문에 View 와 Controller 를 분리하기 어렵다.
+- Controller 가 View 의 생명주기까지 관리하기 때문에 View 와 Controller 를 분리하기 어렵다.
 >- 재사용성이 떨어지고 유닛 테스트를 진행하기 어렵다.
 - 대부분의 코드가 Controller 에 밀집될 수 있는데, 그런 이유로 MVC를 Massive View Controller 라고 부르기도 한다.
 

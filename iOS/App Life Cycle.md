@@ -113,7 +113,7 @@ sceneWillEnterForeground(_ :)
 // 비활성화 상태를 거쳐 활성화 상태가 된다.
 
 sceneWillResignActive(_ :)
-// App Switcher 모드 ( 홈 바 쓸어올렷을 경우, 홈 버튼 두 번 눌렀을 경우
+// App Switcher 모드 ( 홈 바 쓸어올렸을 경우, 홈 버튼 두 번 눌렀을 경우 )
 ```
 
 ## Active
@@ -154,23 +154,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
     
-    func applciationWillResignActive(_ application: UIApplication) {
+    func applicationWillResignActive(_ application: UIApplication) {
     }
     
-    func applciationDidEnterBackground(_ application: UIApplication) {
+    func applicationDidEnterBackground(_ application: UIApplication) {
     }
     
-    func applciationWillEnterForeground(_ application: UIApplication) {
+    func applicationWillEnterForeground(_ application: UIApplication) {
     }
     
-    func applciationDidBecomeActive(_ application: UIApplication) {
+    func applicationDidBecomeActive(_ application: UIApplication) {
     }
     
-    func applciationWillTerminate(_ application: UIApplication) {
+    func applicationWillTerminate(_ application: UIApplication) {
     }
 ```
 - 위 코드를 보면 AppDelegate 객체는 UIResponder 와 UIApplicationDelegate 를 상속 및 참조하고 있다.
-- UIResponder 는 App 에서 발생하는 이벤트들을 담고 잇는 추상형 인터페이슥 객체로 View 와 사용자 이벤트간의 연결을 관리하는 역할을 한다.
+- UIResponder 는 App 에서 발생하는 이벤트들을 담고 있는 추상형 인터페이스 객체로 View 와 사용자 이벤트간의 연결을 관리하는 역할을 한다.
 - UIApplicationDelegate 는 UIApplication 객체의 작업에 개발자가 접근할 수 있도록 하는 메소드 들을 담고 있다.
 
 <br>

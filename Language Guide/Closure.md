@@ -107,7 +107,7 @@ func doSomething() -> () -> () {
 }
 ```
 >- 실제 Return을 할 때 함수가 아닌 Closure 를 Return할 수 있다.
-```swfit
+```swift
 let closure = doSomething()
 closure()
 ```

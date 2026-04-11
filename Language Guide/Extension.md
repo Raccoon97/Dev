@@ -188,7 +188,7 @@ extension Int {
 <br><br><br>
 
 # 중첩 타입
-- Extension 을 이용해 Class, Strucr, Enum 에 중첩 타입을 추가할 수 있다.
+- Extension 을 이용해 Class, Struct, Enum 에 중첩 타입을 추가할 수 있다.
 - 아래 코드는 Int 에 중첩형 Enum 을 추가하는 예시이다.
 ```swift
 // Kind 라는 Enum 은, Int 를 음수, 0, 양수로 표현한다.

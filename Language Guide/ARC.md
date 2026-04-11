@@ -81,7 +81,7 @@ reference2 = nil
 - 두 개의 변수에 nil 을 할당하여 원래의 참조를 포함한 Strong Reference 2개를 끊게 되면 하나의 Strong Reference 가 남아있기에 Person 인스턴스가 할당 해제되지 않는다.
 ```swift
 reference3 = nil
-// Prints "John Appleseed is being deinitialized"
+// Prints "Raccoon97 is being deinitialized"
 ```
 - 마지막 세 번째 변수에 nil 을 할당하여 마지막 Strong Reference 를 끊게 되면 이제 Person 인스턴스와 연결된 Strong Reference 는 하나도 없으므로 디이니셜라이저가 호출되면서 메시지가 출력된다.
 
@@ -102,11 +102,11 @@ class Person {
 class Apartment {
     let unit: String
     init(unit: String) { self.unit = unit }
-    var tennant: Person?
+    var tenant: Person?
     deinit { print("Apartment \(unit) is being deinitialized") }
 }
 ```
-- Person 인스턴스에는 필수적으로 name, 선택적으로 apartment 프로퍼티를.   Apartment 인스턴스에는 필수적으로 unit, 선택적으로 tennant 프로퍼티를 가진다.
+- Person 인스턴스에는 필수적으로 name, 선택적으로 apartment 프로퍼티를.   Apartment 인스턴스에는 필수적으로 unit, 선택적으로 tenant 프로퍼티를 가진다.
 - 두 인스턴스 모두 메모리 할당 해제를 가시적으로 확인할 수 있는 메시지가 출력된다.
 ```swift
 var john: Person?
@@ -126,7 +126,7 @@ unit4A = Apartment(unit: "4A")
 - 이제 두 인스턴스를 서로 연결할 수 있다.
 ```swift
 john!.apartment = unit4A
-unit4A!.tennant = john
+unit4A!.tenant = john
 ```
 - 아래 이미지는 두 인스턴스를 연결한 후 Strong Reference 의 변화를 보여준다.
 
@@ -165,7 +165,7 @@ unit4A = nil
 - 프로퍼티, 변수 선언 시 앞에 weak 키워드를 배치한다.
 ```swift
 // 예시
-weak var tennant: Person?
+weak var tenant: Person?
 ```
 - 인스턴스를 Strong Reference 하지 않기 때문에 해당 인스턴스를 참조하는 동안 할당 해제될 수 있다.
 - ARC 는 참조하는 인스턴스가 할당 해제될 때 Weak Reference 를 nil 로 할당한다.
@@ -184,7 +184,7 @@ class Person {
 class Apartment {
     let unit: String
     init(unit: String) { self.unit = unit }
-    weak var tennant: Person?
+    weak var tenant: Person?
     deinit { print("Apartment \(unit) is being deinitialized") }
 }
 ```
@@ -197,7 +197,7 @@ john = Person(name: "John Appleseed")
 unit4A = Apartment(unit: "4A")
 
 john!.apartment = unit4A
-unit4A!.tennant = john
+unit4A!.tenant = john
 ```
 - 아래 이미지는 두 인스턴스를 연결한 Reference 의 상태를 보여준다.
 
@@ -211,7 +211,7 @@ unit4A!.tennant = john
 john = nil
 // Prints "John Appleseed is being deinitialized"
 ```
-- Person 인스턴스의 디이니셜라이저가 호출되며 메시지가 출력되었고, 더 이상 Strong Reference 가 없으므로 Apartment 인스턴스의 tennant 속성이 nil 로 바뀌게 된다.
+- Person 인스턴스의 디이니셜라이저가 호출되며 메시지가 출력되었고, 더 이상 Strong Reference 가 없으므로 Apartment 인스턴스의 tenant 속성이 nil 로 바뀌게 된다.
 - 아래 이미지는 Person 인스턴스를 갖는 john 변수를 nil 로 할당한 뒤 Reference 의 변화를 보여준다.
 
 <br>
@@ -242,7 +242,7 @@ unit4A = nil
 - 프로퍼티, 변수 선언 시 앞에 unowned 키워드를 배치한다.
 ```swift
 // 예시
-unowned var tennant: Person?
+unowned var tenant: Person?
 ```
 - Weak Reference 는 값이 nil 이어도 괜찮지만 Unowned Reference 는 항상 값이 있어야 한다.
 - ARC 는 Unowned Reference 의 값을 nil 로 설정하지 않는다.
@@ -274,7 +274,7 @@ class CreditCard {
 >- CreditCard 클래스의 numer 프로퍼티는 32비트 및 64비트 시스템에서 16자리의 카드 번호를 저장할 수 있을 만큼 Int 가 아닌 UInt64 로 정의한다.
 - Customer 클래스를 사용하기 위해 변수를 선언한다.
 ```swift
-var john
+var john: Customer?
 ```
 - Customer 인스턴스를 만들고 card 프로퍼티에 CreditCard 인스턴스를 할당한다.
 ```swift
