@@ -92,7 +92,7 @@
 
 <br>
 
-- acceptInput(fotMode: before:)
+- acceptInput(forMode: before:)
   - Loop 를 한 번 실행하는데, 해당 모드 또는 지정된 날짜까지만 입력을 허용한다.
 
 <br><br>

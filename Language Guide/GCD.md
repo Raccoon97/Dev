@@ -30,7 +30,7 @@
 - <p>Task 를 관리하는 Queue 이기 때문에, FIFO 데이터 구조이다. ( First In, First Out )</p>
 - Dispatch Queue 에는 Serial Dispatch Queue 와 Concurrent Dispatch Queue, Main Dispatch Queue 가 있다.
   - Serial Disaptch Queue - Queue 에 쌓인 Task 들을 순차적으로 1개씩 시작하며 이전 Task 가 종료되면 다음 Task 를 실행한다. ( 1번에 1개 )
-  - oncurrent Disaptch Queue - Queue 에 쌓인 Task 들을 순서대로 시작하며, 이전 Task 가 종료되는 것을 기다리지 않고 다음 Task 를 실행한다. ( FIFO 구조로 계속 Task 를 실행 )
+  - Concurrent Dispatch Queue - Queue 에 쌓인 Task 들을 순서대로 시작하며, 이전 Task 가 종료되는 것을 기다리지 않고 다음 Task 를 실행한다. ( FIFO 구조로 계속 Task 를 실행 )
   - Main Dispatch Queue - Application 의 MainThread 에서 RunLoop 를 통해 관리되는 Queue 이며, Serial 하게 수행된다.
 
 <br>
@@ -122,31 +122,31 @@ DispatchQueue.global(qos: .userInteractive).async {
 - <p>QoS 는 우선 순위를 결정하고 시스템이 성능을 최적화 할 수 있도록 지원한다.</p>
 
 ```swift
-// Main Queue, 메인 헤드에 해당하는 클래스이다.
-DispatchQueue.global(pos: .userInteractive) {}
+// Main Queue, 메인 스레드에 해당하는 클래스이다.
+DispatchQueue.global(qos: .userInteractive) {}
 
 // 유저가 시작한 작업, 유저가 응답을 기다림
-// 사용자가 트리거한 작업은 기본 Thred 에서 실행할 필요가 없다. 
+// 사용자가 트리거한 작업은 기본 Thread 에서 실행할 필요가 없다.
 // DISPATCH_QUEUE_PRIORITY_HIGH 와 동일하다.
-DispatchQueue.global(pos: .userInitiated) {}
+DispatchQueue.global(qos: .userInitiated) {}
 
 // userInitiated 와 utility 의 중간
-// 기본 QoS 이다. 
-// DISPATCH_QUE_PRIORITY_DEFAULT 와 동일하다.
-DispatchQueue.global(pos: .default) {}
+// 기본 QoS 이다.
+// DISPATCH_QUEUE_PRIORITY_DEFAULT 와 동일하다.
+DispatchQueue.global(qos: .default) {}
 
 // 시간이 걸리며 즉각적인 응답이 필요하지 않은 경우
-// 파일 및 네트워크 I/O 와 같은 시스템 리소스에 의존하는 Dispatch 항목에 사용된다. 
-// DISPATCH_QUE_PRIORITY_LOW 와 동일하다.
-DispatchQueue.global(pos: .utility) {}
+// 파일 및 네트워크 I/O 와 같은 시스템 리소스에 의존하는 Dispatch 항목에 사용된다.
+// DISPATCH_QUEUE_PRIORITY_LOW 와 동일하다.
+DispatchQueue.global(qos: .utility) {}
 
 // 눈에 보이지 않는 부분의 작업, 완료되는 시간이 중요하지 않을 경우
-// 우선 순위가 낮은 작업에 사용된다. 
-// DISPATCH_QUE_PRIORITY_BACKGROUND 와 동일하다. 
-DispatchQueue.global(pos: .background) {}
+// 우선 순위가 낮은 작업에 사용된다.
+// DISPATCH_QUEUE_PRIORITY_BACKGROUND 와 동일하다.
+DispatchQueue.global(qos: .background) {}
 
 // QoS 가 지정되지 않는 경우
-DispatchQueue.global(pos: .unspecified) {}
+DispatchQueue.global(qos: .unspecified) {}
 ```
 
 - <p>Main Dispatch Queue 를 통해 아래 예시처럼 Main Thread 에 작업을 제출할 수 있다.</p>
@@ -294,9 +294,9 @@ DispatchQueue.global().async {
 - <p>Block Coding 시 순환참조에 주의해야 한다.</p>
 - <p>DeadLock 에 주의해야 한다. ( MainQueue 에서의 Sync 는 DeadLock 을 야기한다. )</p>
 - Obj-C 와 Swift 의 Block/Closure 에서 참조하는 외부 변수가 Reference Type 인지 Value Type 인지 고려해야 한다.
-  - Obj-C Block 내 변수는 Value Type 이며 Swift Closuer 내 변수는 Reference Type 이다.
-  - Ojb-C Block 의 경우는 _block 키워드를 선언하여 Reference Type 으로 사용할 수 있다.
-  - Swift Clouser 의 경우는 Capture List 를 선언하여 Value Type 으로 사용할 수 있다.
+  - Obj-C Block 내 변수는 Value Type 이며 Swift Closure 내 변수는 Reference Type 이다.
+  - Obj-C Block 의 경우는 __block 키워드를 선언하여 Reference Type 으로 사용할 수 있다.
+  - Swift Closure 의 경우는 Capture List 를 선언하여 Value Type 으로 사용할 수 있다.
 
 <br><br><br>
 
@@ -305,7 +305,7 @@ DispatchQueue.global().async {
 - <p>MainQueue 는 Serial 하기 때문에, UI 갱신이 아닌 API 호출이나 Download 같은 작업을 MainQueue 에서 할 경우 Freezing 현상이 일어나며 Application 의 효율이 떨어지게 된다.</p>
 - <p>tableView 혹은 collectionView 를 이용한 List 를 보여주는 동작에서 Image 에 대한 다운로드를 MainQueue 에서 모두 수행할 경우 버벅임이 일어난다.</p>
 - <p>Image DownLoad 는 globalQueue( Concurrent Queue ) 에서 수행시키고 Download 완료 시 UI 갱신만 MainQueue 에서 호출해야 한다.</p>
-- <p>UI 갱신이 필요하지 않고, 수행시간이 길거나, 수행에 소비되는 리소스가 큰 경우 Councurrent Queue 를 이용하면 좋다.</p>
+- <p>UI 갱신이 필요하지 않고, 수행시간이 길거나, 수행에 소비되는 리소스가 큰 경우 Concurrent Queue 를 이용하면 좋다.</p>
 
 <br><br><br>
 
