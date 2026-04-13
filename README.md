@@ -63,6 +63,7 @@
   - [Heap](CS/Data%20Structure/Heap.md)
   - [Tree 와 Binary Search Tree](CS/Data%20Structure/Tree%20%EC%99%80%20Binary%20Search%20Tree.md)
   - [Graph](CS/Data%20Structure/Graph.md)
+  - [Trie](CS/Data%20Structure/Trie.md)
 
 ### Operating System
   - [Process 와 Thread](CS/Operating%20System/Process%20%EC%99%80%20Thread.md)
@@ -79,6 +80,7 @@
   - [DNS](CS/Network/DNS.md)
   - [인증 방식 (Cookie / Session / JWT)](CS/Network/%EC%9D%B8%EC%A6%9D%20%EB%B0%A9%EC%8B%9D.md)
   - [Load Balancing 과 CDN](CS/Network/Load%20Balancing%20%EA%B3%BC%20CDN.md)
+  - [WebSocket](CS/Network/WebSocket.md)
 
 ### Database
   - [관계형 데이터베이스](CS/Database/%EA%B4%80%EA%B3%84%ED%98%95%20%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4.md)
@@ -93,6 +95,7 @@
   - [함수형 프로그래밍](CS/Software%20Engineering/%ED%95%A8%EC%88%98%ED%98%95%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D.md)
   - [디자인 패턴](CS/Software%20Engineering/%EB%94%94%EC%9E%90%EC%9D%B8%20%ED%8C%A8%ED%84%B4.md)
   - [Test Code](CS/Software%20Engineering/Test%20Code.md)
+  - [클린 아키텍처](CS/Software%20Engineering/%ED%81%B4%EB%A6%B0%20%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98.md)
 
 ### Algorithm
   - [시간 복잡도와 공간 복잡도](CS/Algorithm/%EC%8B%9C%EA%B0%84%20%EB%B3%B5%EC%9E%A1%EB%8F%84%EC%99%80%20%EA%B3%B5%EA%B0%84%20%EB%B3%B5%EC%9E%A1%EB%8F%84.md)

@@ -63,7 +63,7 @@ pod install
 
 >- SnapKit Git 에서는 Swift 4. 버전은 SnapKit 4. 버전으로, Swift 5. 버전은 SnapKit 5. 버전으로 사용하는 것을 추천한다.
 >- 플랫폼을 따로 지정하지 않아 자동으로 iOS 13. 으로 지정되었다. https://guides.cocoapods.org/syntax/podfile.html#platform 을 참고해서 플랫폼을 지정하자.
->- 마스터 사양 보고서는 추후에..
+>- CocoaPods 의 Master Specs Repo 는 라이브러리의 버전 정보와 소스 위치 등을 관리하는 저장소이다. `pod install` 시 자동으로 참조된다.
 
 ## SnapKit 사용하기
 - 프로젝트 폴더를 보면 아래 이미지와 같이 xcworkspace 파일이 새로 추가되었을텐데, 그걸 실행해준다.

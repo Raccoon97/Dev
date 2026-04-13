@@ -92,7 +92,7 @@ class ViewController: UIViewController {
     
     if user_Email == "test@gmail.com" && user_Passwd == "12345" {
       message.text = "로그인 성공"
-      message.text.isHidden = false
+      message.isHidden = false
     }
   }
 }
@@ -127,7 +127,7 @@ class ViewController: UIViewController {
     
     if user.email == "test@gmail.com" && user.passwd == "12345" {
       message.text = "로그인 성공"
-      message.text.isHidden = false
+      message.isHidden = false
     }
   }
 }

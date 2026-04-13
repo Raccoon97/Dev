@@ -9,9 +9,9 @@
 >- [Unowned Optional Reference](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/ARC.md#unowned-optional-reference)
 >- [Unowned Reference 와 암시적으로 래핑 해제 된 Optional Properties](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/ARC.md#unowned-reference-%EC%99%80-%EC%95%94%EC%8B%9C%EC%A0%81%EC%9C%BC%EB%A1%9C-%EB%9E%98%ED%95%91-%ED%95%B4%EC%A0%9C-%EB%90%9C-optional-properties)
 - [Closure 를 위한 Strong Reference Cycle](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/ARC.md#closure-%EB%A5%BC-%EC%9C%84%ED%95%9C-strong-reference-cycle)
-- [Clousre 에 대한 Strong Reference Cycle 해결 - 작성 중.. 2022_04_29](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/ARC.md#clousre-%EC%97%90-%EB%8C%80%ED%95%9C-strong-reference-cycle-%ED%95%B4%EA%B2%B0)
->- [Capture List 정의 - 작성 전](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/ARC.md#arc-automatic-reference-counting-)
->- [Closure 에 대한 Weak Reference 및 Unowned Reference - 작성 중](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/ARC.md#arc-automatic-reference-counting-)
+- [Closure 에 대한 Strong Reference Cycle 해결](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/ARC.md#closure-%EC%97%90-%EB%8C%80%ED%95%9C-strong-reference-cycle-%ED%95%B4%EA%B2%B0)
+>- [Capture List 정의](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/ARC.md#capture-list-%EC%A0%95%EC%9D%98)
+>- [Closure 에 대한 Weak Reference 및 Unowned Reference](https://github.com/Raccoon97/Swift/blob/main/Language%20Guide/ARC.md#closure-%EC%97%90-%EB%8C%80%ED%95%9C-weak-reference-%EB%B0%8F-unowned-reference)
 
 
 
@@ -171,7 +171,7 @@ weak var tenant: Person?
 - ARC 는 참조하는 인스턴스가 할당 해제될 때 Weak Reference 를 nil 로 할당한다.
 - Weak Reference 는 런타임에 값을 nil 로 변경할 수 있도록 해야 하므로 항상 상수가 아닌 Optional Type 의 var 형식으로 선언된다.
 - ARC 가 Weak Reference 에 nil 을 할당할 때 Property Observer 는 호출되지 않는다. 
->- Property Observer 는 무엇인가.. [Zedd님 블로그](https://zeddios.tistory.com/247]
+>- Property Observer 는 무엇인가.. [Zedd님 블로그](https://zeddios.tistory.com/247)
 - 아래의 예시는 위의 예시와 같지만, Apartment 클래스의 tennant 프로퍼티가 Weak Reference 로 선언된다.
 ```swift
 class Person {
@@ -453,7 +453,122 @@ paragraph = nil
 - HTMLElement 의 디이니셜라이저 메시지는 출력되지 않았다.
 
 <br><br><br>
-# Clousre 에 대한 Strong Reference Cycle 해결
-- Clousre Capture List 를 정의하여 Closure 와 Class 인스턴스 간의 Strong Reference Cycle 을 해결한다.
-- Captue List 는 Closure 본문 내에서 하나 이상의 Reference Type 을 Capture 할 때 사용할 규칙을 정의한다.
-- 계속..
+# Closure 에 대한 Strong Reference Cycle 해결
+- Closure 의 **Capture List** 를 정의하여 Closure 와 Class 인스턴스 간의 Strong Reference Cycle 을 해결한다.
+- Capture List 는 Closure 본문 내에서 하나 이상의 Reference Type 을 Capture 할 때 사용할 규칙을 정의한다.
+- 두 Class 인스턴스 간의 Strong Reference Cycle 해결과 마찬가지로 **Weak Reference** 또는 **Unowned Reference** 를 사용한다.
+
+<br><br><br>
+
+# Capture List 정의
+- Capture List 의 각 항목은 `weak` 또는 `unowned` 키워드와 클래스 인스턴스에 대한 참조 (예: `self`) 또는 어떤 값으로 초기화된 변수를 쌍으로 한다.
+- Closure 의 매개변수 목록 앞에 대괄호 `[]` 안에 작성하며, 쉼표로 구분한다.
+
+```swift
+// Closure 에 매개변수와 반환 타입이 있는 경우
+lazy var someClosure = {
+    [unowned self, weak delegate = self.delegate]
+    (index: Int, stringToProcess: String) -> String in
+    // Closure 본문
+}
+
+// Closure 에 매개변수와 반환 타입이 없는 경우 (컨텍스트에서 추론)
+lazy var someClosure = {
+    [unowned self, weak delegate = self.delegate] in
+    // Closure 본문
+}
+```
+
+<br><br><br>
+
+# Closure 에 대한 Weak Reference 및 Unowned Reference
+- Closure 와 Capture 하는 인스턴스가 항상 서로를 참조하고 **동시에 할당 해제** 되는 경우 `unowned` 를 사용한다.
+- Capture 된 참조가 **나중에 nil 이 될 수 있는 경우** `weak` 를 사용한다.
+- Capture 된 참조가 nil 이 되지 않을 것이 확실하면 `unowned` 로 Capture 해야 한다.
+
+### Unowned Reference 로 해결
+- 위의 HTMLElement 예시에서 Strong Reference Cycle 을 해결하는 방법은 다음과 같다.
+
+```swift
+class HTMLElement {
+    let name: String
+    let text: String?
+    
+    lazy var asHTML: () -> String = {
+        [unowned self] in
+        if let text = self.text {
+            return "<\(self.name)>\(text)</\(self.name)>"
+        } else {
+            return "<\(self.name) />"
+        }
+    }
+    
+    init(name: String, text: String? = nil) {
+        self.name = name
+        self.text = text
+    }
+    
+    deinit {
+        print("\(name) is being deinitialized")
+    }
+}
+```
+
+- Capture List 에 `[unowned self]` 를 추가하면 Closure 는 self 를 Strong Reference 가 아닌 **Unowned Reference** 로 Capture 한다.
+
+```swift
+var paragraph: HTMLElement? = HTMLElement(name: "p", text: "hello, world")
+print(paragraph!.asHTML())
+// Prints "<p>hello, world</p>"
+
+paragraph = nil
+// Prints "p is being deinitialized"
+```
+
+- paragraph 변수를 nil 로 할당하면 HTMLElement 인스턴스가 정상적으로 할당 해제된다.
+
+![image](https://docs.swift.org/swift-book/_images/closureReferenceCycle02_2x.png)
+
+### Weak Reference 로 해결
+- Capture 된 참조가 나중에 nil 이 될 수 있는 경우 `weak` 를 사용한다.
+- `weak` 로 Capture 하면 해당 참조는 **Optional** 이 되며, 참조하는 인스턴스가 할당 해제되면 자동으로 nil 이 된다.
+
+```swift
+class HTMLElement {
+    let name: String
+    let text: String?
+    
+    lazy var asHTML: () -> String = {
+        [weak self] in
+        guard let self = self else { return "" }
+        if let text = self.text {
+            return "<\(self.name)>\(text)</\(self.name)>"
+        } else {
+            return "<\(self.name) />"
+        }
+    }
+    
+    init(name: String, text: String? = nil) {
+        self.name = name
+        self.text = text
+    }
+    
+    deinit {
+        print("\(name) is being deinitialized")
+    }
+}
+```
+
+- `[weak self]` 를 사용하면 Closure 내에서 `self` 가 Optional 이 되므로 `guard let` 이나 Optional Chaining 으로 안전하게 접근해야 한다.
+
+<br><br><br>
+
+# 면접 예상 질문
+- **Q. Closure 에서 [weak self] 와 [unowned self] 의 차이는?**
+  - `weak self` 는 self 를 Optional 로 Capture 하며, 참조 대상이 해제되면 nil 이 됩니다. `unowned self` 는 Non-Optional 로 Capture 하며, 참조 대상이 해제된 후 접근하면 런타임 오류가 발생합니다. self 가 먼저 해제될 수 있으면 `weak`, Closure 와 self 의 생명주기가 같으면 `unowned` 을 사용합니다.
+
+- **Q. Closure 에서 Strong Reference Cycle 이 발생하는 이유는?**
+  - Closure 는 Reference Type 이므로 Closure 가 `self` 를 Capture 하고, 동시에 `self` 가 해당 Closure 를 Strong Reference 로 들고 있으면 서로를 참조하는 Cycle 이 발생합니다. Capture List 에 `weak` 또는 `unowned` 를 사용해 해결합니다.
+
+- **Q. Capture List 란 무엇인가요?**
+  - Closure 가 외부 변수를 Capture 할 때 **참조 방식 (strong, weak, unowned)** 을 명시적으로 지정하는 목록입니다. `[weak self, unowned delegate]` 와 같이 대괄호 안에 작성하며, Strong Reference Cycle 을 방지하기 위해 사용됩니다.

@@ -19,7 +19,7 @@
 
 ## loadView
 - ViewController 가 View 를 만들고 메모리에 올리는 역할을 한다.
-- View 와 ViewController 를 만들기 위해서 Interface Builder 를 사용했다면 이 메소드를 override 하지 말아야 한다. ??
+- Interface Builder (Storyboard) 를 사용해 View 를 구성한 경우, loadView 를 override 하면 IB 에서 설정한 View 가 무시되므로 override 하지 않아야 한다.
 
 <br>
 

@@ -57,8 +57,6 @@ var frame: CGRect { get set }
 - frame.size 는 View 가 차지하는 영역을 모두 감싸는 사각형인데, 회전할 경우 차지하는 영역이 변화되기 때문이다.
 - frame.size 가 변경되면 origin 값도 바뀔 수 있다.
 
->- secondeView --> secondView
-
 ## frame.origin 의 변경
 
 <img width="1440" alt="스크린샷 2022-06-24 오후 9 23 36" src="https://user-images.githubusercontent.com/101554627/175534056-4287c89c-0362-4627-8a42-8042d9c80046.png">
@@ -124,6 +122,6 @@ var bounds: CGRect { get set }
 - View.clipsToBounds = true 를 적용해주면 viewPort 의 위치를 옮겼을 때, SubView 가 밖으로 튀어나오는 현상을 없애준다.
 
 <br><br><br>
-# 참고
+# 참조
 - [소들님](https://babbab2.tistory.com/46?category=831129)
 - [유시형님](https://sihyungyou.github.io/iOS-frame-bounds/)

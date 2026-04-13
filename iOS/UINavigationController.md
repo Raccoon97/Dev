@@ -116,7 +116,7 @@ import UIKit
 // 버튼의 3가지 위치를 미리 지정.
 let statBtnRect = CGRect(x: 50, y: 100, width: 300, height: 52)
 let commonBtnRect = CGRect(x: 100, y: 100, width: 200, height: 52)
-let dimissBtnRect = CGRect(x: 100, y: 162, width: 200, height: 52)
+let dismissBtnRect = CGRect(x: 100, y: 162, width: 200, height: 52)
 
 // 버튼을 만들고 View 에 띄우는 함수
 // 3 개의 뷰컨트롤러에 겹치는 부분이 많아 코드가 길어져서 상단으로 빼놓았다.
