@@ -102,6 +102,11 @@
   - [Greedy Algorithm](CS/Algorithm/Greedy%20Algorithm.md)
   - [그래프 알고리즘](CS/Algorithm/%EA%B7%B8%EB%9E%98%ED%94%84%20%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98.md)
 
+<br><br>
+
+# Projects
+  - [music2score](music2score/) - 음악을 듣고 악보(MusicXML / MIDI)를 만드는 프로그램 (Python) - 2026. 09. 26
+
 <br><br><br><br><br>
 
 ## iOS Road Map

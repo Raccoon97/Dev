@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "music2score"
+version = "0.1.0"
+description = "음악(오디오)을 듣고 악보(MusicXML / MIDI)를 만드는 프로그램"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "librosa>=0.10",
+    "music21>=9",
+    "numpy",
+    "soundfile",
+]
+
+[project.optional-dependencies]
+poly = ["basic-pitch>=0.3"]   # 피아노 등 화음 인식 (TensorFlow 포함, 무거움)
+mic = ["sounddevice"]         # 마이크 녹음
+dev = ["pytest"]
+
+[project.scripts]
+music2score = "music2score.__main__:main"
+
+[tool.setuptools]
+packages = ["music2score"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning", "ignore::FutureWarning", "ignore::UserWarning"]
