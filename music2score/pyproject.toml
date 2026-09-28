@@ -18,6 +18,7 @@ dependencies = [
 [project.optional-dependencies]
 poly = ["basic-pitch>=0.3"]   # 피아노 등 화음 인식 (TensorFlow 포함, 무거움)
 mic = ["sounddevice"]         # 마이크 녹음
+separate = ["onnxruntime"]    # 밴드 음원에서 베이스 등 악기 분리 (--stem)
 dev = ["pytest"]
 
 [project.scripts]

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import math
+from dataclasses import replace
 
 import librosa
 import numpy as np
@@ -97,7 +98,7 @@ def quantize(
     for n in sorted(notes, key=lambda n: (n.start, n.pitch)):
         s = max(0.0, snap(n.start))
         e = max(snap(n.end), s + step)
-        snapped.append(QuantizedNote(s, e - s, n.pitch, n.velocity))
+        snapped.append(QuantizedNote(s, e - s, n.pitch, n.velocity, n.tech))
 
     if monophonic:
         return _monophonize(snapped, step, bar_length, slack)
@@ -150,7 +151,7 @@ def _monophonize(
                 if boundary <= limit and _fill_gap(cur.length, boundary - end, step, slack):
                     end = float(boundary)
                     break
-        result.append(QuantizedNote(cur.offset, end - cur.offset, cur.pitch, cur.velocity))
+        result.append(replace(cur, length=end - cur.offset))
     return result
 
 
@@ -164,7 +165,7 @@ def ring_together(qnotes: list[QuantizedNote]) -> list[QuantizedNote]:
     longest: dict[float, float] = {}
     for q in qnotes:
         longest[q.offset] = max(longest.get(q.offset, 0.0), q.length)
-    rung = [QuantizedNote(q.offset, longest[q.offset], q.pitch, q.velocity) for q in qnotes]
+    rung = [replace(q, length=longest[q.offset]) for q in qnotes]
     return _dedupe(sorted(rung, key=lambda q: (q.offset, q.pitch)))
 
 
@@ -187,7 +188,7 @@ def _align_ends(
         tol = max(step, slack * q.length)
         near = boundaries[(boundaries > q.offset) & (np.abs(boundaries - q.end) <= tol)]
         end = float(near[np.argmin(np.abs(near - q.end))]) if near.size else q.end
-        result.append(QuantizedNote(q.offset, end - q.offset, q.pitch, q.velocity))
+        result.append(replace(q, length=end - q.offset))
     return result
 
 
@@ -204,7 +205,7 @@ def _dedupe(qnotes: list[QuantizedNote]) -> list[QuantizedNote]:
                     result[i] = q
                 continue
             if prev.end > q.offset:
-                result[i] = QuantizedNote(prev.offset, q.offset - prev.offset, prev.pitch, prev.velocity)
+                result[i] = replace(prev, length=q.offset - prev.offset)
         last_by_pitch[q.pitch] = len(result)
         result.append(q)
     return result

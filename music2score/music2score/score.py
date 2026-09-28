@@ -11,7 +11,7 @@ from pathlib import Path
 from music21 import chord, clef, instrument, key, layout, metadata, meter, note, pitch, stream, tempo
 
 from .notes import QuantizedNote
-from .tab import TabNote, Tuning, add_tab_details, attach_frets
+from .tab import TabNote, Tuning, add_tab_details, attach_frets, osmd_bends
 
 SPLIT_POINT = 60  # 피아노 모드에서 C4 이상은 오른손(높은음자리표), 미만은 왼손
 
@@ -158,7 +158,10 @@ def export(
     files["midi"] = Path(score.write("midi", fp=out_dir / f"{name}.mid"))
 
     html_path = out_dir / f"{name}.html"
-    html_path.write_text(_viewer_html(xml_path.read_text(encoding="utf-8"), score), encoding="utf-8")
+    viewer_xml = xml_path.read_text(encoding="utf-8")
+    if tuning is not None:
+        viewer_xml = osmd_bends(viewer_xml)
+    html_path.write_text(_viewer_html(viewer_xml, score), encoding="utf-8")
     files["html"] = html_path
 
     if pdf:

@@ -138,3 +138,73 @@ def _piano_tone(freq: float, dur: float, sr: int, vibrato: float) -> np.ndarray:
     wave[:attack] *= np.linspace(0, 1, attack)
     wave[-release:] *= np.linspace(1, 0, release)
     return wave
+
+
+Lick = list[tuple[str, float, str]]  # (음이름, 박 수, 주법)
+
+
+def synthesize_lick(lick: Lick, bpm: float, sr: int = 22050, *, lead_in: float = 0.5) -> np.ndarray:
+    """주법이 들어간 기타 한 줄 연주를 합성한다 (주법 인식 테스트용).
+
+    주법: ""(피킹) | "h"(해머링) | "p"(풀링) | "/"(앞 음에서 슬라이드) |
+          "b2"(2반음 벤딩) | "b2r"(벤딩 후 릴리즈) | "<"(아래에서 슬라이드 인) | ">"(끝에서 슬라이드 아웃)
+    해머링·풀링·슬라이드는 줄을 다시 치지 않으므로 소리를 새로 내지 않고 음높이만 바꾼다.
+    """
+    beat = 60.0 / bpm
+    total = lead_in + sum(b for _, b, _ in lick) * beat + 0.5
+    n = int(total * sr)
+    t = np.arange(n) / sr
+    semis = np.full(n, np.nan)  # 시각마다 음높이 (MIDI, 소리 없으면 nan)
+    phrase = np.full(n, -1)  # 시각마다 몇 번째로 친 소리인가
+    starts = []
+
+    pos, k = lead_in, -1
+    prev, prev_end = None, 0
+    for name, beats, how in lick:
+        p = pitch.Pitch(name).midi
+        s, e = int(pos * sr), int((pos + beats * beat * 0.97) * sr)
+        if how not in ("h", "p", "/") or prev is None:
+            k += 1
+            starts.append(s)
+        else:  # 이어지는 음: 앞 음이 틈 없이 여기까지 울린다
+            semis[prev_end:s] = prev
+            phrase[prev_end:s] = k
+        seg = np.full(e - s, float(p))
+        tt = t[s:e] - pos
+        if how == "/" and prev is not None:  # 앞 음에서 80ms 동안 미끄러져 옴
+            glide = int(0.04 * sr)
+            semis[s - glide : s] = np.linspace(prev, prev + (p - prev) / 2, glide)
+            seg[:glide] = np.linspace(prev + (p - prev) / 2, p, glide)
+        if how.startswith("b"):  # 치고 80ms 뒤부터 150ms 동안 밀어 올림
+            amount = int(how[1])
+            seg += amount * _smoothstep((tt - 0.08) / 0.15)
+            if how.endswith("r"):  # 음 길이의 60% 지점에서 되돌림
+                seg -= amount * _smoothstep((tt - beats * beat * 0.6) / 0.15)
+        if how == "<":
+            seg -= 4 * (1 - _smoothstep(tt / 0.08))
+        if how == ">":
+            seg -= 5 * _smoothstep((tt - (tt[-1] - 0.15)) / 0.15)
+        semis[s:e] = seg
+        phrase[s:e] = k
+        pos += beats * beat
+        prev, prev_end = p, e
+
+    freq = 440.0 * 2 ** ((np.nan_to_num(semis, nan=69.0) - 69) / 12)
+    phase = 2 * np.pi * np.cumsum(freq) / sr
+    out = np.zeros(n)
+    for k, s in enumerate(starts):
+        mask = phrase == k
+        idx = np.where(mask)[0]
+        age = (np.arange(n) - s) / sr
+        env = np.where(mask, np.exp(-np.clip(age, 0, None) * 1.2), 0.0)
+        env[s : s + int(0.003 * sr)] *= np.linspace(0, 1, int(0.003 * sr))
+        tail = int(0.015 * sr)
+        env[idx[-1] - tail + 1 : idx[-1] + 1] *= np.linspace(1, 0, tail)
+        tone = sum(a * np.sin(h * phase) * np.exp(-np.clip(age, 0, None) * 0.8 * h) for h, a in ((1, 1.0), (2, 0.5), (3, 0.33), (4, 0.25)))
+        out += env * tone
+    return (out / np.max(np.abs(out)) * 0.8).astype(np.float32)
+
+
+def _smoothstep(x: np.ndarray) -> np.ndarray:
+    x = np.clip(x, 0.0, 1.0)
+    return x * x * (3 - 2 * x)

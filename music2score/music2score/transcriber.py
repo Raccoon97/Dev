@@ -10,6 +10,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 
+import librosa
 from music21 import key, meter, stream
 
 from . import mono, poly
@@ -17,7 +18,7 @@ from .audio import load_audio
 from .notes import NoteEvent, QuantizedNote
 from .rhythm import estimate_tempo, fit_grid, quantize, ring_together
 from .score import build_score, estimate_key
-from .tab import TUNINGS, TabNote, Tuning, assign_frets, fit_range, render_ascii
+from .tab import TUNINGS, TabNote, Tuning, assign_frets, fit_range, render_ascii, resolve_glides
 
 
 @dataclass
@@ -68,7 +69,8 @@ def transcribe(
     bpm  : 알고 있으면 지정. 없으면 오디오에서 추정한다.
     grid : 가장 짧은 음표 단위 (16 → 16분음표).
     min_note : 이보다 짧은(초) 음은 버린다. 없으면 mono 0.06초, poly 0.12초.
-    tab  : "guitar", "drop-d", "bass", "ukulele" 중 하나면 그 악기 타브 보표를 붙인다.
+    tab  : "guitar", "drop-d", "bass", "bass5", "ukulele" 중 하나면 그 악기 타브 보표를 붙이고
+           해머링·풀링·슬라이드·벤딩(기타만) 을 읽어 표기한다.
     capo : 카포 위치 (타브의 프렛 번호는 카포 기준).
     """
     path = Path(path)
@@ -78,15 +80,23 @@ def transcribe(
         raise ValueError("grid 는 4, 8, 16, 32 중 하나여야 합니다.")
     division = grid // 4  # 4분음표 한 박을 몇 칸으로 나눌지
 
+    tuning = TUNINGS[tab] if tab is not None else None
     if mode == "mono":
         y, sr = load_audio(path)
-        notes = mono.detect_notes(y, sr, min_note=min_note or 0.06)
+        fmin, fmax = "C2", "C7"
+        if tuning is not None:  # 악기 음역만 찾으면 베이스 저음(E1=41Hz)도 잡고 엉뚱한 배음도 덜 잡는다
+            fmin = librosa.midi_to_note(min(tuning.strings) + capo - 1)
+            fmax = librosa.midi_to_note(min(max(tuning.strings) + tuning.frets + 1, 96))
+        notes = mono.detect_notes(y, sr, fmin=fmin, fmax=fmax, min_note=min_note or 0.06)
     elif mode == "poly":  # basic-pitch 가 오디오를 직접 읽는다
         notes = poly.detect_notes(path, min_note=min_note or 0.12, drop_overtones=tab is None)
     else:
         raise ValueError(f"알 수 없는 mode: {mode}")
     if not notes:
         raise ValueError("음을 하나도 찾지 못했습니다. 소리가 너무 작거나 잡음이 많은지 확인하세요.")
+    if tuning is not None:
+        # 미끄러지듯 이어진 음 → 기타면 벤딩/슬라이드, 베이스·우쿨렐레면 슬라이드
+        notes = resolve_glides(notes, allow_bends=tuning.name in ("guitar", "drop-d"))
 
     onsets = sorted(n.start for n in notes)
     guess = bpm if bpm else estimate_tempo(onsets)
@@ -96,9 +106,8 @@ def transcribe(
         notes, fitted_bpm, t0, division, monophonic=(mode == "mono"), bar_length=bar_length
     )
 
-    tuning, tab_notes, moved, dropped = None, [], 0, 0
-    if tab is not None:
-        tuning = TUNINGS[tab]
+    tab_notes, moved, dropped = [], 0, 0
+    if tuning is not None:
         if mode == "poly":
             qnotes = ring_together(qnotes)
         qnotes, moved = fit_range(qnotes, tuning, capo, drop=(mode == "poly"))

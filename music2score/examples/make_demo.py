@@ -5,13 +5,22 @@
     python -m music2score examples/school_bell_piano.wav --mode poly
     python -m music2score examples/guitar_riff.wav --tab guitar
     python -m music2score examples/guitar_chords.wav --mode poly --tab guitar --bpm 90
+    python -m music2score examples/guitar_lick.wav --tab guitar      # 해머링·풀링·슬라이드·벤딩
+    python -m music2score examples/bass_lick.wav --tab bass
 """
 
 from pathlib import Path
 
 import soundfile as sf
 
-from music2score.synth import SCHOOL_BELL, SCHOOL_BELL_CHORDS, synthesize, synthesize_chords, synthesize_piano
+from music2score.synth import (
+    SCHOOL_BELL,
+    SCHOOL_BELL_CHORDS,
+    synthesize,
+    synthesize_chords,
+    synthesize_lick,
+    synthesize_piano,
+)
 
 SR = 22050
 HERE = Path(__file__).parent
@@ -32,6 +41,18 @@ files = {
         [(["C3", "E3", "G3", "C4", "E4"], 4), (["G2", "B2", "D3", "G3", "B3", "G4"], 4),
          (["A2", "E3", "A3", "C4", "E4"], 4), (["F2", "C3", "F3", "A3", "C4", "F4"], 4)],
         90, SR,
+    ),
+    # 주법이 들어간 기타 릭: 해머링, 풀링, 슬라이드, 벤딩, 벤딩+릴리즈, 슬라이드 아웃
+    "guitar_lick.wav": synthesize_lick(
+        [("A3", 1, ""), ("C4", 0.5, ""), ("D4", 0.5, "h"), ("E4", 0.5, ""), ("D4", 0.5, "p"),
+         ("C4", 1, ""), ("E4", 1, "/"), ("A4", 2, "b2"), ("G4", 2, "b2r"), ("E4", 2, ">")],
+        90, SR,
+    ),
+    # 베이스 라인: 개방현 해머링·풀링, 슬라이드, 슬라이드 아웃
+    "bass_lick.wav": synthesize_lick(
+        [("E2", 1, ""), ("G2", 0.5, ""), ("A2", 0.5, "h"), ("B2", 1, ""), ("A2", 0.5, ""),
+         ("G2", 0.5, "p"), ("E2", 1, ""), ("A2", 1, "/"), ("E2", 2, ">")],
+        100, SR,
     ),
 }
 for name, audio in files.items():

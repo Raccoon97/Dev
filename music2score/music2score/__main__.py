@@ -8,6 +8,7 @@ from pathlib import Path
 
 from .audio import record_audio
 from .score import export, spell
+from .separate import STEMS, separate
 from .tab import TUNINGS
 from .transcriber import transcribe
 
@@ -32,9 +33,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--tab",
         choices=list(TUNINGS),
-        help="타브 악보도 만들기: guitar(기타), drop-d(드롭 D 기타), bass(베이스), ukulele(우쿨렐레)",
+        help="타브 악보도 만들기: guitar(기타), drop-d(드롭 D 기타), bass(4현 베이스), bass5(5현 베이스), ukulele(우쿨렐레)",
     )
     parser.add_argument("--capo", type=int, default=0, metavar="N", help="카포 위치 (--tab 과 함께, 기본: 0)")
+    parser.add_argument(
+        "--stem",
+        choices=list(STEMS),
+        help="밴드 음원에서 이 악기 소리만 떼어 낸 뒤 악보로: bass(베이스), other(기타·건반), drums (onnxruntime 필요)",
+    )
     parser.add_argument("--title", help="악보 제목 (기본: 파일 이름)")
     parser.add_argument("-o", "--out", default="output", help="결과 폴더 (기본: output)")
     parser.add_argument("--pdf", action="store_true", help="MuseScore 로 PDF 도 만들기")
@@ -54,20 +60,30 @@ def main(argv: list[str] | None = None) -> int:
     else:
         parser.error("오디오 파일을 주거나 --record 초 를 지정하세요.")
 
-    print(f"♪ 분석 중: {src}")
+    name = src.stem
     try:
+        if args.stem:
+            stem_path = out_dir / f"{name}.{args.stem}.wav"
+            if stem_path.exists() and stem_path.stat().st_mtime >= src.stat().st_mtime:
+                print(f"♪ 전에 분리해 둔 {args.stem} 소리를 씁니다: {stem_path}")
+            else:
+                print(f"♪ 악기 분리 중: {src} → {args.stem} (3분 곡에 1~2분)")
+                separate(src, args.stem, stem_path)
+            src = stem_path
+        print(f"♪ 분석 중: {src}")
         result = transcribe(
             src,
             mode=args.mode,
             bpm=args.bpm,
             time_signature=args.time,
             grid=args.grid,
-            title=args.title,
+            title=args.title or name,
             min_note=args.min_note,
             tab=args.tab,
             capo=args.capo,
         )
-        files = export(result.score, out_dir, src.stem, pdf=args.pdf, tuning=result.tuning, capo=args.capo)
+        name = f"{name}.{args.stem}" if args.stem else name
+        files = export(result.score, out_dir, name, pdf=args.pdf, tuning=result.tuning, capo=args.capo)
     except (RuntimeError, ValueError) as e:
         print(f"오류: {e}", file=sys.stderr)
         return 1
@@ -78,7 +94,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"  조성  : {_pretty(result.key.tonic.name)} {'장조' if result.key.mode == 'major' else '단조'}")
     print(f"  음 개수: {len(result.qnotes)}  ({names}{more})")
     if result.tuning is not None:
-        tab_path = out_dir / f"{src.stem}.tab.txt"
+        tab_path = out_dir / f"{name}.tab.txt"
         tab_text = result.tab_text()
         tab_path.write_text(tab_text, encoding="utf-8")
         files["tab"] = tab_path
@@ -88,6 +104,9 @@ def main(argv: list[str] | None = None) -> int:
             print(f"          악기 음역 밖이라 {done} 음 {result.moved}개")
         if result.dropped:
             print(f"          한 손으로 잡을 수 없어 뺀 화음 구성음 {result.dropped}개")
+        counts = _technique_counts(result.tab_notes)
+        if counts:
+            print("  주법  : " + ", ".join(f"{k} {v}" for k, v in counts.items()))
     print("  결과  :")
     for kind, path in files.items():
         print(f"    {kind:8} {path}")
@@ -95,6 +114,23 @@ def main(argv: list[str] | None = None) -> int:
         print()
         print(_first_system(tab_text))
     return 0
+
+
+def _technique_counts(tab_notes) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for t in tab_notes:
+        tech = t.note.tech
+        names = {"hammer": "해머링", "pull": "풀링", "slide": "슬라이드"}
+        for label, on in (
+            (names.get(tech.link, ""), bool(tech.link)),
+            ("벤딩", bool(tech.bend)),
+            ("릴리즈", tech.release),
+            ("슬라이드 인", bool(tech.slide_in)),
+            ("슬라이드 아웃", bool(tech.slide_out)),
+        ):
+            if on and label:
+                counts[label] = counts.get(label, 0) + 1
+    return counts
 
 
 def _first_system(tab_text: str) -> str:
