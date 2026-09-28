@@ -11,6 +11,7 @@ from pathlib import Path
 from music21 import chord, clef, instrument, key, layout, metadata, meter, note, pitch, stream, tempo
 
 from .notes import QuantizedNote
+from .tab import TabNote, Tuning, add_tab_details, attach_frets
 
 SPLIT_POINT = 60  # 피아노 모드에서 C4 이상은 오른손(높은음자리표), 미만은 왼손
 
@@ -54,12 +55,23 @@ def build_score(
     time_signature: str = "4/4",
     title: str = "Transcription",
     piano: bool = False,
+    tab: tuple[Tuning, list[TabNote]] | None = None,
 ) -> stream.Score:
+    """piano 면 오른손/왼손 큰보표, tab 이면 오선 + TAB 두 줄 보표, 둘 다 아니면 오선 하나."""
     score = stream.Score()
     # title 로 넣으면 work-title/movement-title 두 곳에 들어가 뷰어에 제목이 두 번 찍힌다.
     score.insert(0, metadata.Metadata(movementName=title, composer="music2score"))
 
-    if piano:
+    make_instrument = instrument.Piano  # MIDI 재생용 음색
+    if tab is not None:
+        tuning, _ = tab
+        # 위: 오선 악보, 아래: TAB. 둘 다 같은 음표로 만들어야 마디·붙임줄이 똑같이 나뉜다.
+        parts = [
+            (_make_part(qnotes, k, chords=True), tuning.clef()),
+            (_make_part(qnotes, k, chords=True), clef.TabClef()),
+        ]
+        make_instrument = tuning.instrument
+    elif piano:
         right = _make_part([q for q in qnotes if q.pitch >= SPLIT_POINT], k, chords=True)
         left = _make_part([q for q in qnotes if q.pitch < SPLIT_POINT], k, chords=True)
         parts = [(right, clef.TrebleClef()), (left, clef.BassClef())]
@@ -77,12 +89,16 @@ def build_score(
         part.insert(0, meter.TimeSignature(time_signature))
         if i == 0:
             part.insert(0, tempo.MetronomeMark(number=round(bpm)))
-        part.insert(0, instrument.Piano())  # MIDI 재생용 음색
+        part.insert(0, make_instrument())
         score.insert(0, part)
 
-    if piano:
-        score.insert(0, layout.StaffGroup([p for p, _ in parts], symbol="brace", barTogether=True))
-    return score.makeNotation()
+    if len(parts) == 2:
+        symbol = "brace" if piano else "bracket"
+        score.insert(0, layout.StaffGroup([p for p, _ in parts], symbol=symbol, barTogether=True))
+    score = score.makeNotation()
+    if tab is not None:
+        attach_frets(score.parts[1], tab[1])
+    return score
 
 
 def _make_part(qnotes: list[QuantizedNote], k: key.Key, *, chords: bool) -> stream.Part:
@@ -119,12 +135,25 @@ def _pad_to(part: stream.Part, total: float) -> None:
         part.insert(end, note.Rest(quarterLength=total - end))
 
 
-def export(score: stream.Score, out_dir: Path, name: str = "score", *, pdf: bool = False) -> dict[str, Path]:
-    """악보를 여러 형식으로 저장하고 {형식: 경로} 를 돌려준다."""
+def export(
+    score: stream.Score,
+    out_dir: Path,
+    name: str = "score",
+    *,
+    pdf: bool = False,
+    tuning: Tuning | None = None,
+    capo: int = 0,
+) -> dict[str, Path]:
+    """악보를 여러 형식으로 저장하고 {형식: 경로} 를 돌려준다.
+
+    tuning 을 주면 TAB 보표에 줄/프렛 번호와 조율 정보를 넣는다.
+    """
     out_dir.mkdir(parents=True, exist_ok=True)
     files: dict[str, Path] = {}
 
     xml_path = Path(score.write("musicxml", fp=out_dir / f"{name}.musicxml"))
+    if tuning is not None:
+        xml_path.write_text(add_tab_details(xml_path.read_text(encoding="utf-8"), tuning, capo), encoding="utf-8")
     files["musicxml"] = xml_path
     files["midi"] = Path(score.write("midi", fp=out_dir / f"{name}.mid"))
 

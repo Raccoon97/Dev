@@ -44,9 +44,9 @@ def synthesize(
     vibrato : 비브라토 폭 (반음 단위)
     noise   : 백색 잡음 크기
     lead_in : 첫 음 앞 무음 (초)
-    timbre  : "organ" (소리가 일정하게 유지) 또는 "piano" (치고 나서 점점 작아짐)
+    timbre  : "organ" (소리가 일정하게 유지), "piano" (치고 나서 점점 작아짐), "guitar" (뜯는 줄)
     """
-    tone_fn = _piano_tone if timbre == "piano" else _tone
+    tone_fn = {"piano": _piano_tone, "guitar": _guitar_tone}.get(timbre, _tone)
     beat = 60.0 / bpm
     total = lead_in + sum(b for _, b in melody) * beat + 0.5
     out = np.zeros(int(total * sr))
@@ -72,6 +72,42 @@ def synthesize_piano(melody: Melody, chords: list[list[str]], bpm: float, sr: in
         n = min(len(out), len(v))
         out[:n] += 0.45 * v[:n]
     return (out / np.max(np.abs(out)) * 0.8).astype(np.float32)
+
+
+def synthesize_chords(
+    chords: list[tuple[list[str], float]], bpm: float, sr: int = 22050, *, strum: float = 0.025, lead_in: float = 0.5
+) -> np.ndarray:
+    """기타 스트로크처럼 화음을 낮은 줄부터 strum 초 간격으로 긁어서 합성한다."""
+    beat = 60.0 / bpm
+    total = lead_in + sum(b for _, b in chords) * beat + 1.0
+    out = np.zeros(int(total * sr))
+    t = lead_in
+    for names, beats in chords:
+        for i, name in enumerate(names):
+            tone = _guitar_tone(pitch.Pitch(name).frequency, beats * beat * 0.95 - i * strum, sr, 0.0)
+            start = int((t + i * strum) * sr)
+            out[start : start + len(tone)] += tone
+        t += beats * beat
+    return (out / np.max(np.abs(out)) * 0.8).astype(np.float32)
+
+
+def _guitar_tone(freq: float, dur: float, sr: int, vibrato: float) -> np.ndarray:
+    """Karplus-Strong 뜯는 줄 소리: 잡음 한 주기를 되먹이며 거르면 줄 소리처럼 감쇠한다."""
+    period = int(np.ceil(sr / freq))
+    inner_sr = freq * period  # 주기가 정확히 정수 샘플이 되는 내부 샘플링 주파수 → 음정 오차 없음
+    n_inner = int(dur * inner_sr)
+    rng = np.random.default_rng(int(freq * 100))
+    cycle = np.convolve(rng.uniform(-1, 1, period), [0.5, 0.5], mode="same")  # 살짝 부드러운 픽 소리
+    cycles = []
+    for _ in range(n_inner // period + 1):
+        cycles.append(cycle)
+        cycle = 0.996 * 0.5 * (cycle + np.roll(cycle, -1))
+    wave = np.concatenate(cycles)[:n_inner]
+    n = int(dur * sr)
+    wave = np.interp(np.arange(n) * inner_sr / sr, np.arange(n_inner), wave)
+    release = min(int(0.02 * sr), n)
+    wave[n - release :] *= np.linspace(1, 0, release)
+    return wave
 
 
 def _tone(freq: float, dur: float, sr: int, vibrato: float) -> np.ndarray:

@@ -105,7 +105,7 @@
 <br><br>
 
 # Projects
-  - [music2score](music2score/) - 음악을 듣고 악보(MusicXML / MIDI)를 만드는 프로그램 (Python) - 2026. 09. 26
+  - [music2score](music2score/) - 음악을 듣고 악보(MusicXML / MIDI / 기타 타브)를 만드는 프로그램 (Python) - 2026. 09. 26
 
 <br><br><br><br><br>
 

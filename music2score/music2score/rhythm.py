@@ -154,6 +154,20 @@ def _monophonize(
     return result
 
 
+def ring_together(qnotes: list[QuantizedNote]) -> list[QuantizedNote]:
+    """같이 시작한 음들은 같이 끝나게 한다 (기타 스트로크처럼 한 번에 친 화음).
+
+    모델은 화음 구성음마다 길이를 제각각 잡아서(높은 줄은 빨리 사그라든다)
+    악보가 붙임줄 조각투성이가 된다. 한 번에 긁은 줄들은 함께 울리므로 가장 긴 음에
+    맞추고, 같은 음이 다시 나오면 거기서 끊는다.
+    """
+    longest: dict[float, float] = {}
+    for q in qnotes:
+        longest[q.offset] = max(longest.get(q.offset, 0.0), q.length)
+    rung = [QuantizedNote(q.offset, longest[q.offset], q.pitch, q.velocity) for q in qnotes]
+    return _dedupe(sorted(rung, key=lambda q: (q.offset, q.pitch)))
+
+
 def _align_ends(
     qnotes: list[QuantizedNote], step: float, bar_length: float, slack: float
 ) -> list[QuantizedNote]:
