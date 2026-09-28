@@ -35,6 +35,7 @@ class Transcription:
     tab_notes: list[TabNote] = field(default_factory=list)
     moved: int = 0  # 악기 음역 밖이라 옥타브를 옮긴(mono) / 버린(poly) 음 개수
     dropped: int = 0  # 한 손으로 잡을 수 없어 뺀 화음 구성음 개수
+    shift: int = 0  # 편곡에서 선율을 옮긴 반음 수
 
     def tab_text(self) -> str:
         """글자 타브 (tab 을 지정했을 때만)."""

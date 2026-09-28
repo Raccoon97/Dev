@@ -235,7 +235,7 @@ def _drop_impossible(tab: list[TabNote]) -> list[TabNote]:
 def _candidates(
     notes: list[QuantizedNote], tuning: Tuning, capo: int, all_hands: tuple[int, ...], *, fretted: bool = False
 ) -> list[_Fingering]:
-    """동시에 치는 음들을 잡는 모든 운지 후보. 안 되면 가운데 음부터 하나씩 뺀다."""
+    """동시에 치는 음들을 잡는 모든 운지 후보. 안 되면 음을 하나씩 뺀다 (셋 이상은 가운데부터, 둘이면 아래 음)."""
     opens = [s + capo for s in tuning.strings]
     max_fret = tuning.frets - capo
     while notes:
@@ -264,7 +264,9 @@ def _candidates(
             found.append(_Fingering(tuple(notes), places, cost, hands))
         if found:
             return found
-        notes = notes[: len(notes) // 2] + notes[len(notes) // 2 + 1 :]
+        # 셋 이상이면 가운데 음부터, 둘이면(편곡의 선율+베이스) 선율을 살리고 아래 음을 뺀다.
+        drop = len(notes) // 2 if len(notes) > 2 else 0
+        notes = notes[:drop] + notes[drop + 1 :]
     return []
 
 

@@ -6,6 +6,7 @@ import argparse
 import sys
 from pathlib import Path
 
+from .arrange import arrange
 from .audio import record_audio
 from .score import export, spell
 from .separate import STEMS, separate
@@ -22,10 +23,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--record", type=float, metavar="SEC", help="파일 대신 마이크로 SEC 초 동안 녹음")
     parser.add_argument(
         "--mode",
-        choices=["mono", "poly", "melody"],
+        choices=["mono", "poly", "melody", "arrange"],
         default="mono",
         help="mono: 노래/허밍/단선율 악기 (기본), poly: 피아노처럼 화음이 있는 연주, "
-        "melody: 화음·반주가 섞인 소리에서 선율 한 줄만 뽑기",
+        "melody: 화음·반주가 섞인 소리에서 선율 한 줄만 뽑기, "
+        "arrange: 밴드 음원을 기타 한 대로 칠 수 있게 편곡 (선율 + 베이스)",
     )
     parser.add_argument("--bpm", type=float, help="템포를 알고 있으면 지정 (기본: 자동 추정)")
     parser.add_argument("--time", default="4/4", help="박자표 (기본: 4/4)")
@@ -67,15 +69,29 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("오디오 파일을 주거나 --record 초 를 지정하세요.")
 
     name = src.stem
+    if args.mode == "arrange" and args.stem:
+        parser.error("--mode arrange 는 악기를 알아서 나눕니다. --stem 없이 원곡을 넣으세요.")
     try:
+        if args.mode == "arrange":
+            tab = args.tab or "guitar"
+            melody_src, bass_src = (_stem(src, s, out_dir) for s in ("other", "bass"))
+            print(f"♪ 편곡 중: 선율({melody_src.name}) + 베이스({bass_src.name}) → {TUNINGS[tab].label}")
+            result = arrange(
+                melody_src,
+                bass_src,
+                tab=tab,
+                bpm=args.bpm,
+                time_signature=args.time,
+                grid=args.grid if args.grid != 16 else 8,
+                title=args.title or name,
+                capo=args.capo,
+                transpose=args.transpose or None,
+            )
+            name = f"{name}.arrange"
+            files = export(result.score, out_dir, name, pdf=args.pdf, tuning=result.tuning, capo=args.capo)
+            return _report(args, result, files, name, out_dir)
         if args.stem:
-            stem_path = out_dir / f"{name}.{args.stem}.wav"
-            if stem_path.exists() and stem_path.stat().st_mtime >= src.stat().st_mtime:
-                print(f"♪ 전에 분리해 둔 {args.stem} 소리를 씁니다: {stem_path}")
-            else:
-                print(f"♪ 악기 분리 중: {src} → {args.stem} (3분 곡에 1~2분)")
-                separate(src, args.stem, stem_path)
-            src = stem_path
+            src = _stem(src, args.stem, out_dir)
         print(f"♪ 분석 중: {src}")
         result = transcribe(
             src,
@@ -94,12 +110,28 @@ def main(argv: list[str] | None = None) -> int:
     except (RuntimeError, ValueError) as e:
         print(f"오류: {e}", file=sys.stderr)
         return 1
+    return _report(args, result, files, name, out_dir)
 
+
+def _stem(src: Path, stem: str, out_dir: Path) -> Path:
+    """악기 소리를 떼어 낸 파일 (전에 떼어 둔 것이 있으면 그대로 쓴다)."""
+    stem_path = out_dir / f"{src.stem}.{stem}.wav"
+    if stem_path.exists() and stem_path.stat().st_mtime >= src.stat().st_mtime:
+        print(f"♪ 전에 분리해 둔 {stem} 소리를 씁니다: {stem_path}")
+    else:
+        print(f"♪ 악기 분리 중: {src} → {stem} (3분 곡에 1~2분)")
+        separate(src, stem, stem_path)
+    return stem_path
+
+
+def _report(args, result, files: dict, name: str, out_dir: Path) -> int:
     names = " ".join(_pretty(spell(q.pitch, result.key).nameWithOctave) for q in result.qnotes[:16])
     more = " …" if len(result.qnotes) > 16 else ""
     print(f"  템포  : ♩ = {result.bpm:.0f}")
     print(f"  조성  : {_pretty(result.key.tonic.name)} {'장조' if result.key.mode == 'major' else '단조'}")
     print(f"  음 개수: {len(result.qnotes)}  ({names}{more})")
+    if result.shift:
+        print(f"  옮김  : 선율을 {result.shift:+d}반음 ({result.shift // 12:+d}옥타브) 옮겨 기타 낮은 포지션에 맞춤")
     if result.tuning is not None:
         tab_path = out_dir / f"{name}.tab.txt"
         tab_text = result.tab_text()
