@@ -65,7 +65,8 @@ def transcribe(
 ) -> Transcription:
     """오디오 파일을 받아 악보(music21 Score)와 중간 결과를 돌려준다.
 
-    mode : "mono" (멜로디 한 줄) 또는 "poly" (피아노처럼 화음이 있는 연주)
+    mode : "mono" (멜로디 한 줄), "poly" (피아노처럼 화음이 있는 연주),
+           "melody" (화음·반주가 섞인 소리에서 가장 두드러진 선율 한 줄만)
     bpm  : 알고 있으면 지정. 없으면 오디오에서 추정한다.
     grid : 가장 짧은 음표 단위 (16 → 16분음표).
     min_note : 이보다 짧은(초) 음은 버린다. 없으면 mono 0.06초, poly 0.12초.
@@ -90,20 +91,25 @@ def transcribe(
         notes = mono.detect_notes(y, sr, fmin=fmin, fmax=fmax, min_note=min_note or 0.06)
     elif mode == "poly":  # basic-pitch 가 오디오를 직접 읽는다
         notes = poly.detect_notes(path, min_note=min_note or 0.12, drop_overtones=tab is None)
+    elif mode == "melody":
+        low, high = 52, 93  # E3~A6
+        if tuning is not None:  # 그 악기로 낼 수 있는 음역에서만 찾는다
+            low, high = min(tuning.strings) + capo, min(max(tuning.strings) + tuning.frets, 96)
+        notes = poly.extract_melody(path, low=low, high=high, min_note=min_note or 0.08)
     else:
         raise ValueError(f"알 수 없는 mode: {mode}")
     if not notes:
         raise ValueError("음을 하나도 찾지 못했습니다. 소리가 너무 작거나 잡음이 많은지 확인하세요.")
     if tuning is not None:
         # 미끄러지듯 이어진 음 → 기타면 벤딩/슬라이드, 베이스·우쿨렐레면 슬라이드
-        notes = resolve_glides(notes, allow_bends=tuning.name in ("guitar", "drop-d"))
+        notes = resolve_glides(notes, allow_bends=tuning.bends)
 
     onsets = sorted(n.start for n in notes)
     guess = bpm if bpm else estimate_tempo(onsets)
     fitted_bpm, t0 = fit_grid(onsets, guess, division, fixed_bpm=bool(bpm))
     bar_length = meter.TimeSignature(time_signature).barDuration.quarterLength
     qnotes = quantize(
-        notes, fitted_bpm, t0, division, monophonic=(mode == "mono"), bar_length=bar_length
+        notes, fitted_bpm, t0, division, monophonic=(mode != "poly"), bar_length=bar_length
     )
 
     tab_notes, moved, dropped = [], 0, 0

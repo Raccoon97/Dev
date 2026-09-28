@@ -36,11 +36,12 @@ STEMS = {
     "bass": MdxModel("kuielab_a_bass.onnx", n_fft=16384),
     "drums": MdxModel("kuielab_a_drums.onnx", n_fft=4096),
     "other": MdxModel("kuielab_a_other.onnx", n_fft=8192),  # 기타·건반 등 나머지 악기
+    "vocals": MdxModel("kuielab_a_vocals.onnx", n_fft=6144),  # 노래 (리드 악기가 섞여 나오기도 한다)
 }
 
 
 def separate(path: str | Path, stem: str, out_path: str | Path | None = None) -> Path:
-    """path 음원에서 stem("bass" | "drums" | "other") 소리만 뽑아 WAV 로 저장하고 경로를 돌려준다."""
+    """path 음원에서 stem("bass" | "drums" | "other" | "vocals") 소리만 뽑아 WAV 로 저장하고 경로를 돌려준다."""
     if stem not in STEMS:
         raise ValueError(f"알 수 없는 악기: {stem} (가능: {', '.join(STEMS)})")
     try:

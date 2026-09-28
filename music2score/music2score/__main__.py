@@ -22,9 +22,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--record", type=float, metavar="SEC", help="파일 대신 마이크로 SEC 초 동안 녹음")
     parser.add_argument(
         "--mode",
-        choices=["mono", "poly"],
+        choices=["mono", "poly", "melody"],
         default="mono",
-        help="mono: 노래/허밍/단선율 악기 (기본), poly: 피아노처럼 화음이 있는 연주",
+        help="mono: 노래/허밍/단선율 악기 (기본), poly: 피아노처럼 화음이 있는 연주, "
+        "melody: 화음·반주가 섞인 소리에서 선율 한 줄만 뽑기",
     )
     parser.add_argument("--bpm", type=float, help="템포를 알고 있으면 지정 (기본: 자동 추정)")
     parser.add_argument("--time", default="4/4", help="박자표 (기본: 4/4)")
@@ -33,13 +34,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--tab",
         choices=list(TUNINGS),
-        help="타브 악보도 만들기: guitar(기타), drop-d(드롭 D 기타), bass(4현 베이스), bass5(5현 베이스), ukulele(우쿨렐레)",
+        help="타브 악보도 만들기: guitar(통기타), electric(일렉기타), drop-d(드롭 D 기타), "
+        "bass(4현 베이스), bass5(5현 베이스), ukulele(우쿨렐레)",
     )
     parser.add_argument("--capo", type=int, default=0, metavar="N", help="카포 위치 (--tab 과 함께, 기본: 0)")
     parser.add_argument(
         "--stem",
         choices=list(STEMS),
-        help="밴드 음원에서 이 악기 소리만 떼어 낸 뒤 악보로: bass(베이스), other(기타·건반), drums (onnxruntime 필요)",
+        help="밴드 음원에서 이 악기 소리만 떼어 낸 뒤 악보로: bass(베이스), other(기타·건반), vocals(노래), drums "
+        "(onnxruntime 필요)",
     )
     parser.add_argument("--title", help="악보 제목 (기본: 파일 이름)")
     parser.add_argument("-o", "--out", default="output", help="결과 폴더 (기본: output)")

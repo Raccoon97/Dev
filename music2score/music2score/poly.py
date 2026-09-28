@@ -110,3 +110,104 @@ def remove_ghosts(notes: list[NoteEvent], *, drop_overtones: bool = True) -> lis
         if not ghost:
             kept.append(n)
     return kept
+
+
+# ── 화음 속에서 선율 한 줄 뽑기 ────────────────────────────────
+
+FPS = 86  # basic-pitch 출력 프레임 (22050Hz / 256)
+LOWEST_KEY = 21  # basic-pitch 88건반 출력의 첫 칸 = A0
+
+
+def extract_melody(
+    path: str | Path,
+    *,
+    low: int = 52,
+    high: int = 93,
+    min_note: float = 0.08,
+) -> list[NoteEvent]:
+    """반주·건반처럼 여러 음이 겹친 소리에서 가장 두드러진 선율 한 줄을 뽑는다.
+
+    low~high(MIDI, 기본 E3~A6)는 선율을 찾을 음역이다. 기타로 치기 좋은 높이를 기본으로 둔다.
+    """
+    try:
+        from basic_pitch import ICASSP_2022_MODEL_PATH
+        from basic_pitch.inference import predict
+    except ImportError as e:
+        raise RuntimeError("선율 뽑기(--melody)에는 basic-pitch 가 필요합니다: pip install basic-pitch") from e
+    output, _, _ = predict(str(path), ICASSP_2022_MODEL_PATH)
+    return melody_from_posteriors(output["note"], output["onset"], low=low, high=high, min_note=min_note)
+
+
+def melody_from_posteriors(
+    note: np.ndarray,
+    onset: np.ndarray,
+    *,
+    low: int = 52,
+    high: int = 93,
+    min_note: float = 0.08,
+    fps: float = FPS,
+    rest_level: float = 0.3,
+    height_bonus: float = 1.5,
+    switch_cost: float = 1.5,
+    jump_cost: float = 0.3,
+    min_strength: float = 0.4,
+) -> list[NoteEvent]:
+    """프레임별 음 확률(note: 프레임 × 88건반)에서 선율 한 줄을 비터비로 고른다.
+
+    프레임마다 '어느 음이 선율인가(또는 쉼)'를 정하는데, 곡 전체에서
+      - 그 음이 울릴 확률이 높을수록 (-log 확률),
+      - 높은 음일수록 (선율은 보통 반주 위에 있다),
+      - 음을 덜 바꿀수록, 바꾸더라도 가까운 음으로 갈수록
+    싼 길을 고른다. 확률이 rest_level 보다 낮으면 쉼이 더 싸다.
+    평균 확률이 min_strength 에 못 미치면서 짧은 음(0.2초 미만)은 모델이 잘못 잡은 잔음으로 보고 버린다.
+    """
+    lo, hi = low - LOWEST_KEY, high - LOWEST_KEY + 1
+    probs = note[:, lo:hi]
+    n_frames, k = probs.shape
+    if n_frames == 0:
+        return []
+    emit = np.empty((n_frames, k + 1))
+    emit[:, :k] = -np.log(probs + 1e-4) - height_bonus * np.linspace(0.0, 1.0, k)
+    # 높은 음 가산점 때문에 거의 안 울리는 높은 잔음이 쉼을 이기지 않도록, 약한 음은 아예 못 고르게 한다.
+    emit[:, :k][probs < 0.7 * rest_level] = 20.0
+    emit[:, k] = -np.log(rest_level)  # 마지막 상태 = 쉼
+
+    keys = np.arange(k)
+    trans = np.zeros((k + 1, k + 1))
+    trans[:k, :k] = np.where(keys[:, None] != keys[None, :], switch_cost + jump_cost * np.abs(keys[:, None] - keys[None, :]), 0.0)
+    trans[:k, k] = trans[k, :k] = switch_cost / 2  # 쉼으로 들어가고 나오기
+
+    cost = emit[0].copy()
+    back = np.empty((n_frames, k + 1), dtype=np.int32)
+    for t in range(1, n_frames):
+        total = cost[:, None] + trans
+        back[t] = total.argmin(axis=0)
+        cost = total.min(axis=0) + emit[t]
+    path = np.empty(n_frames, dtype=np.int32)
+    path[-1] = int(cost.argmin())
+    for t in range(n_frames - 1, 0, -1):
+        path[t - 1] = back[t, path[t]]
+
+    # 같은 음이 이어진 구간 = 음 하나. 같은 음을 다시 친 곳(onset 봉우리)에서는 나눈다.
+    min_frames = max(1, int(round(min_note * fps)))
+    notes: list[NoteEvent] = []
+    t = 0
+    while t < n_frames:
+        state = path[t]
+        u = t + 1
+        while u < n_frames and path[u] == state:
+            u += 1
+        if state < k:
+            key = lo + state
+            cuts = [t]
+            for f in range(t + min_frames, u - min_frames):
+                o = onset[f, key]
+                if o > 0.5 and o >= onset[f - 1, key] and o >= onset[f + 1, key] and f - cuts[-1] >= min_frames:
+                    cuts.append(f)
+            for a, b in zip(cuts, [*cuts[1:], u]):
+                strength = float(probs[a:b, state].mean())
+                if b - a < min_frames or (strength < min_strength and b - a < 0.2 * fps):
+                    continue
+                notes.append(NoteEvent(a / fps, b / fps, key + LOWEST_KEY, int(np.clip(strength * 127, 1, 127))))
+        t = u
+    return notes

@@ -49,6 +49,12 @@ music2score 기타코드.wav --mode poly --tab guitar --capo 2
 
 # 밴드 음원에서 베이스만 떼어 내 5현 베이스 타브로
 music2score 노래.mp3 --stem bass --tab bass5
+
+# 원곡에서 노래 멜로디만 떼어 내 일렉기타 타브로
+music2score 원곡.mp3 --stem vocals --tab electric
+
+# 반주·건반처럼 화음이 섞인 소리에서 선율 한 줄만 뽑아 일렉기타 타브로
+music2score 건반.wav --mode melody --tab electric --grid 8
 ```
 
 설치 없이 폴더 안에서 `python -m music2score 노래.wav` 로 실행해도 됩니다.
@@ -84,14 +90,15 @@ music2score examples/guitar_chords.wav --mode poly --tab guitar --bpm 90
 |---|---|---|
 | `--mode mono` | 노래, 허밍, 휘파람, 리코더·바이올린 같은 **멜로디 한 줄** | ✔ |
 | `--mode poly` | 피아노·기타처럼 **여러 음이 동시에** 울리는 연주 (basic-pitch 필요) | |
+| `--mode melody` | 화음·반주가 섞인 소리에서 **가장 두드러진 선율 한 줄**만 (basic-pitch 필요) | |
 | `--record SEC` | 파일 대신 마이크로 SEC 초 녹음 (sounddevice 필요) | |
 | `--bpm` | 템포 직접 지정 | 자동 추정 |
 | `--time` | 박자표 (`4/4`, `3/4`, `6/8` …) | `4/4` |
 | `--grid` | 가장 짧은 음표 (`8` = 8분음표, `16` = 16분음표) | `16` |
 | `--min-note` | 이보다 짧은 음(초)은 잡음으로 보고 버림 | mono 0.06 / poly 0.12 |
-| `--tab` | 타브 악보도 만들기: `guitar`, `drop-d`, `bass`(4현), `bass5`(5현), `ukulele` | |
+| `--tab` | 타브 악보도 만들기: `guitar`, `electric`(일렉기타), `drop-d`, `bass`(4현), `bass5`(5현), `ukulele` | |
 | `--capo N` | 카포 위치. 타브의 프렛 번호가 카포 기준이 됨 | `0` |
-| `--stem` | 밴드 음원에서 이 악기만 떼어 낸 뒤 악보로: `bass`, `other`(기타·건반), `drums` | |
+| `--stem` | 밴드 음원에서 이 악기만 떼어 낸 뒤 악보로: `bass`, `other`(기타·건반), `vocals`(노래), `drums` | |
 | `--title` | 악보 제목 | 파일 이름 |
 | `-o`, `--out` | 결과 폴더 | `output` |
 | `--pdf` | PDF 도 생성 (MuseScore 설치 필요) | |
@@ -134,7 +141,7 @@ E|-----------------|-----------------|-----------------|
 
 | 악기 (`--tab`) | 조율 (낮은 줄 → 높은 줄) |
 |---|---|
-| `guitar` | E A D G B E |
+| `guitar` / `electric` | E A D G B E (통기타 / 일렉기타, 둘 다 벤딩을 읽는다) |
 | `drop-d` | D A D G B E |
 | `bass` | E A D G (4현) |
 | `bass5` | B E A D G (5현, 가장 낮은 B0 까지) |
@@ -219,14 +226,28 @@ h 해머링 · p 풀링 · / \ 슬라이드 (앞뒤에 붙으면 미끄러져 �
 
 ```bash
 pip install -e ".[separate]"
-music2score 반주.mp3 --stem bass --tab bass5         # 베이스만 떼어 5현 베이스 타브로
-music2score 반주.mp3 --stem other --mode poly         # 기타·건반 소리 (화음)
+music2score 반주.mp3 --stem bass --tab bass5                 # 베이스만 떼어 5현 베이스 타브로
+music2score 반주.mp3 --stem other --mode poly                 # 기타·건반 소리 (화음)
+music2score 원곡.mp3 --stem vocals --tab electric             # 노래 멜로디를 일렉기타 타브로
+music2score 반주.mp3 --stem other --mode melody --tab electric # 건반의 맨 위 선율을 일렉기타 타브로
 ```
 
 - 분리 모델은 [KUIELab](https://github.com/kuielab/mdx-net) 의 MDX-Net(2021 Music Demixing Challenge) 입니다. 처음 쓸 때 [UVR](https://github.com/Anjok07/ultimatevocalremovergui) 프로젝트가 GitHub 에 올려 둔 ONNX 파일(악기당 약 30MB)을 `~/.cache/music2score` 에 내려받습니다.
 - 3분 곡을 CPU 로 분리하는 데 1~2분 걸립니다. 떼어 낸 소리는 결과 폴더에 `이름.bass.wav` 로 남고, 다시 실행하면 그 파일을 씁니다.
 - 떼어 낸 소리 셋(베이스·드럼·나머지)을 더하면 원곡과 12dB SDR 정도로 맞습니다 (실제 반주 음원으로 확인).
 - 베이스 라인은 한 줄이라 `mono` 로 잘 읽힙니다. 기타·건반(`other`)은 보통 여러 음을 동시에 쳐서 `poly` 로 읽어야 하고, 건반 화음은 기타로 잡을 수 없는 음이 많아 타브로는 초안 수준입니다.
+- 노래(`vocals`)도 한 줄이라 `mono` 로 읽고, `--tab electric` 이면 노래의 끌어올림·꺾기가 기타의 벤딩·슬라이드로 적힙니다.
+- **반주(MR) 음원에는 멜로디가 없습니다.** 멜로디를 따려면 노래나 리드 악기가 들어 있는 원곡을 넣으세요. 반주만 있을 때 `--mode melody` 로 뽑히는 것은 건반 반주의 맨 위 음 줄기라서, 화음 자리바꿈을 따라 음역이 자주 뜁니다.
+
+### 화음 속 선율 한 줄 뽑기 (`--mode melody`)
+
+basic-pitch 가 내놓는 "프레임마다 88건반 각각이 울릴 확률"에서, 곡 전체를 한 번에 보고 비터비로 선율 한 줄을 고릅니다 ([poly.py](music2score/poly.py)).
+
+- 그 음이 울릴 확률이 높을수록, **높은 음일수록**(선율은 보통 반주 위에 있다), 음을 덜 바꾸고 가까운 음으로 갈수록 싼 길.
+- 확률이 낮으면 쉼. 아주 약한 음은 높더라도 고르지 않고, 약하면서 짧은 음은 잔음으로 버립니다.
+- `--tab` 과 함께 쓰면 그 악기로 낼 수 있는 음역 안에서만 찾습니다 (일렉기타 E2~D6).
+
+피아노 반주(도-미-솔 화음) 위의 "학교종이 땡땡땡"을 넣으면 반주 음은 하나도 섞이지 않고 멜로디 24음이 박자까지 그대로 나옵니다 (테스트로 확인).
 
 <br>
 
@@ -299,7 +320,8 @@ pytest
 정답을 아는 멜로디를 [synth.py](music2score/synth.py) 로 직접 합성해서 넣고, **음높이·시작 박·길이가 정답과 완전히 같은지** 확인합니다.
 (학교종 / 바장조 8분·16분·점음표 멜로디 × 잡음·비브라토·빠른 템포·레가토·스타카토, 3/4 박자, 피아노 화음,
 기타 코드 모양·카포·우쿨렐레·베이스, 기타 리프 → 타브, 코드 스트로크 → 타브,
-기타·베이스 릭의 해머링·풀링·슬라이드·벤딩·릴리즈, 일반 피킹에 주법이 잘못 붙지 않는지, 악기 분리 조각 이어 붙이기 등 48개)
+기타·베이스 릭의 해머링·풀링·슬라이드·벤딩·릴리즈, 일반 피킹에 주법이 잘못 붙지 않는지, 악기 분리 조각 이어 붙이기,
+반주 속 선율 뽑기 등 51개)
 
 <br>
 
@@ -312,7 +334,7 @@ music2score/
 │   ├── transcriber.py  # 전체 파이프라인 transcribe()
 │   ├── audio.py        # 오디오 읽기, 마이크 녹음
 │   ├── mono.py         # ① 단선율 음 검출 (pYIN) + 주법 읽기
-│   ├── poly.py         # ① 다성 음 검출 (basic-pitch)
+│   ├── poly.py         # ① 다성 음 검출 (basic-pitch), 화음 속 선율 뽑기
 │   ├── rhythm.py       # ② 템포 추정, ③ 박자 양자화
 │   ├── score.py        # ④ 조성, ⑤ 악보 생성·내보내기
 │   ├── tab.py          # 타브: 줄·프렛 고르기(비터비), 주법 표기, 글자 타브, TAB 보표

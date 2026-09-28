@@ -33,6 +33,7 @@ class Tuning:
     strings: tuple[int, ...]  # 각 줄 개방현의 MIDI 번호. 가장 아래 줄(번호가 큰 줄)부터
     names: tuple[str, ...]  # 타브 왼쪽에 적는 줄 이름
     frets: int
+    bends: bool = False  # 벤딩을 쓰는 악기인가 (미끄러짐을 벤딩으로 읽을지)
 
     def clef(self) -> clef.Clef:
         if self.name.startswith("bass"):
@@ -46,6 +47,8 @@ class Tuning:
             return instrument.ElectricBass()
         if self.name == "ukulele":
             return instrument.Ukulele()
+        if self.name == "electric":
+            return instrument.ElectricGuitar()
         return instrument.AcousticGuitar()
 
     def string_number(self, index: int) -> int:
@@ -54,8 +57,9 @@ class Tuning:
 
 
 TUNINGS = {
-    "guitar": Tuning("guitar", "기타 표준 (E A D G B E)", (40, 45, 50, 55, 59, 64), ("E", "A", "D", "G", "B", "e"), 22),
-    "drop-d": Tuning("drop-d", "기타 드롭 D (D A D G B E)", (38, 45, 50, 55, 59, 64), ("D", "A", "D", "G", "B", "e"), 22),
+    "guitar": Tuning("guitar", "기타 표준 (E A D G B E)", (40, 45, 50, 55, 59, 64), ("E", "A", "D", "G", "B", "e"), 22, True),
+    "electric": Tuning("electric", "일렉기타 표준 (E A D G B E)", (40, 45, 50, 55, 59, 64), ("E", "A", "D", "G", "B", "e"), 22, True),
+    "drop-d": Tuning("drop-d", "기타 드롭 D (D A D G B E)", (38, 45, 50, 55, 59, 64), ("D", "A", "D", "G", "B", "e"), 22, True),
     "bass": Tuning("bass", "베이스 4현 (E A D G)", (28, 33, 38, 43), ("E", "A", "D", "G"), 20),
     "bass5": Tuning("bass5", "베이스 5현 (B E A D G)", (23, 28, 33, 38, 43), ("B", "E", "A", "D", "G"), 20),
     "ukulele": Tuning("ukulele", "우쿨렐레 (G C E A)", (67, 60, 64, 69), ("G", "C", "E", "A"), 15),
