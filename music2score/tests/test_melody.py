@@ -50,3 +50,15 @@ def test_melody_from_piano_to_electric_guitar_tab(tmp_path):
 def test_electric_guitar_allows_bends_bass_does_not():
     assert TUNINGS["electric"].bends and TUNINGS["guitar"].bends
     assert not TUNINGS["bass"].bends and not TUNINGS["ukulele"].bends
+
+
+def test_transpose_moves_notes_and_keeps_rhythm(tmp_path):
+    from music2score.synth import synthesize
+
+    path = tmp_path / "bell.wav"
+    sf.write(path, synthesize(SCHOOL_BELL, 100, SR), SR)
+
+    result = transcribe(path, tab="electric", transpose=-12)
+
+    assert [q.pitch for q in result.qnotes] == [pitch.Pitch(name).midi - 12 for name, _ in SCHOOL_BELL]
+    assert result.qnotes[-1].offset == 28.0 and result.moved == 0

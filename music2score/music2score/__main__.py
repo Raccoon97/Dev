@@ -39,6 +39,9 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--capo", type=int, default=0, metavar="N", help="카포 위치 (--tab 과 함께, 기본: 0)")
     parser.add_argument(
+        "--transpose", type=int, default=0, metavar="N", help="반음 N 개만큼 옮겨 적기 (예: -12 = 한 옥타브 아래)"
+    )
+    parser.add_argument(
         "--stem",
         choices=list(STEMS),
         help="밴드 음원에서 이 악기 소리만 떼어 낸 뒤 악보로: bass(베이스), other(기타·건반), vocals(노래), drums "
@@ -84,6 +87,7 @@ def main(argv: list[str] | None = None) -> int:
             min_note=args.min_note,
             tab=args.tab,
             capo=args.capo,
+            transpose=args.transpose,
         )
         name = f"{name}.{args.stem}" if args.stem else name
         files = export(result.score, out_dir, name, pdf=args.pdf, tuning=result.tuning, capo=args.capo)

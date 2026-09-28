@@ -55,6 +55,9 @@ music2score 원곡.mp3 --stem vocals --tab electric
 
 # 반주·건반처럼 화음이 섞인 소리에서 선율 한 줄만 뽑아 일렉기타 타브로
 music2score 건반.wav --mode melody --tab electric --grid 8
+
+# 피아노가 멜로디인 곡: 건반 소리를 떼어 선율을 뽑고, 기타로 치기 좋게 한 옥타브 내려서
+music2score 피아노곡.mp3 --stem other --mode melody --tab electric --transpose -12
 ```
 
 설치 없이 폴더 안에서 `python -m music2score 노래.wav` 로 실행해도 됩니다.
@@ -99,6 +102,7 @@ music2score examples/guitar_chords.wav --mode poly --tab guitar --bpm 90
 | `--tab` | 타브 악보도 만들기: `guitar`, `electric`(일렉기타), `drop-d`, `bass`(4현), `bass5`(5현), `ukulele` | |
 | `--capo N` | 카포 위치. 타브의 프렛 번호가 카포 기준이 됨 | `0` |
 | `--stem` | 밴드 음원에서 이 악기만 떼어 낸 뒤 악보로: `bass`, `other`(기타·건반), `vocals`(노래), `drums` | |
+| `--transpose N` | 반음 N 개만큼 옮겨 적기. 높은 피아노 선율을 기타로 칠 때 `-12`(한 옥타브 아래)면 중간 포지션으로 내려온다 | `0` |
 | `--title` | 악보 제목 | 파일 이름 |
 | `-o`, `--out` | 결과 폴더 | `output` |
 | `--pdf` | PDF 도 생성 (MuseScore 설치 필요) | |
@@ -321,7 +325,7 @@ pytest
 (학교종 / 바장조 8분·16분·점음표 멜로디 × 잡음·비브라토·빠른 템포·레가토·스타카토, 3/4 박자, 피아노 화음,
 기타 코드 모양·카포·우쿨렐레·베이스, 기타 리프 → 타브, 코드 스트로크 → 타브,
 기타·베이스 릭의 해머링·풀링·슬라이드·벤딩·릴리즈, 일반 피킹에 주법이 잘못 붙지 않는지, 악기 분리 조각 이어 붙이기,
-반주 속 선율 뽑기 등 51개)
+반주 속 선율 뽑기, 옮겨 적기 등 52개)
 
 <br>
 
